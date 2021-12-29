@@ -75,7 +75,19 @@ SPI_HandleTypeDef hspi2;
 UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN PV */
+uint8_t  touchIRQ = 0, rtcSet = 1, clearEEPROM = 0, barographViewed = 0, sound = 1, printAlarm = 0, alarm1 = 0;
+uint8_t rtcSec, rtcMin, rtcHrs, rtcDay, rtcDate, rtcMonth, rtcYear,
+rtcSecA1, rtcMinA1, rtcHrsA1, rtcDayA1, rtcDateA1, rtcMinA2, rtcHrsA2, rtcDayA2, rtcDateA2;
+uint16_t touchX, touchY;
+uint8_t rtcSecLast = 61, rtcMinLast = 61, rtcHrsLast = 25, rtcDayLast, rtcDateLast, rtcMonthLast, rtcYearLast;
+uint16_t pressure, pressureLast;
+double temperatureLast, humidityLast, temperature, humidity,
+temperatureRemote, temperatureRemoteLast, humidityRemote, humidityRemoteLast, rtcMoon, rtcMoonLast;
+uint64_t startHistory;
 
+uint16_t barographHourly[367] = { 25 };
+uint16_t barographDaily[367];
+uint16_t barographMinimum = 0, barographMaximum = 0, barographAverage = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -90,6 +102,376 @@ static void MX_SPI2_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+double map(double x, double in_min, double in_max, double out_min, double out_max) {
+	return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
+
+uint8_t rx_buffer[256];
+uint8_t rx_index = 0;
+uint8_t rx_data;
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef* huart) {
+	uint8_t i;
+	if (huart->Instance == USART1) {
+		if (rx_index == 0) {
+			for (i = 0; i < 255; i++) {
+				rx_buffer[i] = 0;
+			}
+		}
+		rx_buffer[rx_index++] = rx_data;
+		HAL_UART_Receive_IT(&huart1, &rx_data, 1);
+	}
+}
+
+uint8_t byteL(uint16_t val) {
+	return (val & 0xFF);
+}
+
+uint8_t byteH(uint16_t val) {
+	return ((val >> 8) & 0xFF);
+}
+
+uint16_t byteS(uint8_t byteL, uint8_t byteH) {
+	return (byteH << 8) | byteL;
+}
+
+void bme280(void) {
+				temperature = BME280_getTemperature(-1);
+				humidity = BME280_getHumidity(-1);
+				pressure = (uint16_t)BME280_getPressure();
+
+				if (temperature != temperatureLast && temperature >= -40 && temperature <= 40) {
+
+					char weatherPrintT[4];
+
+					if (temperatureLast >= 10 || (temperatureLast < 0 && temperatureLast > -10)) {
+						sprintf(weatherPrintT, "%.1f", temperatureLast);
+						LCD_Font(205, 40, weatherPrintT, &DejaVu_Sans_36, 1, BLACK);
+					}
+					else if (temperatureLast < 10 && temperatureLast > 0) {
+						sprintf(weatherPrintT, "%.1f", temperatureLast);
+						LCD_Font(231, 40, weatherPrintT, &DejaVu_Sans_36, 1, BLACK);
+					}
+					else if (temperatureLast <= -10) {
+						sprintf(weatherPrintT, "%2d", (int8_t)temperatureLast);
+						LCD_Font(205, 40, weatherPrintT, &DejaVu_Sans_36, 1, BLACK);
+					}
+
+					if (temperature >= 10 || (temperature < 0 && temperature > -10)) {
+						sprintf(weatherPrintT, "%.1f", temperature);
+						LCD_Font(205, 40, weatherPrintT, &DejaVu_Sans_36, 1, ORANGE);
+					}
+					else if (temperature < 10 && temperature > 0) {
+						sprintf(weatherPrintT, "%.1f", temperature);
+						LCD_Font(231, 40, weatherPrintT, &DejaVu_Sans_36, 1, ORANGE);
+					}
+					else if (temperature <= -10) {
+						sprintf(weatherPrintT, "%2d", (int8_t)temperature);
+						LCD_Font(205, 40, weatherPrintT, &DejaVu_Sans_36, 1, ORANGE);
+					}
+
+//					for (double i = 0.0; i < 400; i++) {
+//						if (temperature > i / 10) LCD_Line(747, 470 - i, 763, 470 - i, 1, GRAY);
+//						else LCD_Line(747, 470 - i, 763, 470 - i, 1, 0x101010);
+//					}
+
+					temperatureLast = temperature;
+				}
+
+				char weatherPrintH[4];
+
+				if (humidity != humidityLast && humidity >= 0 && humidity < 100) {
+
+					sprintf(weatherPrintH, "%.1f", humidityLast);
+					if (humidityLast >= 10)
+						LCD_Font(105, 40, weatherPrintH, &DejaVu_Sans_36, 1, BLACK);
+					else LCD_Font(131, 40, weatherPrintH, &DejaVu_Sans_36, 1, BLACK);
+
+
+					sprintf(weatherPrintH, "%.1f", humidity);
+					if (humidity >= 10)
+						LCD_Font(105, 40, weatherPrintH, &DejaVu_Sans_36, 1, CYAN);
+					else LCD_Font(131, 40, weatherPrintH, &DejaVu_Sans_36, 1, CYAN);
+
+//					for (double i = 0.0; i < 400; i++) {
+//						if (humidity > i / 4) LCD_Line(647, 470 - i, 663, 470 - i, 1, GRAY);
+//						else LCD_Line(647, 470 - i, 663, 470 - i, 1, 0x101010);
+//					}
+
+					humidityLast = humidity;
+				}
+	
+	
+
+	pressure = (uint16_t)BME280_getPressure();
+	if (pressure > 300 && pressure < 1100) {
+
+		for (uint16_t i = 0; i < 367; i++) {
+//			barographHourly[i] = byteS(AT24XX_Read(i * 2 + 1000), AT24XX_Read(i * 2 + 1 + 1000));
+//			barographDaily[i] = byteS(AT24XX_Read(i * 2 + 2000), AT24XX_Read(i * 2 + 1 + 2000));
+		}
+
+		if (barographHourly[0] != rtcHrs && pressure > 300 && pressure < 1100) {
+
+			barographHourly[0] = rtcHrs;
+
+			for (uint16_t i = 1; i < 366; i++) barographHourly[i] = barographHourly[i + 1];
+			barographHourly[366] = (uint16_t)pressure;
+
+			for (uint16_t i = 0; i < 367; i++) {
+//				AT24XX_Update(i * 2 + 1000, byteL(barographHourly[i]));
+//				AT24XX_Update(i * 2 + 1 + 1000, byteH(barographHourly[i]));
+			}
+
+			if (barographDaily[0] != rtcDate) {
+				barographDaily[0] = rtcDate;
+
+				uint32_t barographAverageLast24Hours = 0;
+				uint16_t historyHours = 0;
+				for (uint8_t i = 0; i < 24; i++) {
+					if (barographHourly[366 - i] != 0) {
+						barographAverageLast24Hours = barographAverageLast24Hours + barographHourly[366 - i];
+						historyHours++;
+					}
+				}
+				if (historyHours != 0) barographAverageLast24Hours = barographAverageLast24Hours / historyHours;
+
+				for (uint16_t i = 1; i < 366; i++) {
+					barographDaily[i] = barographDaily[i + 1];
+				}
+				barographDaily[366] = barographAverageLast24Hours;
+
+				for (uint16_t i = 0; i < 367; i++) {
+//					AT24XX_Update(i * 2 + 2000, byteL(barographDaily[i]));
+//					AT24XX_Update(i * 2 + 1 + 2000, byteH(barographDaily[i]));
+				}
+			}
+			barographViewed = 0;
+		}
+
+		if (!barographViewed) {
+
+			uint32_t barographAverageLast366Days = 0;
+			uint16_t historyDays = 0;
+			for (uint16_t i = 0; i < 365; i++) {
+				if (barographDaily[366 - i] != 0) {
+					barographAverageLast366Days = barographAverageLast366Days + barographDaily[366 - i];
+					historyDays++;
+				}
+			}
+			if (historyDays != 0) barographAverage = barographAverageLast366Days / historyDays;
+
+			barographMinimum = barographDaily[366];
+			barographMaximum = barographDaily[366];
+
+			for (uint16_t i = 1; i < 366; i++) {
+				if (barographDaily[366 - i] != 0) {
+					if (barographDaily[366 - i] < barographMinimum) barographMinimum = barographDaily[366 - i];
+					if (barographDaily[366 - i] > barographMaximum) barographMaximum = barographDaily[366 - i];
+				}
+			}
+
+			for (uint16_t i = 1; i < 366; i++) {
+				if (barographHourly[366 - i] != 0) {
+					if (barographHourly[366 - i] < barographMinimum) barographMinimum = barographHourly[366 - i];
+					if (barographHourly[366 - i] > barographMaximum) barographMaximum = barographHourly[366 - i];
+				}
+			}
+
+			barographDaily[0] = rtcDate;
+
+//			LCD_Rect(1, 201, 368, 128, 1, BLUE);
+
+//			for (uint16_t i = 0; i < 366; i++) {
+//				int16_t val = 0;
+//				val = barographHourly[i + 1];
+//				if (val < barographMaximum - 127) val = barographMaximum - 127;
+//				LCD_Line(2 + i, 328, 2 + i, 202, 1, BLACK);
+//				LCD_Line(2 + i, 328, 2 + i, 202 + (barographMaximum - val), 1, RGB(255 - ((barographMaximum - val) * 2), 0, 255 - (255 - ((barographMaximum - val) * 2))));
+//			}
+
+//			LCD_Rect(1, 329, 368, 128, 1, BLUE);
+
+			for (uint16_t i = 0; i < 366; i++) {
+				int16_t val = 0;
+				val = barographDaily[i + 1];
+				if (val < barographMaximum - 127) val = barographMaximum - 127;
+
+//				LCD_Line(2 + i, 456, 2 + i, 330, 1, BLACK);
+//				LCD_Line(2 + i, 456, 2 + i, 330 + (barographMaximum - val), 1, RGB(255 - ((barographMaximum - val) * 2), 0, 255 - (255 - ((barographMaximum - val) * 2))));
+			}
+
+//			LCD_Rect_Fill(1, 460, 397, 18, BLACK);
+
+			char s[10];
+
+			if (barographAverage >= 1000) sprintf(s, "Mid:%02d|", barographAverage);
+			else sprintf(s, "Mid:0%02d|", barographAverage);
+			LCD_Font(1, 474, s, &DejaVu_Sans_18, 1, GRAY);
+
+			if (barographMinimum >= 1000) sprintf(s, "|Min:%02d|", barographMinimum);
+			else sprintf(s, "|Min:0%02d|", barographMinimum);
+			LCD_Font(91, 474, s, &DejaVu_Sans_18, 1, GRAY);
+
+			if (barographMaximum >= 1000) sprintf(s, "|Max:%02d|", barographMaximum);
+			else sprintf(s, "|Max:0%02d|", barographMaximum);
+			LCD_Font(188, 474, s, &DejaVu_Sans_18, 1, GRAY);
+
+			if (pressure >= 1000) sprintf(s, "|Now:%02d", pressure);
+			else sprintf(s, "|Now:0%02d", pressure);
+			LCD_Font(290, 474, s, &DejaVu_Sans_18, 1, GRAY);
+
+			if (barographHourly[365] != barographHourly[366])
+			{
+//				LCD_Triangle_Fill(370, 302, 398, 302, 384, 316, BLACK);
+//				LCD_Triangle_Fill(370, 262, 398, 262, 384, 272, BLACK);
+//				LCD_Triangle_Fill(370, 222, 398, 222, 384, 236, BLACK);
+//				LCD_Triangle_Fill(370, 316, 398, 316, 384, 302, BLACK);
+//				LCD_Triangle_Fill(370, 276, 398, 276, 384, 262, BLACK);
+//				LCD_Triangle_Fill(370, 236, 398, 236, 384, 222, BLACK);
+//				if (barographHourly[365] > barographHourly[366])     LCD_Triangle_Fill(370, 302, 398, 302, 384, 316, BLUE);
+//				if (barographHourly[365] > barographHourly[366] + 1) LCD_Triangle_Fill(370, 262, 398, 262, 384, 272, BLUE);
+//				if (barographHourly[365] > barographHourly[366] + 2) LCD_Triangle_Fill(370, 222, 398, 222, 384, 236, BLUE);
+//				if (barographHourly[365] < barographHourly[366])     LCD_Triangle_Fill(370, 316, 398, 316, 384, 302, RED);
+//				if (barographHourly[365] < barographHourly[366] - 1) LCD_Triangle_Fill(370, 276, 398, 276, 384, 262, RED);
+//				if (barographHourly[365] < barographHourly[366] - 2) LCD_Triangle_Fill(370, 236, 398, 236, 384, 222, RED);
+			}
+
+			if (barographDaily[365] != barographDaily[366])
+			{
+//				LCD_Triangle_Fill(370, 430, 398, 430, 384, 444, BLACK);
+//				LCD_Triangle_Fill(370, 390, 398, 390, 384, 404, BLACK);
+//				LCD_Triangle_Fill(370, 350, 398, 350, 384, 364, BLACK);
+//				LCD_Triangle_Fill(370, 444, 398, 444, 384, 430, BLACK);
+//				LCD_Triangle_Fill(370, 404, 398, 404, 384, 390, BLACK);
+//				LCD_Triangle_Fill(370, 364, 398, 364, 384, 350, BLACK);
+//				if (barographDaily[365] > barographDaily[366] + 5)      LCD_Triangle_Fill(370, 430, 398, 430, 384, 444, BLUE);
+//				if (barographDaily[365] > barographDaily[366] + 10) 	LCD_Triangle_Fill(370, 390, 398, 390, 384, 404, BLUE);
+//				if (barographDaily[365] > barographDaily[366] + 15) 	LCD_Triangle_Fill(370, 350, 398, 350, 384, 364, BLUE);
+//				if (barographDaily[365] < barographDaily[366] - 5)     	LCD_Triangle_Fill(370, 444, 398, 444, 384, 430, RED);
+//				if (barographDaily[365] < barographDaily[366] - 10) 	LCD_Triangle_Fill(370, 404, 398, 404, 384, 390, RED);
+//				if (barographDaily[365] < barographDaily[366] - 15) 	LCD_Triangle_Fill(370, 364, 398, 364, 384, 350, RED);
+			}
+			barographViewed = 1;
+		}
+	}
+}
+
+void uartDecode() {
+
+//	if (memcmp(rx_buffer, "CE", 2) == 0) {
+//		for (uint16_t i = 0; i < 4096; i++) AT24XX_Update(i, 0);
+
+//		uint8_t uartTransmit[] = "EEPROM IS CLEANED\r\n";
+//		HAL_UART_Transmit(&huart1, uartTransmit, sizeof(uartTransmit), 100);
+
+////		barograph();
+//	}
+
+//	if (memcmp(rx_buffer, "RS", 2) == 0) {
+
+//		char valT[4] = { 0 };
+
+//		for (uint8_t i = 0; i < 4; i++) valT[i] = rx_buffer[2 + i];
+
+//		temperatureRemote = atoi(valT);
+//		temperatureRemote = temperatureRemote / 10;
+
+//		char valH[3] = { 0 };
+
+//		for (uint8_t i = 0; i < 3; i++) valH[i] = rx_buffer[6 + i];
+
+//		humidityRemote = atoi(valH);
+//		humidityRemote = humidityRemote / 10;
+//	}
+
+//	if (memcmp(rx_buffer, "RT", 2) == 0) {
+
+//		char val[2];
+
+//		val[0] = rx_buffer[2];
+//		val[1] = rx_buffer[3];
+//		DS3231_setHrs(atoi(val));
+
+//		val[0] = rx_buffer[4];
+//		val[1] = rx_buffer[5];
+//		DS3231_setMin(atoi(val));
+
+//		val[0] = rx_buffer[6];
+//		val[1] = rx_buffer[7];
+//		DS3231_setSec(atoi(val));
+
+//		val[0] = rx_buffer[8];
+//		val[1] = rx_buffer[9];
+//		DS3231_setDate(atoi(val));
+
+//		val[0] = rx_buffer[10];
+//		val[1] = rx_buffer[11];
+//		DS3231_setMonth(atoi(val));
+
+//		val[0] = rx_buffer[12];
+//		val[1] = rx_buffer[13];
+//		DS3231_setYear(atoi(val));
+
+//		val[1] = rx_buffer[14];
+//		DS3231_setDay(atoi(val));
+//	}
+
+//	for (uint8_t i = 0; i < 255; i++) rx_buffer[i] = 0;
+}
+
+void signal(void)
+{
+//	for (uint32_t i = 0; i <= 65536; i++)
+//	{
+//		TIM1->CCR1 = i;
+//	}
+}
+
+void alarm(void)
+{
+//	alarm1 = AT24XX_Read(4000);
+//	if (rtcHrsA1 < 24 && rtcMinA1 < 60)
+//	{
+//		if (!printAlarm)
+//		{
+//			LCD_Rect_Fill(71, 170, 105, 28, BLACK);
+//			char alarm1Time[8];
+//			sprintf(alarm1Time, "%02d:%02d", rtcHrsA1, rtcMinA1);
+//			if (alarm1) LCD_Font(70, 197, alarm1Time, &DejaVu_Sans_36, 1, RED);
+//			else LCD_Font(70, 197, alarm1Time, &DejaVu_Sans_36, 1, GRAY);
+
+//			LCD_Rect_Round(2, 170, 30, 30, 2, 1, GRAY);
+//			LCD_Font(8, 179, "_", &DejaVu_Sans_36, 1, GRAY);
+//			LCD_Rect_Round(34, 170, 30, 30, 2, 1, GRAY);
+//			LCD_Font(34, 197, "+", &DejaVu_Sans_36, 1, GRAY);
+
+//			LCD_Rect_Round(182, 170, 30, 30, 2, 1, GRAY);
+//			LCD_Font(188, 179, "_", &DejaVu_Sans_36, 1, GRAY);
+//			LCD_Rect_Round(214, 170, 30, 30, 2, 1, GRAY);
+//			LCD_Font(214, 197, "+", &DejaVu_Sans_36, 1, GRAY);
+
+//			LCD_Rect_Round(260, 170, 130, 30, 2, 1, GRAY);
+//			LCD_Rect_Round(300, 175, 50, 20, 2, 1, GRAY);
+//			LCD_Font(262, 192, "OFF", &DejaVu_Sans_18, 1, GRAY);
+//			LCD_Font(356, 192, "ON", &DejaVu_Sans_18, 1, GRAY);
+
+//			if (alarm1)
+//			{
+//				LCD_Rect_Round_Fill(329, 176, 20, 18, 1, RED);
+//				LCD_Rect_Round_Fill(301, 176, 20, 18, 1, BLACK);
+//			}
+//			else
+//			{
+//				LCD_Rect_Round_Fill(301, 176, 20, 18, 1, GRAY);
+//				LCD_Rect_Round_Fill(329, 176, 20, 18, 1, BLACK);
+//			}
+
+//			printAlarm = 1;
+//		}
+//		if (alarm1 && rtcHrsA1 == rtcHrs && rtcMinA1 == rtcMin) signal();
+//	}
+}
 
 /* USER CODE END 0 */
 
@@ -126,55 +508,196 @@ int main(void)
   MX_SPI2_Init();
   /* USER CODE BEGIN 2 */
 	LCD_Init();
+	BME280_Init();
 
+	if (clearEEPROM) {
+		for (uint16_t i = 0; i < 4096; i++) {
+			AT24XX_Update(i, 0);
+		}
+	}
+	
 	LCD_Rect_Fill(0, 0, 480, 320, BLUE);
 	LCD_Rect_Fill(1, 1, 478, 318, BLACK);
 	
-//	HAL_Delay(250);
-	LCD_Rect_Fill(0, 0, 160, 128, BLACK);
-	for(uint8_t x = 8; x <= 160; x += 8)
-	{
-		LCD_Line(0, 0, x, 128, 1, GREEN);
-	}
-	for(uint8_t y = 8; y <= 128; y += 8) {
-		LCD_Line(0, 0, 160, y, 1, GREEN);
-	}
-	HAL_Delay(250);
 
-	uint8_t h = 16;
-	uint8_t w = 20;
-	for(uint8_t i = 0; i < 8; i++)
-	{
-		LCD_Rect(80 - w / 2, 64 - h / 2, w, h, 2, YELLOW);
-		h += 16;
-		w += 20;
-	}
-	HAL_Delay(250);
-	LCD_Rect_Fill(0, 0, 160, 128, BLUE);
-	LCD_Rect_Fill(1, 1, 158, 126, BLACK);
-//	LCD_Font(5, 40, "This is\n just a Test\n TomThumb Ext\n", _3_TomThumb_Extended, 1, YELLOW);
-	LCD_Line(23, 20, 137, 20, 1, MAGENTA);
-	LCD_Line(23, 21, 137, 21, 1, BLUE);
-	LCD_Line(23, 21, 137, 21, 1, BLUE);
-//	LCD_Font(41, 10, "DISPLAY DRIVER", _5_Org, 1, MAGENTA);
-//	LCD_Font(45, 35, "SERIF BOLD", _9_Serif_Bold, 1, RED);
-	LCD_Circle(40, 90, 30, 0, 1, RED);
-	LCD_Circle(45, 90, 20, 1, 1, BLUE);
-	LCD_Triangle_Fill(5, 5, 5, 20, 25, 25, BLUE);
-	LCD_Triangle(5, 5, 5, 20, 25, 25, 1, RED);
-	LCD_Rect(60, 45, 30, 20, 2, GREEN);
-	LCD_Rect_Round(80, 70, 60, 25, 10, 3, WHITE);
-	LCD_Rect_Round_Fill(80, 100, 60, 25, 10, WHITE);
-	LCD_Ellipse(60, 100, 30, 20, 0, 2, YELLOW);
-	LCD_Ellipse(125, 60, 25, 15, 1, 1, YELLOW);
-	LCD_Font(0, 200, "1234567890", &DejaVu_Sans_112, 1, RED);
-//	LCD_Font(10, 220, "1234567890 Default Font", _8_Default, 1, RED);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+
+		if (sound)
+		{
+//			signal();
+//			sound = 0;
+		}
+
+		if (rx_index != 0) {
+//			HAL_Delay(200);
+//			rx_index = 0;
+//			uartDecode();
+		}
+
+//		if ((HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13) == GPIO_PIN_SET)) {
+//			uint16_t touchXr = getX();
+//			uint16_t touchYr = getY();
+
+//			if (touchXr && touchYr && touchXr != 0x2F5 && touchYr != 0x0DB) {
+//				touchX = touchXr;
+//				touchY = touchYr;
+
+//				LCD_Rect_Fill(touchX, touchY, 2, 2, WHITE);
+
+//				if (touchX > 0 && touchX < 32 && touchY > 170 && touchY < 200)
+//				{
+//					LCD_Rect_Round(2, 170, 30, 30, 2, 1, RED);
+//					LCD_Font(8, 179, "_", &DejaVu_Sans_36, 1, RED);
+//					if (rtcHrsA1 > 0) rtcHrsA1 = rtcHrsA1 - 1; else rtcHrsA1 = 23;
+//					DS3231_setAlarm1Hour(rtcHrsA1);
+//					printAlarm = 0;
+//					sound = 1;
+//				}
+//				else if (touchX > 32 && touchX < 64 && touchY > 170 && touchY < 200)
+//				{
+//					LCD_Rect_Round(34, 170, 30, 30, 2, 1, RED);
+//					LCD_Font(34, 197, "+", &DejaVu_Sans_36, 1, RED);
+//					if (rtcHrsA1 < 23) rtcHrsA1 = rtcHrsA1 + 1; else rtcHrsA1 = 0;
+//					DS3231_setAlarm1Hour(rtcHrsA1);
+//					printAlarm = 0;
+//					sound = 1;
+//				}
+//				else if (touchX > 182 && touchX < 212 && touchY > 170 && touchY < 200)
+//				{
+//					if (rtcMinA1 > 0) rtcMinA1 = rtcMinA1 - 5; else rtcMinA1 = 55;
+//					DS3231_setAlarm1Min(rtcMinA1);
+//					LCD_Rect_Round(182, 170, 30, 30, 2, 1, RED);
+//					LCD_Font(188, 179, "_", &DejaVu_Sans_36, 1, RED);
+//					printAlarm = 0;
+//					sound = 1;
+//				}
+//				else if (touchX > 214 && touchX < 244 && touchY > 170 && touchY < 200)
+//				{
+//					if (rtcMinA1 < 55) rtcMinA1 = rtcMinA1 + 5; else rtcMinA1 = 0;
+//					DS3231_setAlarm1Min(rtcMinA1);
+//					LCD_Rect_Round(214, 170, 30, 30, 2, 1, RED);
+//					LCD_Font(214, 197, "+", &DejaVu_Sans_36, 1, RED);
+//					printAlarm = 0;
+//					sound = 1;
+//				}
+//				else if (touchX > 260 && touchX < 390 && touchY > 170 && touchY < 200)
+//				{
+//					if (AT24XX_Read(4000)) AT24XX_Update(4000, 0);
+//					else AT24XX_Update(4000, 1);
+//					printAlarm = 0;
+//					sound = 1;
+//				}
+
+//			}
+//		}
+
+
+		DS3231_Update();
+		rtcSec = DS3231_getSec();
+		rtcMin = DS3231_getMin();
+		rtcHrs = DS3231_getHrs();
+		rtcDay = DS3231_getDay();
+		rtcDate = DS3231_getDate();
+		rtcMonth = DS3231_getMonth();
+		rtcYear = DS3231_getYear();
+		//		rtcSecA1 = DS3231_getAlarm1Sec();
+		rtcMinA1 = DS3231_getAlarm1Min();
+		rtcHrsA1 = DS3231_getAlarm1Hour();
+		//		rtcDayA1 = DS3231_getAlarm1Day();
+		//		rtcDateA1 = DS3231_getAlarm1Date();
+		//		rtcMinA2 = DS3231_getAlarm2Min();
+		//		rtcHrsA2 = DS3231_getAlarm2Hour();
+		//		rtcDayA2 = DS3231_getAlarm2Day();
+		//		rtcDateA2 = DS3231_getAlarm2Date();
+
+		char clockPrint[13];
+
+		if (rtcSecLast != rtcSec) { 		
+				
+	//		bme280();
+
+			static const uint32_t hues[24] = {
+				HUE_01, HUE_02, HUE_03, HUE_04, HUE_05, HUE_06, HUE_07, HUE_08, HUE_09, HUE_10, HUE_11, HUE_12,
+			HUE_13, HUE_14, HUE_15, HUE_16, HUE_17, HUE_18, HUE_19, HUE_20, HUE_21, HUE_22, HUE_23, HUE_24 };
+
+			LCD_Circle(172, 35, 8, 0, 1, hues[rtcHrs]);
+			LCD_Circle(172, 75, 8, 0, 1, hues[rtcHrs]);
+
+			if (rtcSec % 2 != 0) {
+				LCD_Circle(172, 35, 7, 1, 1, hues[rtcHrs]);
+				LCD_Circle(172, 75, 7, 1, 1, hues[rtcHrs]);
+				HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);	
+			}
+			else {
+				LCD_Circle(172, 35, 7, 1, 1, BLACK);
+				LCD_Circle(172, 75, 7, 1, 1, BLACK);
+				HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
+			}
+
+			if (rtcMinLast != rtcMin) {
+
+				sprintf(clockPrint, "%02d", rtcMinLast);
+				LCD_Font(180, 100, clockPrint, &DejaVu_Sans_128, 1, BLACK);
+				sprintf(clockPrint, "%02d", rtcMin);
+				LCD_Font(180, 100, clockPrint, &DejaVu_Sans_128, 1, hues[rtcHrs]);
+
+				if (rtcHrsLast != rtcHrs) {
+					sprintf(clockPrint, "%02d", rtcHrsLast);
+					LCD_Font(0, 100, clockPrint, &DejaVu_Sans_128, 1, BLACK);
+					sprintf(clockPrint, "%02d", rtcHrs);
+					LCD_Font(0, 100, clockPrint, &DejaVu_Sans_128, 1, hues[rtcHrs]);
+
+/*					if (rtcDayLast != rtcDay) {
+
+						static const char* days[7] = { "MONDAY", "TUESDAY", "WEDNESDAY",
+							"THURSTDAY", "FRIDAY", "SATURDAY", "SUNDAY" };
+
+						LCD_Font(2, 140, days[(7 + rtcDay - 2) % 7], &DejaVu_Sans_36, 1, BLACK);
+						LCD_Font(2, 140, days[(7 + rtcDay - 1) % 7], &DejaVu_Sans_36, 1, GRAY);
+
+						static const char* months[12] = { "JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY",
+						"JUNE", "JULE", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER" };
+
+						LCD_Font(3, 168, months[(12 + rtcMonth - 2) % 12], &DejaVu_Sans_36, 1, BLACK);
+						LCD_Font(3, 168, months[(12 + rtcMonth - 1) % 12], &DejaVu_Sans_36, 1, GRAY);
+
+						sprintf(clockPrint, "%02d-%02d-%02d", rtcDateLast, rtcMonthLast, rtcYearLast);
+						LCD_Font(230, 168, clockPrint, &DejaVu_Sans_36, 1, BLACK);
+
+						sprintf(clockPrint, "%02d-%02d-%02d", rtcDate, rtcMonth, rtcYear);
+						LCD_Font(230, 168, clockPrint, &DejaVu_Sans_36, 1, GRAY);
+
+//						if (rtcMoonLast < 10) sprintf(clockPrint, "M:  %01d", (uint16_t)rtcMoonLast);
+//						else sprintf(clockPrint, "M: %02d", (uint16_t)rtcMoonLast);
+//						LCD_Font(297, 140, clockPrint, &DejaVu_Sans_36, 1, BLACK);
+//						rtcMoon = DS3231_getMoonDay();
+//						if (rtcMoon < 10) sprintf(clockPrint, "M:  %01d", (uint16_t)rtcMoon);
+//						else sprintf(clockPrint, "M: %02d", (uint16_t)rtcMoon);
+//						LCD_Font(297, 140, clockPrint, &DejaVu_Sans_36, 1, GRAY);
+//						rtcMoonLast = rtcMoon;
+
+						rtcDayLast = rtcDay;
+					} */
+					rtcDateLast = rtcDate;
+					rtcMonthLast = rtcMonth;
+					rtcYearLast = rtcYear;
+					rtcHrsLast = rtcHrs;
+					sound = 1;
+				}
+
+
+				rtcMinLast = rtcMin;
+			}
+//			alarm();
+			
+		rtcSecLast = rtcSec;
+		}					
+//	}
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

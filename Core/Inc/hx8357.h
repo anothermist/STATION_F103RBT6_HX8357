@@ -100,7 +100,7 @@
 					
 #define BGR 1
 
-#define DEFAULT_ORIENTATION 2
+#define DEFAULT_ORIENTATION 0
 
 #define BLACK   0x000000
 #define WHITE   0xFFFFFF
