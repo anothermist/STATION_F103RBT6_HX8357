@@ -151,6 +151,26 @@
 #include "fonts/Open_Sans_Bold/112_Open_Sans_Bold.h"
 #include "fonts/Open_Sans_Bold/128_Open_Sans_Bold.h"
 
+#include "fonts/Roboto_Mono/008_Roboto_Mono.h"
+#include "fonts/Roboto_Mono/009_Roboto_Mono.h"
+#include "fonts/Roboto_Mono/010_Roboto_Mono.h"
+#include "fonts/Roboto_Mono/011_Roboto_Mono.h"
+#include "fonts/Roboto_Mono/012_Roboto_Mono.h"
+#include "fonts/Roboto_Mono/014_Roboto_Mono.h"
+#include "fonts/Roboto_Mono/016_Roboto_Mono.h"
+#include "fonts/Roboto_Mono/018_Roboto_Mono.h"
+#include "fonts/Roboto_Mono/020_Roboto_Mono.h"
+#include "fonts/Roboto_Mono/022_Roboto_Mono.h"
+#include "fonts/Roboto_Mono/024_Roboto_Mono.h"
+#include "fonts/Roboto_Mono/026_Roboto_Mono.h"
+#include "fonts/Roboto_Mono/028_Roboto_Mono.h"
+#include "fonts/Roboto_Mono/036_Roboto_Mono.h"
+#include "fonts/Roboto_Mono/048_Roboto_Mono.h"
+#include "fonts/Roboto_Mono/072_Roboto_Mono.h"
+#include "fonts/Roboto_Mono/096_Roboto_Mono.h"
+#include "fonts/Roboto_Mono/112_Roboto_Mono.h"
+#include "fonts/Roboto_Mono/128_Roboto_Mono.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -245,30 +265,30 @@ void bme280(void) {
 
 					if (temperatureLast >= 10 || (temperatureLast < 0 && temperatureLast > -10)) {
 						sprintf(weatherPrintT, "%.1f", temperatureLast);
-						LCD_Font(205, 40, weatherPrintT, &DejaVu_Sans_36, 1, BLACK);
+						LCD_Font(105, 240, weatherPrintT, &DejaVu_Sans_36, 1, BLACK);
 					}
 					else if (temperatureLast < 10 && temperatureLast > 0) {
 						sprintf(weatherPrintT, "%.1f", temperatureLast);
-						LCD_Font(231, 40, weatherPrintT, &DejaVu_Sans_36, 1, BLACK);
+						LCD_Font(131, 240, weatherPrintT, &DejaVu_Sans_36, 1, BLACK);
 					}
 					else if (temperatureLast <= -10) {
 						sprintf(weatherPrintT, "%2d", (int8_t)temperatureLast);
-						LCD_Font(205, 40, weatherPrintT, &DejaVu_Sans_36, 1, BLACK);
+						LCD_Font(105, 240, weatherPrintT, &DejaVu_Sans_36, 1, BLACK);
 					}
 
 					if (temperature >= 10 || (temperature < 0 && temperature > -10)) {
 						sprintf(weatherPrintT, "%.1f", temperature);
-						LCD_Font(205, 40, weatherPrintT, &DejaVu_Sans_36, 1, ORANGE);
+						LCD_Font(105, 240, weatherPrintT, &DejaVu_Sans_36, 1, ORANGE);
 					}
 					else if (temperature < 10 && temperature > 0) {
 						sprintf(weatherPrintT, "%.1f", temperature);
-						LCD_Font(231, 40, weatherPrintT, &DejaVu_Sans_36, 1, ORANGE);
+						LCD_Font(131, 240, weatherPrintT, &DejaVu_Sans_36, 1, ORANGE);
 					}
 					else if (temperature <= -10) {
 						sprintf(weatherPrintT, "%2d", (int8_t)temperature);
-						LCD_Font(205, 40, weatherPrintT, &DejaVu_Sans_36, 1, ORANGE);
+						LCD_Font(105, 240, weatherPrintT, &DejaVu_Sans_36, 1, ORANGE);
 					}
-					
+
 					temperatureLast = temperature;
 				}
 
@@ -278,20 +298,18 @@ void bme280(void) {
 
 					sprintf(weatherPrintH, "%.1f", humidityLast);
 					if (humidityLast >= 10)
-						LCD_Font(105, 40, weatherPrintH, &DejaVu_Sans_36, 1, BLACK);
-					else LCD_Font(131, 40, weatherPrintH, &DejaVu_Sans_36, 1, BLACK);
+						LCD_Font(205, 240, weatherPrintH, &DejaVu_Sans_36, 1, BLACK);
+					else LCD_Font(231, 240, weatherPrintH, &DejaVu_Sans_36, 1, BLACK);
 
 
 					sprintf(weatherPrintH, "%.1f", humidity);
 					if (humidity >= 10)
-						LCD_Font(105, 40, weatherPrintH, &DejaVu_Sans_36, 1, CYAN);
-					else LCD_Font(131, 40, weatherPrintH, &DejaVu_Sans_36, 1, CYAN);
+						LCD_Font(205, 240, weatherPrintH, &DejaVu_Sans_36, 1, CYAN);
+					else LCD_Font(231, 240, weatherPrintH, &DejaVu_Sans_36, 1, CYAN);
 
 					humidityLast = humidity;
 				}
 	
-	
-
 	pressure = (uint16_t)BME280_getPressure();
 	if (pressure > 300 && pressure < 1100) {
 
@@ -394,53 +412,10 @@ void bme280(void) {
 
 			char s[10];
 
-			if (barographAverage >= 1000) sprintf(s, "Mid:%02d|", barographAverage);
-			else sprintf(s, "Mid:0%02d|", barographAverage);
-			LCD_Font(1, 474, s, &DejaVu_Sans_18, 1, GRAY);
-
-			if (barographMinimum >= 1000) sprintf(s, "|Min:%02d|", barographMinimum);
-			else sprintf(s, "|Min:0%02d|", barographMinimum);
-			LCD_Font(91, 474, s, &DejaVu_Sans_18, 1, GRAY);
-
-			if (barographMaximum >= 1000) sprintf(s, "|Max:%02d|", barographMaximum);
-			else sprintf(s, "|Max:0%02d|", barographMaximum);
-			LCD_Font(188, 474, s, &DejaVu_Sans_18, 1, GRAY);
-
-			if (pressure >= 1000) sprintf(s, "|Now:%02d", pressure);
+			if (pressure >= 1000) sprintf(s, "%02d HPa", pressure);
 			else sprintf(s, "|Now:0%02d", pressure);
-			LCD_Font(290, 474, s, &DejaVu_Sans_18, 1, GRAY);
+			LCD_Font(290, 200, s, &DejaVu_Sans_36, 1, GRAY);
 
-			if (barographHourly[365] != barographHourly[366])
-			{
-//				LCD_Triangle_Fill(370, 302, 398, 302, 384, 316, BLACK);
-//				LCD_Triangle_Fill(370, 262, 398, 262, 384, 272, BLACK);
-//				LCD_Triangle_Fill(370, 222, 398, 222, 384, 236, BLACK);
-//				LCD_Triangle_Fill(370, 316, 398, 316, 384, 302, BLACK);
-//				LCD_Triangle_Fill(370, 276, 398, 276, 384, 262, BLACK);
-//				LCD_Triangle_Fill(370, 236, 398, 236, 384, 222, BLACK);
-//				if (barographHourly[365] > barographHourly[366])     LCD_Triangle_Fill(370, 302, 398, 302, 384, 316, BLUE);
-//				if (barographHourly[365] > barographHourly[366] + 1) LCD_Triangle_Fill(370, 262, 398, 262, 384, 272, BLUE);
-//				if (barographHourly[365] > barographHourly[366] + 2) LCD_Triangle_Fill(370, 222, 398, 222, 384, 236, BLUE);
-//				if (barographHourly[365] < barographHourly[366])     LCD_Triangle_Fill(370, 316, 398, 316, 384, 302, RED);
-//				if (barographHourly[365] < barographHourly[366] - 1) LCD_Triangle_Fill(370, 276, 398, 276, 384, 262, RED);
-//				if (barographHourly[365] < barographHourly[366] - 2) LCD_Triangle_Fill(370, 236, 398, 236, 384, 222, RED);
-			}
-
-			if (barographDaily[365] != barographDaily[366])
-			{
-//				LCD_Triangle_Fill(370, 430, 398, 430, 384, 444, BLACK);
-//				LCD_Triangle_Fill(370, 390, 398, 390, 384, 404, BLACK);
-//				LCD_Triangle_Fill(370, 350, 398, 350, 384, 364, BLACK);
-//				LCD_Triangle_Fill(370, 444, 398, 444, 384, 430, BLACK);
-//				LCD_Triangle_Fill(370, 404, 398, 404, 384, 390, BLACK);
-//				LCD_Triangle_Fill(370, 364, 398, 364, 384, 350, BLACK);
-//				if (barographDaily[365] > barographDaily[366] + 5)      LCD_Triangle_Fill(370, 430, 398, 430, 384, 444, BLUE);
-//				if (barographDaily[365] > barographDaily[366] + 10) 	LCD_Triangle_Fill(370, 390, 398, 390, 384, 404, BLUE);
-//				if (barographDaily[365] > barographDaily[366] + 15) 	LCD_Triangle_Fill(370, 350, 398, 350, 384, 364, BLUE);
-//				if (barographDaily[365] < barographDaily[366] - 5)     	LCD_Triangle_Fill(370, 444, 398, 444, 384, 430, RED);
-//				if (barographDaily[365] < barographDaily[366] - 10) 	LCD_Triangle_Fill(370, 404, 398, 404, 384, 390, RED);
-//				if (barographDaily[365] < barographDaily[366] - 15) 	LCD_Triangle_Fill(370, 364, 398, 364, 384, 350, RED);
-			}
 			barographViewed = 1;
 		}
 	}
@@ -597,8 +572,8 @@ int main(void)
   MX_SPI2_Init();
   /* USER CODE BEGIN 2 */
 	LCD_Init();
-	BME280_Init();
 	DS3231_Update();
+	BME280_Init();
 
 	if (clearEEPROM) {
 		for (uint16_t i = 0; i < 4096; i++) {
