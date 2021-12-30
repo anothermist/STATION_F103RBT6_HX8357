@@ -31,6 +31,26 @@
 #include "ds3231.h"
 #include "at24xx.h"
 
+#include "fonts/Arimo_Regular/008_Arimo_Regular.h"
+#include "fonts/Arimo_Regular/009_Arimo_Regular.h"
+#include "fonts/Arimo_Regular/010_Arimo_Regular.h"
+#include "fonts/Arimo_Regular/011_Arimo_Regular.h"
+#include "fonts/Arimo_Regular/012_Arimo_Regular.h"
+#include "fonts/Arimo_Regular/014_Arimo_Regular.h"
+#include "fonts/Arimo_Regular/016_Arimo_Regular.h"
+#include "fonts/Arimo_Regular/018_Arimo_Regular.h"
+#include "fonts/Arimo_Regular/020_Arimo_Regular.h"
+#include "fonts/Arimo_Regular/022_Arimo_Regular.h"
+#include "fonts/Arimo_Regular/024_Arimo_Regular.h"
+#include "fonts/Arimo_Regular/026_Arimo_Regular.h"
+#include "fonts/Arimo_Regular/028_Arimo_Regular.h"
+#include "fonts/Arimo_Regular/036_Arimo_Regular.h"
+#include "fonts/Arimo_Regular/048_Arimo_Regular.h"
+#include "fonts/Arimo_Regular/072_Arimo_Regular.h"
+#include "fonts/Arimo_Regular/096_Arimo_Regular.h"
+#include "fonts/Arimo_Regular/112_Arimo_Regular.h"
+#include "fonts/Arimo_Regular/128_Arimo_Regular.h"
+
 #include "fonts/DejaVu_Sans/008_DejaVu_Sans.h"
 #include "fonts/DejaVu_Sans/009_DejaVu_Sans.h"
 #include "fonts/DejaVu_Sans/010_DejaVu_Sans.h"
@@ -50,6 +70,86 @@
 #include "fonts/DejaVu_Sans/096_DejaVu_Sans.h"
 #include "fonts/DejaVu_Sans/112_DejaVu_Sans.h"
 #include "fonts/DejaVu_Sans/128_DejaVu_Sans.h"
+
+#include "fonts/DejaVu_Sans_Bold/008_DejaVu_Sans_Bold.h"
+#include "fonts/DejaVu_Sans_Bold/009_DejaVu_Sans_Bold.h"
+#include "fonts/DejaVu_Sans_Bold/010_DejaVu_Sans_Bold.h"
+#include "fonts/DejaVu_Sans_Bold/011_DejaVu_Sans_Bold.h"
+#include "fonts/DejaVu_Sans_Bold/012_DejaVu_Sans_Bold.h"
+#include "fonts/DejaVu_Sans_Bold/014_DejaVu_Sans_Bold.h"
+#include "fonts/DejaVu_Sans_Bold/016_DejaVu_Sans_Bold.h"
+#include "fonts/DejaVu_Sans_Bold/018_DejaVu_Sans_Bold.h"
+#include "fonts/DejaVu_Sans_Bold/020_DejaVu_Sans_Bold.h"
+#include "fonts/DejaVu_Sans_Bold/022_DejaVu_Sans_Bold.h"
+#include "fonts/DejaVu_Sans_Bold/024_DejaVu_Sans_Bold.h"
+#include "fonts/DejaVu_Sans_Bold/026_DejaVu_Sans_Bold.h"
+#include "fonts/DejaVu_Sans_Bold/028_DejaVu_Sans_Bold.h"
+#include "fonts/DejaVu_Sans_Bold/036_DejaVu_Sans_Bold.h"
+#include "fonts/DejaVu_Sans_Bold/048_DejaVu_Sans_Bold.h"
+#include "fonts/DejaVu_Sans_Bold/072_DejaVu_Sans_Bold.h"
+#include "fonts/DejaVu_Sans_Bold/096_DejaVu_Sans_Bold.h"
+#include "fonts/DejaVu_Sans_Bold/112_DejaVu_Sans_Bold.h"
+//#include "fonts/DejaVu_Sans_Bold/128_DejaVu_Sans_Bold.h"
+
+#include "fonts/DejaVu_Sans_Mono/008_DejaVu_Sans_Mono.h"
+#include "fonts/DejaVu_Sans_Mono/009_DejaVu_Sans_Mono.h"
+#include "fonts/DejaVu_Sans_Mono/010_DejaVu_Sans_Mono.h"
+#include "fonts/DejaVu_Sans_Mono/011_DejaVu_Sans_Mono.h"
+#include "fonts/DejaVu_Sans_Mono/012_DejaVu_Sans_Mono.h"
+#include "fonts/DejaVu_Sans_Mono/014_DejaVu_Sans_Mono.h"
+#include "fonts/DejaVu_Sans_Mono/016_DejaVu_Sans_Mono.h"
+#include "fonts/DejaVu_Sans_Mono/018_DejaVu_Sans_Mono.h"
+#include "fonts/DejaVu_Sans_Mono/020_DejaVu_Sans_Mono.h"
+#include "fonts/DejaVu_Sans_Mono/022_DejaVu_Sans_Mono.h"
+#include "fonts/DejaVu_Sans_Mono/024_DejaVu_Sans_Mono.h"
+#include "fonts/DejaVu_Sans_Mono/026_DejaVu_Sans_Mono.h"
+#include "fonts/DejaVu_Sans_Mono/028_DejaVu_Sans_Mono.h"
+#include "fonts/DejaVu_Sans_Mono/036_DejaVu_Sans_Mono.h"
+#include "fonts/DejaVu_Sans_Mono/048_DejaVu_Sans_Mono.h"
+#include "fonts/DejaVu_Sans_Mono/072_DejaVu_Sans_Mono.h"
+#include "fonts/DejaVu_Sans_Mono/096_DejaVu_Sans_Mono.h"
+#include "fonts/DejaVu_Sans_Mono/112_DejaVu_Sans_Mono.h"
+#include "fonts/DejaVu_Sans_Mono/128_DejaVu_Sans_Mono.h"
+
+#include "fonts/Open_Sans_Regular/008_Open_Sans_Regular.h"
+#include "fonts/Open_Sans_Regular/009_Open_Sans_Regular.h"
+#include "fonts/Open_Sans_Regular/010_Open_Sans_Regular.h"
+#include "fonts/Open_Sans_Regular/011_Open_Sans_Regular.h"
+#include "fonts/Open_Sans_Regular/012_Open_Sans_Regular.h"
+#include "fonts/Open_Sans_Regular/014_Open_Sans_Regular.h"
+#include "fonts/Open_Sans_Regular/016_Open_Sans_Regular.h"
+#include "fonts/Open_Sans_Regular/018_Open_Sans_Regular.h"
+#include "fonts/Open_Sans_Regular/020_Open_Sans_Regular.h"
+#include "fonts/Open_Sans_Regular/022_Open_Sans_Regular.h"
+#include "fonts/Open_Sans_Regular/024_Open_Sans_Regular.h"
+#include "fonts/Open_Sans_Regular/026_Open_Sans_Regular.h"
+#include "fonts/Open_Sans_Regular/028_Open_Sans_Regular.h"
+#include "fonts/Open_Sans_Regular/036_Open_Sans_Regular.h"
+#include "fonts/Open_Sans_Regular/048_Open_Sans_Regular.h"
+#include "fonts/Open_Sans_Regular/072_Open_Sans_Regular.h"
+#include "fonts/Open_Sans_Regular/096_Open_Sans_Regular.h"
+#include "fonts/Open_Sans_Regular/112_Open_Sans_Regular.h"
+#include "fonts/Open_Sans_Regular/128_Open_Sans_Regular.h"
+
+#include "fonts/Open_Sans_Bold/008_Open_Sans_Bold.h"
+#include "fonts/Open_Sans_Bold/009_Open_Sans_Bold.h"
+#include "fonts/Open_Sans_Bold/010_Open_Sans_Bold.h"
+#include "fonts/Open_Sans_Bold/011_Open_Sans_Bold.h"
+#include "fonts/Open_Sans_Bold/012_Open_Sans_Bold.h"
+#include "fonts/Open_Sans_Bold/014_Open_Sans_Bold.h"
+#include "fonts/Open_Sans_Bold/016_Open_Sans_Bold.h"
+#include "fonts/Open_Sans_Bold/018_Open_Sans_Bold.h"
+#include "fonts/Open_Sans_Bold/020_Open_Sans_Bold.h"
+#include "fonts/Open_Sans_Bold/022_Open_Sans_Bold.h"
+#include "fonts/Open_Sans_Bold/024_Open_Sans_Bold.h"
+#include "fonts/Open_Sans_Bold/026_Open_Sans_Bold.h"
+#include "fonts/Open_Sans_Bold/028_Open_Sans_Bold.h"
+#include "fonts/Open_Sans_Bold/036_Open_Sans_Bold.h"
+#include "fonts/Open_Sans_Bold/048_Open_Sans_Bold.h"
+#include "fonts/Open_Sans_Bold/072_Open_Sans_Bold.h"
+#include "fonts/Open_Sans_Bold/096_Open_Sans_Bold.h"
+#include "fonts/Open_Sans_Bold/112_Open_Sans_Bold.h"
+#include "fonts/Open_Sans_Bold/128_Open_Sans_Bold.h"
 
 /* USER CODE END Includes */
 
@@ -78,11 +178,10 @@ UART_HandleTypeDef huart1;
 uint8_t  touchIRQ = 0, rtcSet = 1, clearEEPROM = 0, barographViewed = 0, sound = 1, printAlarm = 0, alarm1 = 0;
 uint8_t rtcSec, rtcMin, rtcHrs, rtcDay, rtcDate, rtcMonth, rtcYear,
 rtcSecA1, rtcMinA1, rtcHrsA1, rtcDayA1, rtcDateA1, rtcMinA2, rtcHrsA2, rtcDayA2, rtcDateA2;
-uint16_t touchX, touchY;
 uint8_t rtcSecLast = 61, rtcMinLast = 61, rtcHrsLast = 25, rtcDayLast, rtcDateLast, rtcMonthLast, rtcYearLast;
 uint16_t pressure, pressureLast;
 double temperatureLast, humidityLast, temperature, humidity,
-temperatureRemote, temperatureRemoteLast, humidityRemote, humidityRemoteLast, rtcMoon, rtcMoonLast;
+temperatureRemote, temperatureRemoteLast, humidityRemote, humidityRemoteLast;
 uint64_t startHistory;
 
 uint16_t barographHourly[367] = { 25 };
@@ -169,12 +268,7 @@ void bme280(void) {
 						sprintf(weatherPrintT, "%2d", (int8_t)temperature);
 						LCD_Font(205, 40, weatherPrintT, &DejaVu_Sans_36, 1, ORANGE);
 					}
-
-//					for (double i = 0.0; i < 400; i++) {
-//						if (temperature > i / 10) LCD_Line(747, 470 - i, 763, 470 - i, 1, GRAY);
-//						else LCD_Line(747, 470 - i, 763, 470 - i, 1, 0x101010);
-//					}
-
+					
 					temperatureLast = temperature;
 				}
 
@@ -193,11 +287,6 @@ void bme280(void) {
 						LCD_Font(105, 40, weatherPrintH, &DejaVu_Sans_36, 1, CYAN);
 					else LCD_Font(131, 40, weatherPrintH, &DejaVu_Sans_36, 1, CYAN);
 
-//					for (double i = 0.0; i < 400; i++) {
-//						if (humidity > i / 4) LCD_Line(647, 470 - i, 663, 470 - i, 1, GRAY);
-//						else LCD_Line(647, 470 - i, 663, 470 - i, 1, 0x101010);
-//					}
-
 					humidityLast = humidity;
 				}
 	
@@ -207,8 +296,8 @@ void bme280(void) {
 	if (pressure > 300 && pressure < 1100) {
 
 		for (uint16_t i = 0; i < 367; i++) {
-//			barographHourly[i] = byteS(AT24XX_Read(i * 2 + 1000), AT24XX_Read(i * 2 + 1 + 1000));
-//			barographDaily[i] = byteS(AT24XX_Read(i * 2 + 2000), AT24XX_Read(i * 2 + 1 + 2000));
+			barographHourly[i] = byteS(AT24XX_Read(i * 2 + 1000), AT24XX_Read(i * 2 + 1 + 1000));
+			barographDaily[i] = byteS(AT24XX_Read(i * 2 + 2000), AT24XX_Read(i * 2 + 1 + 2000));
 		}
 
 		if (barographHourly[0] != rtcHrs && pressure > 300 && pressure < 1100) {
@@ -219,8 +308,8 @@ void bme280(void) {
 			barographHourly[366] = (uint16_t)pressure;
 
 			for (uint16_t i = 0; i < 367; i++) {
-//				AT24XX_Update(i * 2 + 1000, byteL(barographHourly[i]));
-//				AT24XX_Update(i * 2 + 1 + 1000, byteH(barographHourly[i]));
+				AT24XX_Update(i * 2 + 1000, byteL(barographHourly[i]));
+				AT24XX_Update(i * 2 + 1 + 1000, byteH(barographHourly[i]));
 			}
 
 			if (barographDaily[0] != rtcDate) {
@@ -242,8 +331,8 @@ void bme280(void) {
 				barographDaily[366] = barographAverageLast24Hours;
 
 				for (uint16_t i = 0; i < 367; i++) {
-//					AT24XX_Update(i * 2 + 2000, byteL(barographDaily[i]));
-//					AT24XX_Update(i * 2 + 1 + 2000, byteH(barographDaily[i]));
+					AT24XX_Update(i * 2 + 2000, byteL(barographDaily[i]));
+					AT24XX_Update(i * 2 + 1 + 2000, byteH(barographDaily[i]));
 				}
 			}
 			barographViewed = 0;
@@ -282,13 +371,13 @@ void bme280(void) {
 
 //			LCD_Rect(1, 201, 368, 128, 1, BLUE);
 
-//			for (uint16_t i = 0; i < 366; i++) {
-//				int16_t val = 0;
-//				val = barographHourly[i + 1];
-//				if (val < barographMaximum - 127) val = barographMaximum - 127;
+			for (uint16_t i = 0; i < 366; i++) {
+				int16_t val = 0;
+				val = barographHourly[i + 1];
+				if (val < barographMaximum - 127) val = barographMaximum - 127;
 //				LCD_Line(2 + i, 328, 2 + i, 202, 1, BLACK);
 //				LCD_Line(2 + i, 328, 2 + i, 202 + (barographMaximum - val), 1, RGB(255 - ((barographMaximum - val) * 2), 0, 255 - (255 - ((barographMaximum - val) * 2))));
-//			}
+			}
 
 //			LCD_Rect(1, 329, 368, 128, 1, BLUE);
 
@@ -509,6 +598,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
 	LCD_Init();
 	BME280_Init();
+	DS3231_Update();
 
 	if (clearEEPROM) {
 		for (uint16_t i = 0; i < 4096; i++) {
@@ -539,64 +629,6 @@ int main(void)
 //			uartDecode();
 		}
 
-//		if ((HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13) == GPIO_PIN_SET)) {
-//			uint16_t touchXr = getX();
-//			uint16_t touchYr = getY();
-
-//			if (touchXr && touchYr && touchXr != 0x2F5 && touchYr != 0x0DB) {
-//				touchX = touchXr;
-//				touchY = touchYr;
-
-//				LCD_Rect_Fill(touchX, touchY, 2, 2, WHITE);
-
-//				if (touchX > 0 && touchX < 32 && touchY > 170 && touchY < 200)
-//				{
-//					LCD_Rect_Round(2, 170, 30, 30, 2, 1, RED);
-//					LCD_Font(8, 179, "_", &DejaVu_Sans_36, 1, RED);
-//					if (rtcHrsA1 > 0) rtcHrsA1 = rtcHrsA1 - 1; else rtcHrsA1 = 23;
-//					DS3231_setAlarm1Hour(rtcHrsA1);
-//					printAlarm = 0;
-//					sound = 1;
-//				}
-//				else if (touchX > 32 && touchX < 64 && touchY > 170 && touchY < 200)
-//				{
-//					LCD_Rect_Round(34, 170, 30, 30, 2, 1, RED);
-//					LCD_Font(34, 197, "+", &DejaVu_Sans_36, 1, RED);
-//					if (rtcHrsA1 < 23) rtcHrsA1 = rtcHrsA1 + 1; else rtcHrsA1 = 0;
-//					DS3231_setAlarm1Hour(rtcHrsA1);
-//					printAlarm = 0;
-//					sound = 1;
-//				}
-//				else if (touchX > 182 && touchX < 212 && touchY > 170 && touchY < 200)
-//				{
-//					if (rtcMinA1 > 0) rtcMinA1 = rtcMinA1 - 5; else rtcMinA1 = 55;
-//					DS3231_setAlarm1Min(rtcMinA1);
-//					LCD_Rect_Round(182, 170, 30, 30, 2, 1, RED);
-//					LCD_Font(188, 179, "_", &DejaVu_Sans_36, 1, RED);
-//					printAlarm = 0;
-//					sound = 1;
-//				}
-//				else if (touchX > 214 && touchX < 244 && touchY > 170 && touchY < 200)
-//				{
-//					if (rtcMinA1 < 55) rtcMinA1 = rtcMinA1 + 5; else rtcMinA1 = 0;
-//					DS3231_setAlarm1Min(rtcMinA1);
-//					LCD_Rect_Round(214, 170, 30, 30, 2, 1, RED);
-//					LCD_Font(214, 197, "+", &DejaVu_Sans_36, 1, RED);
-//					printAlarm = 0;
-//					sound = 1;
-//				}
-//				else if (touchX > 260 && touchX < 390 && touchY > 170 && touchY < 200)
-//				{
-//					if (AT24XX_Read(4000)) AT24XX_Update(4000, 0);
-//					else AT24XX_Update(4000, 1);
-//					printAlarm = 0;
-//					sound = 1;
-//				}
-
-//			}
-//		}
-
-
 		DS3231_Update();
 		rtcSec = DS3231_getSec();
 		rtcMin = DS3231_getMin();
@@ -619,24 +651,20 @@ int main(void)
 
 		if (rtcSecLast != rtcSec) { 		
 				
-	//		bme280();
+			bme280();
 
-			static const uint32_t hues[24] = {
-				HUE_01, HUE_02, HUE_03, HUE_04, HUE_05, HUE_06, HUE_07, HUE_08, HUE_09, HUE_10, HUE_11, HUE_12,
-			HUE_13, HUE_14, HUE_15, HUE_16, HUE_17, HUE_18, HUE_19, HUE_20, HUE_21, HUE_22, HUE_23, HUE_24 };
-
-			LCD_Circle(172, 35, 8, 0, 1, hues[rtcHrs]);
-			LCD_Circle(172, 75, 8, 0, 1, hues[rtcHrs]);
+			LCD_Circle(172, 35, 8, 0, 1, HUE_14);
+			LCD_Circle(172, 75, 8, 0, 1, HUE_14);
 
 			if (rtcSec % 2 != 0) {
-				LCD_Circle(172, 35, 7, 1, 1, hues[rtcHrs]);
-				LCD_Circle(172, 75, 7, 1, 1, hues[rtcHrs]);
-				HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);	
+				LCD_Circle(172, 35, 7, 1, 1, HUE_14);
+				LCD_Circle(172, 75, 7, 1, 1, HUE_14);
+				HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);	
 			}
 			else {
 				LCD_Circle(172, 35, 7, 1, 1, BLACK);
 				LCD_Circle(172, 75, 7, 1, 1, BLACK);
-				HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
+				HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
 			}
 
 			if (rtcMinLast != rtcMin) {
@@ -644,15 +672,15 @@ int main(void)
 				sprintf(clockPrint, "%02d", rtcMinLast);
 				LCD_Font(180, 100, clockPrint, &DejaVu_Sans_128, 1, BLACK);
 				sprintf(clockPrint, "%02d", rtcMin);
-				LCD_Font(180, 100, clockPrint, &DejaVu_Sans_128, 1, hues[rtcHrs]);
+				LCD_Font(180, 100, clockPrint, &DejaVu_Sans_128, 1, HUE_14);
 
 				if (rtcHrsLast != rtcHrs) {
 					sprintf(clockPrint, "%02d", rtcHrsLast);
 					LCD_Font(0, 100, clockPrint, &DejaVu_Sans_128, 1, BLACK);
 					sprintf(clockPrint, "%02d", rtcHrs);
-					LCD_Font(0, 100, clockPrint, &DejaVu_Sans_128, 1, hues[rtcHrs]);
+					LCD_Font(0, 100, clockPrint, &DejaVu_Sans_128, 1, HUE_14);
 
-/*					if (rtcDayLast != rtcDay) {
+					if (rtcDayLast != rtcDay) {
 
 						static const char* days[7] = { "MONDAY", "TUESDAY", "WEDNESDAY",
 							"THURSTDAY", "FRIDAY", "SATURDAY", "SUNDAY" };
@@ -672,17 +700,10 @@ int main(void)
 						sprintf(clockPrint, "%02d-%02d-%02d", rtcDate, rtcMonth, rtcYear);
 						LCD_Font(230, 168, clockPrint, &DejaVu_Sans_36, 1, GRAY);
 
-//						if (rtcMoonLast < 10) sprintf(clockPrint, "M:  %01d", (uint16_t)rtcMoonLast);
-//						else sprintf(clockPrint, "M: %02d", (uint16_t)rtcMoonLast);
-//						LCD_Font(297, 140, clockPrint, &DejaVu_Sans_36, 1, BLACK);
-//						rtcMoon = DS3231_getMoonDay();
-//						if (rtcMoon < 10) sprintf(clockPrint, "M:  %01d", (uint16_t)rtcMoon);
-//						else sprintf(clockPrint, "M: %02d", (uint16_t)rtcMoon);
-//						LCD_Font(297, 140, clockPrint, &DejaVu_Sans_36, 1, GRAY);
-//						rtcMoonLast = rtcMoon;
+
 
 						rtcDayLast = rtcDay;
-					} */
+					} 
 					rtcDateLast = rtcDate;
 					rtcMonthLast = rtcMonth;
 					rtcYearLast = rtcYear;

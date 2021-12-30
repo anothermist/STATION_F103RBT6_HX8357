@@ -449,6 +449,8 @@ void LCD_Font(uint16_t x, uint16_t y, const char *text, const GFXfont *p_font, u
 
 void LCD_Init(void)
 {	
+	LCD_RST_R
+	HAL_Delay(200);
 	LCD_RST_S
 	
   LCD_Send_Cmd(HX8357_SLPOUT);
@@ -459,9 +461,6 @@ void LCD_Init(void)
   LCD_Send_Cmd(HX8357_DISPON);
 	
 	LCD_Orientation(DEFAULT_ORIENTATION);
-//	if (DEFAULT_ORIENTATION == 1 || DEFAULT_ORIENTATION == 3) 
-//	LCD_Rect_Fill(0, 0, 320, 480, BLACK);
-//	else LCD_Rect_Fill(0, 0, 480, 320, BLACK);
 }
 
 void LCD_Orientation(uint8_t orientation)
