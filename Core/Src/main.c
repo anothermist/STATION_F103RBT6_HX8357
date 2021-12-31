@@ -255,61 +255,76 @@ uint16_t byteS(uint8_t byteL, uint8_t byteH) {
 }
 
 void bme280(void) {
-				temperature = BME280_getTemperature(-1);
-				humidity = BME280_getHumidity(-1);
-				pressure = (uint16_t)BME280_getPressure();
+	temperature = BME280_getTemperature(-1);
+	humidity = BME280_getHumidity(-1);
+	pressure = (uint16_t)BME280_getPressure();
 
-				if (temperature != temperatureLast && temperature >= -40 && temperature <= 40) {
+	if (temperature != temperatureLast && temperature >= -40 && temperature <= 40) {
 
-					char weatherPrintT[4];
+		char weatherPrintT[7];
 
-					if (temperatureLast >= 10 || (temperatureLast < 0 && temperatureLast > -10)) {
-						sprintf(weatherPrintT, "%.1f", temperatureLast);
-						LCD_Font(105, 240, weatherPrintT, &DejaVu_Sans_36, 1, BLACK);
-					}
-					else if (temperatureLast < 10 && temperatureLast > 0) {
-						sprintf(weatherPrintT, "%.1f", temperatureLast);
-						LCD_Font(131, 240, weatherPrintT, &DejaVu_Sans_36, 1, BLACK);
-					}
-					else if (temperatureLast <= -10) {
-						sprintf(weatherPrintT, "%2d", (int8_t)temperatureLast);
-						LCD_Font(105, 240, weatherPrintT, &DejaVu_Sans_36, 1, BLACK);
-					}
+		if (temperatureLast >= 10 || (temperatureLast < 0 && temperatureLast > -10)) {
+			sprintf(weatherPrintT, "%.1f 'C", temperatureLast);
+			LCD_Font(0, 200, weatherPrintT, &DejaVu_Sans_36, 1, BLACK);
+		}
+		else if (temperatureLast < 10 && temperatureLast > 0) {
+			sprintf(weatherPrintT, "%.1f 'C", temperatureLast);
+			LCD_Font(26, 200, weatherPrintT, &DejaVu_Sans_36, 1, BLACK);
+		}
+		else if (temperatureLast <= -10) {
+			sprintf(weatherPrintT, "%2d", (int8_t)temperatureLast);
+			LCD_Font(0, 200, weatherPrintT, &DejaVu_Sans_36, 1, BLACK);
+		}
 
-					if (temperature >= 10 || (temperature < 0 && temperature > -10)) {
-						sprintf(weatherPrintT, "%.1f", temperature);
-						LCD_Font(105, 240, weatherPrintT, &DejaVu_Sans_36, 1, ORANGE);
-					}
-					else if (temperature < 10 && temperature > 0) {
-						sprintf(weatherPrintT, "%.1f", temperature);
-						LCD_Font(131, 240, weatherPrintT, &DejaVu_Sans_36, 1, ORANGE);
-					}
-					else if (temperature <= -10) {
-						sprintf(weatherPrintT, "%2d", (int8_t)temperature);
-						LCD_Font(105, 240, weatherPrintT, &DejaVu_Sans_36, 1, ORANGE);
-					}
+		if (temperature >= 10 || (temperature < 0 && temperature > -10)) {
+			sprintf(weatherPrintT, "%.1f 'C", temperature);
+			LCD_Font(0, 200, weatherPrintT, &DejaVu_Sans_36, 1, ORANGE);
+		}
+		else if (temperature < 10 && temperature > 0) {
+			sprintf(weatherPrintT, "%.1f 'C", temperature);
+			LCD_Font(26, 200, weatherPrintT, &DejaVu_Sans_36, 1, ORANGE);
+		}
+		else if (temperature <= -10) {
+			sprintf(weatherPrintT, "%2d 'C", (int8_t)temperature);
+			LCD_Font(0, 200, weatherPrintT, &DejaVu_Sans_36, 1, ORANGE);
+		}
 
-					temperatureLast = temperature;
-				}
+		temperatureLast = temperature;
+	}
 
-				char weatherPrintH[4];
+	if (humidity != humidityLast && humidity >= 0 && humidity < 100) {
 
-				if (humidity != humidityLast && humidity >= 0 && humidity < 100) {
+		char weatherPrintH[7];
 
-					sprintf(weatherPrintH, "%.1f", humidityLast);
-					if (humidityLast >= 10)
-						LCD_Font(205, 240, weatherPrintH, &DejaVu_Sans_36, 1, BLACK);
-					else LCD_Font(231, 240, weatherPrintH, &DejaVu_Sans_36, 1, BLACK);
+		sprintf(weatherPrintH, "%.1f %%H", humidityLast);
+		if (humidityLast >= 10)
+			LCD_Font(140, 200, weatherPrintH, &DejaVu_Sans_36, 1, BLACK);
+		else LCD_Font(166, 200, weatherPrintH, &DejaVu_Sans_36, 1, BLACK);
 
 
-					sprintf(weatherPrintH, "%.1f", humidity);
-					if (humidity >= 10)
-						LCD_Font(205, 240, weatherPrintH, &DejaVu_Sans_36, 1, CYAN);
-					else LCD_Font(231, 240, weatherPrintH, &DejaVu_Sans_36, 1, CYAN);
+		sprintf(weatherPrintH, "%.1f %%H", humidity);
+		if (humidity >= 10)
+			LCD_Font(140, 200, weatherPrintH, &DejaVu_Sans_36, 1, CYAN);
+		else LCD_Font(166, 200, weatherPrintH, &DejaVu_Sans_36, 1, CYAN);
 
-					humidityLast = humidity;
-				}
-	
+		humidityLast = humidity;
+	}
+
+	if (pressureLast != pressure) {
+
+		char weatherPrintP[8];
+
+		if (pressureLast >= 1000) sprintf(weatherPrintP, "%02d HP", pressureLast);
+		else sprintf(weatherPrintP, " %02d HPa", pressureLast);
+		LCD_Font(310, 200, weatherPrintP, &DejaVu_Sans_36, 1, BLACK);
+
+		if (pressure >= 1000) sprintf(weatherPrintP, "%02d HP", pressure);
+		else sprintf(weatherPrintP, " %02d HP", pressure);
+		LCD_Font(310, 200, weatherPrintP, &DejaVu_Sans_36, 1, GRAY);
+
+		pressureLast = pressure;
+	}
+
 	pressure = (uint16_t)BME280_getPressure();
 	if (pressure > 300 && pressure < 1100) {
 
@@ -387,35 +402,26 @@ void bme280(void) {
 
 			barographDaily[0] = rtcDate;
 
-//			LCD_Rect(1, 201, 368, 128, 1, BLUE);
+			//			LCD_Rect(1, 201, 368, 128, 1, BLUE);
 
 			for (uint16_t i = 0; i < 366; i++) {
 				int16_t val = 0;
 				val = barographHourly[i + 1];
 				if (val < barographMaximum - 127) val = barographMaximum - 127;
-//				LCD_Line(2 + i, 328, 2 + i, 202, 1, BLACK);
-//				LCD_Line(2 + i, 328, 2 + i, 202 + (barographMaximum - val), 1, RGB(255 - ((barographMaximum - val) * 2), 0, 255 - (255 - ((barographMaximum - val) * 2))));
+				//				LCD_Line(2 + i, 328, 2 + i, 202, 1, BLACK);
+				//				LCD_Line(2 + i, 328, 2 + i, 202 + (barographMaximum - val), 1, RGB(255 - ((barographMaximum - val) * 2), 0, 255 - (255 - ((barographMaximum - val) * 2))));
 			}
 
-//			LCD_Rect(1, 329, 368, 128, 1, BLUE);
+			//			LCD_Rect(1, 329, 368, 128, 1, BLUE);
 
 			for (uint16_t i = 0; i < 366; i++) {
 				int16_t val = 0;
 				val = barographDaily[i + 1];
 				if (val < barographMaximum - 127) val = barographMaximum - 127;
 
-//				LCD_Line(2 + i, 456, 2 + i, 330, 1, BLACK);
-//				LCD_Line(2 + i, 456, 2 + i, 330 + (barographMaximum - val), 1, RGB(255 - ((barographMaximum - val) * 2), 0, 255 - (255 - ((barographMaximum - val) * 2))));
+				//				LCD_Line(2 + i, 456, 2 + i, 330, 1, BLACK);
+				//				LCD_Line(2 + i, 456, 2 + i, 330 + (barographMaximum - val), 1, RGB(255 - ((barographMaximum - val) * 2), 0, 255 - (255 - ((barographMaximum - val) * 2))));
 			}
-
-//			LCD_Rect_Fill(1, 460, 397, 18, BLACK);
-
-			char s[10];
-
-			if (pressure >= 1000) sprintf(s, "%02d HPa", pressure);
-			else sprintf(s, "|Now:0%02d", pressure);
-			LCD_Font(290, 200, s, &DejaVu_Sans_36, 1, GRAY);
-
 			barographViewed = 1;
 		}
 	}
@@ -675,8 +681,6 @@ int main(void)
 						sprintf(clockPrint, "%02d-%02d-%02d", rtcDate, rtcMonth, rtcYear);
 						LCD_Font(230, 168, clockPrint, &DejaVu_Sans_36, 1, GRAY);
 
-
-
 						rtcDayLast = rtcDay;
 					} 
 					rtcDateLast = rtcDate;
@@ -755,7 +759,7 @@ static void MX_I2C1_Init(void)
 
   /* USER CODE END I2C1_Init 1 */
   hi2c1.Instance = I2C1;
-  hi2c1.Init.ClockSpeed = 100000;
+  hi2c1.Init.ClockSpeed = 400000;
   hi2c1.Init.DutyCycle = I2C_DUTYCYCLE_2;
   hi2c1.Init.OwnAddress1 = 0;
   hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
@@ -871,15 +875,20 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, LCD_RS_Pin|LCD_WR_Pin|LCD_CS_Pin|LCD_RST_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : LED_Pin LCD_DB_08_Pin LCD_DB_09_Pin LCD_DB_10_Pin
-                           LCD_DB_11_Pin LCD_DB_12_Pin LCD_DB_13_Pin LCD_DB_01_Pin
-                           LCD_DB_00_Pin */
-  GPIO_InitStruct.Pin = LED_Pin|LCD_DB_08_Pin|LCD_DB_09_Pin|LCD_DB_10_Pin
-                          |LCD_DB_11_Pin|LCD_DB_12_Pin|LCD_DB_13_Pin|LCD_DB_01_Pin
-                          |LCD_DB_00_Pin;
+  /*Configure GPIO pin : LED_Pin */
+  GPIO_InitStruct.Pin = LED_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(LED_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : LCD_DB_08_Pin LCD_DB_09_Pin LCD_DB_10_Pin LCD_DB_11_Pin
+                           LCD_DB_12_Pin LCD_DB_13_Pin LCD_DB_01_Pin LCD_DB_00_Pin */
+  GPIO_InitStruct.Pin = LCD_DB_08_Pin|LCD_DB_09_Pin|LCD_DB_10_Pin|LCD_DB_11_Pin
+                          |LCD_DB_12_Pin|LCD_DB_13_Pin|LCD_DB_01_Pin|LCD_DB_00_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
   /*Configure GPIO pins : LCD_DB_14_Pin LCD_DB_15_Pin LCD_DB_07_Pin LCD_DB_06_Pin
@@ -888,14 +897,14 @@ static void MX_GPIO_Init(void)
                           |LCD_DB_05_Pin|LCD_DB_04_Pin|LCD_DB_03_Pin|LCD_DB_02_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pins : LCD_RS_Pin LCD_WR_Pin LCD_CS_Pin LCD_RST_Pin */
   GPIO_InitStruct.Pin = LCD_RS_Pin|LCD_WR_Pin|LCD_CS_Pin|LCD_RST_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /*Configure GPIO pin : SYSTEM_RESERVED_Pin */
