@@ -192,7 +192,7 @@ I2C_HandleTypeDef hi2c1;
 UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN PV */
-uint8_t  touchIRQ = 0, rtcSet = 1, clearEEPROM = 0, graphViewed = 0, sound = 1, printAlarm = 0, alarm1 = 0;
+uint8_t  touchIRQ = 0, rtcSet = 0, clearEEPROM = 0, graphViewed = 0, sound = 1, printAlarm = 0, alarm1 = 0;
 uint8_t rtcSec, rtcMin, rtcHrs, rtcDay, rtcDate, rtcMonth, rtcYear,
 rtcSecA1, rtcMinA1, rtcHrsA1, rtcDayA1, rtcDateA1, rtcMinA2, rtcHrsA2, rtcDayA2, rtcDateA2;
 uint8_t rtcSecLast = 61, rtcMinLast = 61, rtcHrsLast = 25, rtcDayLast, rtcDateLast, rtcMonthLast, rtcYearLast;
@@ -201,7 +201,7 @@ uint16_t pressure, pressureLast;
 //uint64_t startHistory;
 
 uint16_t hourlyTemperature[156] = { 25 }, hourlyHumidity[156] = { 25 }, hourlyPressure[157] = { 25 };
-uint16_t maximumTemperature = 400, maximumHumidity = 800, maximumPressure = 1050;
+uint16_t maximumTemperature = 400, maximumHumidity = 800, maximumPressure = 1040;
 
 uint8_t eeprom[4096];
 
@@ -340,6 +340,7 @@ void bme280(void) {
 		}
 
 		if (hourlyPressure[0] != rtcHrs) {
+			hourlyPressure[0] = rtcHrs;
 
 			for (uint16_t i = 1; i < 156; i++) hourlyPressure[i] = hourlyPressure[i + 1];
 			hourlyPressure[155] = (uint16_t)pressure;
@@ -348,7 +349,6 @@ void bme280(void) {
 				AT24XX_Update(i * 2 + 3000, byteL(hourlyPressure[i]));
 				AT24XX_Update(i * 2 + 1 + 3000, byteH(hourlyPressure[i]));
 			}
-			hourlyPressure[0] = rtcHrs;
 
 			graphViewed = 0;
 		}
@@ -523,11 +523,13 @@ int main(void)
 	LCD_Rect_Fill(0, 0, 480, 320, BLUE);
 	LCD_Rect_Fill(1, 1, 478, 318, BLACK);
 
+	LCD_Font(20, 127, "Clearing EEPROM", &DejaVu_Sans_36, 1, RED);
 	if (clearEEPROM) {
 		for (uint16_t i = 0; i < 4096; i++) {
 			AT24XX_Update(i, 0);
 		}
 	}
+	LCD_Font(20, 127, "Clearing EEPROM", &DejaVu_Sans_36, 1, BLACK);
 
 	LCD_Font(20, 127, "Waiting for I2C devices", &DejaVu_Sans_36, 1, RED);
 	for (uint16_t i = 0; i < 4096; i++) eeprom[i] = AT24XX_Read(i);
