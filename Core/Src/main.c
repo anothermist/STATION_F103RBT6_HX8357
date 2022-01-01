@@ -260,7 +260,7 @@ void bme280(void) {
 
 	if (temperature != temperatureLast && temperature >= -40 && temperature <= 40) {
 
-		char weatherPrintT[7];
+		char weatherPrintT[8];
 
 		if (temperatureLast >= 10 || (temperatureLast < 0 && temperatureLast > -10)) {
 			sprintf(weatherPrintT, "%.1f 'C", temperatureLast);
@@ -295,13 +295,13 @@ void bme280(void) {
 
 		char weatherPrintH[7];
 
-		//		sprintf(weatherPrintH, "%.1f %%H", humidityLast);
+				sprintf(weatherPrintH, "%.1f %%H", humidityLast);
 		if (humidityLast >= 10)
 			LCD_Font(140, 200, weatherPrintH, &DejaVu_Sans_36, 1, BLACK);
 		else LCD_Font(166, 200, weatherPrintH, &DejaVu_Sans_36, 1, BLACK);
 
 
-		//		sprintf(weatherPrintH, "%.1f %%H", humidity);
+				sprintf(weatherPrintH, "%.1f %%H", humidity);
 		if (humidity >= 10)
 			LCD_Font(140, 200, weatherPrintH, &DejaVu_Sans_36, 1, CYAN);
 		else LCD_Font(166, 200, weatherPrintH, &DejaVu_Sans_36, 1, CYAN);
@@ -311,7 +311,7 @@ void bme280(void) {
 
 	if (pressureLast != pressure) {
 
-		char weatherPrintP[8];
+		char weatherPrintP[9];
 
 		if (pressureLast >= 1000) sprintf(weatherPrintP, "%02d HP", pressureLast);
 		else sprintf(weatherPrintP, " %02d HPa", pressureLast);
