@@ -529,8 +529,6 @@ int main(void)
 	MX_SPI2_Init();
 	/* USER CODE BEGIN 2 */
 	LCD_Init();
-	DS3231_Update();
-	BME280_Init();
 
 	LCD_Rect_Fill(0, 0, 480, 320, BLUE);
 	LCD_Rect_Fill(1, 1, 478, 318, BLACK);
@@ -541,13 +539,12 @@ int main(void)
 		}
 	}
 
-	LCD_Font(20, 127, "Connect I2C and Reset!", &DejaVu_Sans_36, 1, RED);
+	LCD_Font(20, 127, "Waiting for I2C devices", &DejaVu_Sans_36, 1, RED);
+	for (uint16_t i = 0; i < 4096; i++) eeprom[i] = AT24XX_Read(i);
+	LCD_Font(20, 127, "Waiting for I2C devices", &DejaVu_Sans_36, 1, BLACK);
 
-	for (uint16_t i = 0; i < 4096; i++) {
-		eeprom[i] = AT24XX_Read(i);
-	}
-
-	LCD_Font(20, 127, "Connect I2C and Reset!", &DejaVu_Sans_36, 1, BLACK);
+	BME280_Init();
+	DS3231_Update();
 	/* USER CODE END 2 */
 
 	/* Infinite loop */

@@ -27,21 +27,21 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   ALLOC
  11 .ARM.attributes 00000029  00000000  00000000  00030320  2**0
                   CONTENTS, READONLY
- 12 .debug_info   0001a966  00000000  00000000  00030349  2**0
+ 12 .debug_info   0001a96a  00000000  00000000  00030349  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 13 .debug_abbrev 00002f03  00000000  00000000  0004acaf  2**0
+ 13 .debug_abbrev 00002f03  00000000  00000000  0004acb3  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 14 .debug_loc    00011890  00000000  00000000  0004dbb2  2**0
+ 14 .debug_loc    00011890  00000000  00000000  0004dbb6  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  15 .debug_aranges 00000b90  00000000  00000000  0005f448  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  16 .debug_ranges 000033a0  00000000  00000000  0005ffd8  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_line   00015619  00000000  00000000  00063378  2**0
+ 17 .debug_line   00015618  00000000  00000000  00063378  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_str    000042b9  00000000  00000000  00078991  2**0
+ 18 .debug_str    000042b9  00000000  00000000  00078990  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .comment      00000050  00000000  00000000  0007cc4a  2**0
+ 19 .comment      00000050  00000000  00000000  0007cc49  2**0
                   CONTENTS, READONLY
  20 .debug_frame  0000401c  00000000  00000000  0007cc9c  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
@@ -5825,59 +5825,56 @@ void Error_Handler(void)
  800306e:	25ff      	movs	r5, #255	; 0xff
 	LCD_Init();
  8003070:	f7ff f98c 	bl	800238c <LCD_Init>
-	DS3231_Update();
- 8003074:	f7fe fa76 	bl	8001564 <DS3231_Update>
-	BME280_Init();
- 8003078:	f7fe f98c 	bl	8001394 <BME280_Init>
 	LCD_Rect_Fill(0, 0, 480, 320, BLUE);
- 800307c:	f44f 73a0 	mov.w	r3, #320	; 0x140
- 8003080:	f44f 72f0 	mov.w	r2, #480	; 0x1e0
- 8003084:	4621      	mov	r1, r4
- 8003086:	4620      	mov	r0, r4
- 8003088:	9500      	str	r5, [sp, #0]
- 800308a:	f7fe fb1d 	bl	80016c8 <LCD_Rect_Fill>
+ 8003074:	f44f 73a0 	mov.w	r3, #320	; 0x140
+ 8003078:	f44f 72f0 	mov.w	r2, #480	; 0x1e0
+ 800307c:	4621      	mov	r1, r4
+ 800307e:	4620      	mov	r0, r4
+ 8003080:	9500      	str	r5, [sp, #0]
+ 8003082:	f7fe fb21 	bl	80016c8 <LCD_Rect_Fill>
 	LCD_Rect_Fill(1, 1, 478, 318, BLACK);
- 800308e:	2101      	movs	r1, #1
- 8003090:	f44f 739f 	mov.w	r3, #318	; 0x13e
- 8003094:	f44f 72ef 	mov.w	r2, #478	; 0x1de
- 8003098:	4608      	mov	r0, r1
- 800309a:	9400      	str	r4, [sp, #0]
- 800309c:	f7fe fb14 	bl	80016c8 <LCD_Rect_Fill>
+ 8003086:	2101      	movs	r1, #1
+ 8003088:	f44f 739f 	mov.w	r3, #318	; 0x13e
+ 800308c:	f44f 72ef 	mov.w	r2, #478	; 0x1de
+ 8003090:	4608      	mov	r0, r1
+ 8003092:	9400      	str	r4, [sp, #0]
+ 8003094:	f7fe fb18 	bl	80016c8 <LCD_Rect_Fill>
 	if (clearEEPROM) {
- 80030a0:	4bb4      	ldr	r3, [pc, #720]	; (8003374 <main+0x49c>)
- 80030a2:	781b      	ldrb	r3, [r3, #0]
- 80030a4:	2b00      	cmp	r3, #0
- 80030a6:	f040 81b6 	bne.w	8003416 <main+0x53e>
-	LCD_Font(20, 127, "Connect I2C and Reset!", &DejaVu_Sans_36, 1, RED);
- 80030aa:	f44f 077f 	mov.w	r7, #16711680	; 0xff0000
- 80030ae:	2601      	movs	r6, #1
- 80030b0:	217f      	movs	r1, #127	; 0x7f
- 80030b2:	2014      	movs	r0, #20
- 80030b4:	e9cd 6700 	strd	r6, r7, [sp]
- 80030b8:	4baf      	ldr	r3, [pc, #700]	; (8003378 <main+0x4a0>)
- 80030ba:	4ab0      	ldr	r2, [pc, #704]	; (800337c <main+0x4a4>)
- 80030bc:	2400      	movs	r4, #0
- 80030be:	4db0      	ldr	r5, [pc, #704]	; (8003380 <main+0x4a8>)
- 80030c0:	f7ff f8a0 	bl	8002204 <LCD_Font>
-		eeprom[i] = AT24XX_Read(i);
- 80030c4:	b2a0      	uxth	r0, r4
- 80030c6:	f7fd ff69 	bl	8000f9c <AT24XX_Read>
-	for (uint16_t i = 0; i < 4096; i++) {
- 80030ca:	3401      	adds	r4, #1
- 80030cc:	f5b4 5f80 	cmp.w	r4, #4096	; 0x1000
-		eeprom[i] = AT24XX_Read(i);
- 80030d0:	f805 0f01 	strb.w	r0, [r5, #1]!
-	for (uint16_t i = 0; i < 4096; i++) {
- 80030d4:	d1f6      	bne.n	80030c4 <main+0x1ec>
-	LCD_Font(20, 127, "Connect I2C and Reset!", &DejaVu_Sans_36, 1, BLACK);
- 80030d6:	2501      	movs	r5, #1
- 80030d8:	2700      	movs	r7, #0
- 80030da:	217f      	movs	r1, #127	; 0x7f
- 80030dc:	e9cd 5700 	strd	r5, r7, [sp]
- 80030e0:	2014      	movs	r0, #20
- 80030e2:	4ba5      	ldr	r3, [pc, #660]	; (8003378 <main+0x4a0>)
- 80030e4:	4aa5      	ldr	r2, [pc, #660]	; (800337c <main+0x4a4>)
- 80030e6:	f7ff f88d 	bl	8002204 <LCD_Font>
+ 8003098:	4bb6      	ldr	r3, [pc, #728]	; (8003374 <main+0x49c>)
+ 800309a:	781b      	ldrb	r3, [r3, #0]
+ 800309c:	2b00      	cmp	r3, #0
+ 800309e:	f040 81ba 	bne.w	8003416 <main+0x53e>
+	LCD_Font(20, 127, "Waiting for I2C devices", &DejaVu_Sans_36, 1, RED);
+ 80030a2:	f44f 077f 	mov.w	r7, #16711680	; 0xff0000
+ 80030a6:	2601      	movs	r6, #1
+ 80030a8:	217f      	movs	r1, #127	; 0x7f
+ 80030aa:	2014      	movs	r0, #20
+ 80030ac:	e9cd 6700 	strd	r6, r7, [sp]
+ 80030b0:	4bb1      	ldr	r3, [pc, #708]	; (8003378 <main+0x4a0>)
+ 80030b2:	4ab2      	ldr	r2, [pc, #712]	; (800337c <main+0x4a4>)
+ 80030b4:	2400      	movs	r4, #0
+ 80030b6:	4db2      	ldr	r5, [pc, #712]	; (8003380 <main+0x4a8>)
+ 80030b8:	f7ff f8a4 	bl	8002204 <LCD_Font>
+	for (uint16_t i = 0; i < 4096; i++) eeprom[i] = AT24XX_Read(i);
+ 80030bc:	b2a0      	uxth	r0, r4
+ 80030be:	f7fd ff6d 	bl	8000f9c <AT24XX_Read>
+ 80030c2:	3401      	adds	r4, #1
+ 80030c4:	f5b4 5f80 	cmp.w	r4, #4096	; 0x1000
+ 80030c8:	f805 0f01 	strb.w	r0, [r5, #1]!
+ 80030cc:	d1f6      	bne.n	80030bc <main+0x1e4>
+	LCD_Font(20, 127, "Waiting for I2C devices", &DejaVu_Sans_36, 1, BLACK);
+ 80030ce:	2501      	movs	r5, #1
+ 80030d0:	2700      	movs	r7, #0
+ 80030d2:	217f      	movs	r1, #127	; 0x7f
+ 80030d4:	2014      	movs	r0, #20
+ 80030d6:	4ba8      	ldr	r3, [pc, #672]	; (8003378 <main+0x4a0>)
+ 80030d8:	4aa8      	ldr	r2, [pc, #672]	; (800337c <main+0x4a4>)
+ 80030da:	e9cd 5700 	strd	r5, r7, [sp]
+ 80030de:	f7ff f891 	bl	8002204 <LCD_Font>
+	BME280_Init();
+ 80030e2:	f7fe f957 	bl	8001394 <BME280_Init>
+	DS3231_Update();
+ 80030e6:	f7fe fa3d 	bl	8001564 <DS3231_Update>
  80030ea:	4ca6      	ldr	r4, [pc, #664]	; (8003384 <main+0x4ac>)
  80030ec:	4ea6      	ldr	r6, [pc, #664]	; (8003388 <main+0x4b0>)
  80030ee:	f8df a29c 	ldr.w	sl, [pc, #668]	; 800338c <main+0x4b4>
@@ -6222,7 +6219,7 @@ void Error_Handler(void)
 		for (uint16_t i = 0; i < 4096; i++) {
  8003420:	f5b4 5f80 	cmp.w	r4, #4096	; 0x1000
  8003424:	d1f7      	bne.n	8003416 <main+0x53e>
- 8003426:	e640      	b.n	80030aa <main+0x1d2>
+ 8003426:	e63c      	b.n	80030a2 <main+0x1ca>
  8003428:	b672      	cpsid	i
 	while (1)
  800342a:	e7fe      	b.n	800342a <main+0x552>
