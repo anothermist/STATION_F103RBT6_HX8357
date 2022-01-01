@@ -31,25 +31,25 @@
 #include "ds3231.h"
 #include "at24xx.h"
 
-#include "fonts/Arimo_Regular/008_Arimo_Regular.h"
-#include "fonts/Arimo_Regular/009_Arimo_Regular.h"
-#include "fonts/Arimo_Regular/010_Arimo_Regular.h"
-#include "fonts/Arimo_Regular/011_Arimo_Regular.h"
-#include "fonts/Arimo_Regular/012_Arimo_Regular.h"
-#include "fonts/Arimo_Regular/014_Arimo_Regular.h"
-#include "fonts/Arimo_Regular/016_Arimo_Regular.h"
-#include "fonts/Arimo_Regular/018_Arimo_Regular.h"
-#include "fonts/Arimo_Regular/020_Arimo_Regular.h"
-#include "fonts/Arimo_Regular/022_Arimo_Regular.h"
-#include "fonts/Arimo_Regular/024_Arimo_Regular.h"
-#include "fonts/Arimo_Regular/026_Arimo_Regular.h"
-#include "fonts/Arimo_Regular/028_Arimo_Regular.h"
-#include "fonts/Arimo_Regular/036_Arimo_Regular.h"
-#include "fonts/Arimo_Regular/048_Arimo_Regular.h"
-#include "fonts/Arimo_Regular/072_Arimo_Regular.h"
-#include "fonts/Arimo_Regular/096_Arimo_Regular.h"
-#include "fonts/Arimo_Regular/112_Arimo_Regular.h"
-#include "fonts/Arimo_Regular/128_Arimo_Regular.h"
+//#include "fonts/Arimo_Regular/008_Arimo_Regular.h"
+//#include "fonts/Arimo_Regular/009_Arimo_Regular.h"
+//#include "fonts/Arimo_Regular/010_Arimo_Regular.h"
+//#include "fonts/Arimo_Regular/011_Arimo_Regular.h"
+//#include "fonts/Arimo_Regular/012_Arimo_Regular.h"
+//#include "fonts/Arimo_Regular/014_Arimo_Regular.h"
+//#include "fonts/Arimo_Regular/016_Arimo_Regular.h"
+//#include "fonts/Arimo_Regular/018_Arimo_Regular.h"
+//#include "fonts/Arimo_Regular/020_Arimo_Regular.h"
+//#include "fonts/Arimo_Regular/022_Arimo_Regular.h"
+//#include "fonts/Arimo_Regular/024_Arimo_Regular.h"
+//#include "fonts/Arimo_Regular/026_Arimo_Regular.h"
+//#include "fonts/Arimo_Regular/028_Arimo_Regular.h"
+//#include "fonts/Arimo_Regular/036_Arimo_Regular.h"
+//#include "fonts/Arimo_Regular/048_Arimo_Regular.h"
+//#include "fonts/Arimo_Regular/072_Arimo_Regular.h"
+//#include "fonts/Arimo_Regular/096_Arimo_Regular.h"
+//#include "fonts/Arimo_Regular/112_Arimo_Regular.h"
+//#include "fonts/Arimo_Regular/128_Arimo_Regular.h"
 
 #include "fonts/DejaVu_Sans/008_DejaVu_Sans.h"
 #include "fonts/DejaVu_Sans/009_DejaVu_Sans.h"
@@ -71,105 +71,105 @@
 #include "fonts/DejaVu_Sans/112_DejaVu_Sans.h"
 #include "fonts/DejaVu_Sans/128_DejaVu_Sans.h"
 
-#include "fonts/DejaVu_Sans_Bold/008_DejaVu_Sans_Bold.h"
-#include "fonts/DejaVu_Sans_Bold/009_DejaVu_Sans_Bold.h"
-#include "fonts/DejaVu_Sans_Bold/010_DejaVu_Sans_Bold.h"
-#include "fonts/DejaVu_Sans_Bold/011_DejaVu_Sans_Bold.h"
-#include "fonts/DejaVu_Sans_Bold/012_DejaVu_Sans_Bold.h"
-#include "fonts/DejaVu_Sans_Bold/014_DejaVu_Sans_Bold.h"
-#include "fonts/DejaVu_Sans_Bold/016_DejaVu_Sans_Bold.h"
-#include "fonts/DejaVu_Sans_Bold/018_DejaVu_Sans_Bold.h"
-#include "fonts/DejaVu_Sans_Bold/020_DejaVu_Sans_Bold.h"
-#include "fonts/DejaVu_Sans_Bold/022_DejaVu_Sans_Bold.h"
-#include "fonts/DejaVu_Sans_Bold/024_DejaVu_Sans_Bold.h"
-#include "fonts/DejaVu_Sans_Bold/026_DejaVu_Sans_Bold.h"
-#include "fonts/DejaVu_Sans_Bold/028_DejaVu_Sans_Bold.h"
-#include "fonts/DejaVu_Sans_Bold/036_DejaVu_Sans_Bold.h"
-#include "fonts/DejaVu_Sans_Bold/048_DejaVu_Sans_Bold.h"
-#include "fonts/DejaVu_Sans_Bold/072_DejaVu_Sans_Bold.h"
-#include "fonts/DejaVu_Sans_Bold/096_DejaVu_Sans_Bold.h"
-#include "fonts/DejaVu_Sans_Bold/112_DejaVu_Sans_Bold.h"
-//#include "fonts/DejaVu_Sans_Bold/128_DejaVu_Sans_Bold.h"
+//#include "fonts/DejaVu_Sans_Bold/008_DejaVu_Sans_Bold.h"
+//#include "fonts/DejaVu_Sans_Bold/009_DejaVu_Sans_Bold.h"
+//#include "fonts/DejaVu_Sans_Bold/010_DejaVu_Sans_Bold.h"
+//#include "fonts/DejaVu_Sans_Bold/011_DejaVu_Sans_Bold.h"
+//#include "fonts/DejaVu_Sans_Bold/012_DejaVu_Sans_Bold.h"
+//#include "fonts/DejaVu_Sans_Bold/014_DejaVu_Sans_Bold.h"
+//#include "fonts/DejaVu_Sans_Bold/016_DejaVu_Sans_Bold.h"
+//#include "fonts/DejaVu_Sans_Bold/018_DejaVu_Sans_Bold.h"
+//#include "fonts/DejaVu_Sans_Bold/020_DejaVu_Sans_Bold.h"
+//#include "fonts/DejaVu_Sans_Bold/022_DejaVu_Sans_Bold.h"
+//#include "fonts/DejaVu_Sans_Bold/024_DejaVu_Sans_Bold.h"
+//#include "fonts/DejaVu_Sans_Bold/026_DejaVu_Sans_Bold.h"
+//#include "fonts/DejaVu_Sans_Bold/028_DejaVu_Sans_Bold.h"
+//#include "fonts/DejaVu_Sans_Bold/036_DejaVu_Sans_Bold.h"
+//#include "fonts/DejaVu_Sans_Bold/048_DejaVu_Sans_Bold.h"
+//#include "fonts/DejaVu_Sans_Bold/072_DejaVu_Sans_Bold.h"
+//#include "fonts/DejaVu_Sans_Bold/096_DejaVu_Sans_Bold.h"
+//#include "fonts/DejaVu_Sans_Bold/112_DejaVu_Sans_Bold.h"
+////#include "fonts/DejaVu_Sans_Bold/128_DejaVu_Sans_Bold.h"
 
-#include "fonts/DejaVu_Sans_Mono/008_DejaVu_Sans_Mono.h"
-#include "fonts/DejaVu_Sans_Mono/009_DejaVu_Sans_Mono.h"
-#include "fonts/DejaVu_Sans_Mono/010_DejaVu_Sans_Mono.h"
-#include "fonts/DejaVu_Sans_Mono/011_DejaVu_Sans_Mono.h"
-#include "fonts/DejaVu_Sans_Mono/012_DejaVu_Sans_Mono.h"
-#include "fonts/DejaVu_Sans_Mono/014_DejaVu_Sans_Mono.h"
-#include "fonts/DejaVu_Sans_Mono/016_DejaVu_Sans_Mono.h"
-#include "fonts/DejaVu_Sans_Mono/018_DejaVu_Sans_Mono.h"
-#include "fonts/DejaVu_Sans_Mono/020_DejaVu_Sans_Mono.h"
-#include "fonts/DejaVu_Sans_Mono/022_DejaVu_Sans_Mono.h"
-#include "fonts/DejaVu_Sans_Mono/024_DejaVu_Sans_Mono.h"
-#include "fonts/DejaVu_Sans_Mono/026_DejaVu_Sans_Mono.h"
-#include "fonts/DejaVu_Sans_Mono/028_DejaVu_Sans_Mono.h"
-#include "fonts/DejaVu_Sans_Mono/036_DejaVu_Sans_Mono.h"
-#include "fonts/DejaVu_Sans_Mono/048_DejaVu_Sans_Mono.h"
-#include "fonts/DejaVu_Sans_Mono/072_DejaVu_Sans_Mono.h"
-#include "fonts/DejaVu_Sans_Mono/096_DejaVu_Sans_Mono.h"
-#include "fonts/DejaVu_Sans_Mono/112_DejaVu_Sans_Mono.h"
-#include "fonts/DejaVu_Sans_Mono/128_DejaVu_Sans_Mono.h"
+//#include "fonts/DejaVu_Sans_Mono/008_DejaVu_Sans_Mono.h"
+//#include "fonts/DejaVu_Sans_Mono/009_DejaVu_Sans_Mono.h"
+//#include "fonts/DejaVu_Sans_Mono/010_DejaVu_Sans_Mono.h"
+//#include "fonts/DejaVu_Sans_Mono/011_DejaVu_Sans_Mono.h"
+//#include "fonts/DejaVu_Sans_Mono/012_DejaVu_Sans_Mono.h"
+//#include "fonts/DejaVu_Sans_Mono/014_DejaVu_Sans_Mono.h"
+//#include "fonts/DejaVu_Sans_Mono/016_DejaVu_Sans_Mono.h"
+//#include "fonts/DejaVu_Sans_Mono/018_DejaVu_Sans_Mono.h"
+//#include "fonts/DejaVu_Sans_Mono/020_DejaVu_Sans_Mono.h"
+//#include "fonts/DejaVu_Sans_Mono/022_DejaVu_Sans_Mono.h"
+//#include "fonts/DejaVu_Sans_Mono/024_DejaVu_Sans_Mono.h"
+//#include "fonts/DejaVu_Sans_Mono/026_DejaVu_Sans_Mono.h"
+//#include "fonts/DejaVu_Sans_Mono/028_DejaVu_Sans_Mono.h"
+//#include "fonts/DejaVu_Sans_Mono/036_DejaVu_Sans_Mono.h"
+//#include "fonts/DejaVu_Sans_Mono/048_DejaVu_Sans_Mono.h"
+//#include "fonts/DejaVu_Sans_Mono/072_DejaVu_Sans_Mono.h"
+//#include "fonts/DejaVu_Sans_Mono/096_DejaVu_Sans_Mono.h"
+//#include "fonts/DejaVu_Sans_Mono/112_DejaVu_Sans_Mono.h"
+//#include "fonts/DejaVu_Sans_Mono/128_DejaVu_Sans_Mono.h"
 
-#include "fonts/Open_Sans_Regular/008_Open_Sans_Regular.h"
-#include "fonts/Open_Sans_Regular/009_Open_Sans_Regular.h"
-#include "fonts/Open_Sans_Regular/010_Open_Sans_Regular.h"
-#include "fonts/Open_Sans_Regular/011_Open_Sans_Regular.h"
-#include "fonts/Open_Sans_Regular/012_Open_Sans_Regular.h"
-#include "fonts/Open_Sans_Regular/014_Open_Sans_Regular.h"
-#include "fonts/Open_Sans_Regular/016_Open_Sans_Regular.h"
-#include "fonts/Open_Sans_Regular/018_Open_Sans_Regular.h"
-#include "fonts/Open_Sans_Regular/020_Open_Sans_Regular.h"
-#include "fonts/Open_Sans_Regular/022_Open_Sans_Regular.h"
-#include "fonts/Open_Sans_Regular/024_Open_Sans_Regular.h"
-#include "fonts/Open_Sans_Regular/026_Open_Sans_Regular.h"
-#include "fonts/Open_Sans_Regular/028_Open_Sans_Regular.h"
-#include "fonts/Open_Sans_Regular/036_Open_Sans_Regular.h"
-#include "fonts/Open_Sans_Regular/048_Open_Sans_Regular.h"
-#include "fonts/Open_Sans_Regular/072_Open_Sans_Regular.h"
-#include "fonts/Open_Sans_Regular/096_Open_Sans_Regular.h"
-#include "fonts/Open_Sans_Regular/112_Open_Sans_Regular.h"
-#include "fonts/Open_Sans_Regular/128_Open_Sans_Regular.h"
+//#include "fonts/Open_Sans_Regular/008_Open_Sans_Regular.h"
+//#include "fonts/Open_Sans_Regular/009_Open_Sans_Regular.h"
+//#include "fonts/Open_Sans_Regular/010_Open_Sans_Regular.h"
+//#include "fonts/Open_Sans_Regular/011_Open_Sans_Regular.h"
+//#include "fonts/Open_Sans_Regular/012_Open_Sans_Regular.h"
+//#include "fonts/Open_Sans_Regular/014_Open_Sans_Regular.h"
+//#include "fonts/Open_Sans_Regular/016_Open_Sans_Regular.h"
+//#include "fonts/Open_Sans_Regular/018_Open_Sans_Regular.h"
+//#include "fonts/Open_Sans_Regular/020_Open_Sans_Regular.h"
+//#include "fonts/Open_Sans_Regular/022_Open_Sans_Regular.h"
+//#include "fonts/Open_Sans_Regular/024_Open_Sans_Regular.h"
+//#include "fonts/Open_Sans_Regular/026_Open_Sans_Regular.h"
+//#include "fonts/Open_Sans_Regular/028_Open_Sans_Regular.h"
+//#include "fonts/Open_Sans_Regular/036_Open_Sans_Regular.h"
+//#include "fonts/Open_Sans_Regular/048_Open_Sans_Regular.h"
+//#include "fonts/Open_Sans_Regular/072_Open_Sans_Regular.h"
+//#include "fonts/Open_Sans_Regular/096_Open_Sans_Regular.h"
+//#include "fonts/Open_Sans_Regular/112_Open_Sans_Regular.h"
+//#include "fonts/Open_Sans_Regular/128_Open_Sans_Regular.h"
 
-#include "fonts/Open_Sans_Bold/008_Open_Sans_Bold.h"
-#include "fonts/Open_Sans_Bold/009_Open_Sans_Bold.h"
-#include "fonts/Open_Sans_Bold/010_Open_Sans_Bold.h"
-#include "fonts/Open_Sans_Bold/011_Open_Sans_Bold.h"
-#include "fonts/Open_Sans_Bold/012_Open_Sans_Bold.h"
-#include "fonts/Open_Sans_Bold/014_Open_Sans_Bold.h"
-#include "fonts/Open_Sans_Bold/016_Open_Sans_Bold.h"
-#include "fonts/Open_Sans_Bold/018_Open_Sans_Bold.h"
-#include "fonts/Open_Sans_Bold/020_Open_Sans_Bold.h"
-#include "fonts/Open_Sans_Bold/022_Open_Sans_Bold.h"
-#include "fonts/Open_Sans_Bold/024_Open_Sans_Bold.h"
-#include "fonts/Open_Sans_Bold/026_Open_Sans_Bold.h"
-#include "fonts/Open_Sans_Bold/028_Open_Sans_Bold.h"
-#include "fonts/Open_Sans_Bold/036_Open_Sans_Bold.h"
-#include "fonts/Open_Sans_Bold/048_Open_Sans_Bold.h"
-#include "fonts/Open_Sans_Bold/072_Open_Sans_Bold.h"
-#include "fonts/Open_Sans_Bold/096_Open_Sans_Bold.h"
-#include "fonts/Open_Sans_Bold/112_Open_Sans_Bold.h"
-#include "fonts/Open_Sans_Bold/128_Open_Sans_Bold.h"
+//#include "fonts/Open_Sans_Bold/008_Open_Sans_Bold.h"
+//#include "fonts/Open_Sans_Bold/009_Open_Sans_Bold.h"
+//#include "fonts/Open_Sans_Bold/010_Open_Sans_Bold.h"
+//#include "fonts/Open_Sans_Bold/011_Open_Sans_Bold.h"
+//#include "fonts/Open_Sans_Bold/012_Open_Sans_Bold.h"
+//#include "fonts/Open_Sans_Bold/014_Open_Sans_Bold.h"
+//#include "fonts/Open_Sans_Bold/016_Open_Sans_Bold.h"
+//#include "fonts/Open_Sans_Bold/018_Open_Sans_Bold.h"
+//#include "fonts/Open_Sans_Bold/020_Open_Sans_Bold.h"
+//#include "fonts/Open_Sans_Bold/022_Open_Sans_Bold.h"
+//#include "fonts/Open_Sans_Bold/024_Open_Sans_Bold.h"
+//#include "fonts/Open_Sans_Bold/026_Open_Sans_Bold.h"
+//#include "fonts/Open_Sans_Bold/028_Open_Sans_Bold.h"
+//#include "fonts/Open_Sans_Bold/036_Open_Sans_Bold.h"
+//#include "fonts/Open_Sans_Bold/048_Open_Sans_Bold.h"
+//#include "fonts/Open_Sans_Bold/072_Open_Sans_Bold.h"
+//#include "fonts/Open_Sans_Bold/096_Open_Sans_Bold.h"
+//#include "fonts/Open_Sans_Bold/112_Open_Sans_Bold.h"
+//#include "fonts/Open_Sans_Bold/128_Open_Sans_Bold.h"
 
-#include "fonts/Roboto_Mono/008_Roboto_Mono.h"
-#include "fonts/Roboto_Mono/009_Roboto_Mono.h"
-#include "fonts/Roboto_Mono/010_Roboto_Mono.h"
-#include "fonts/Roboto_Mono/011_Roboto_Mono.h"
-#include "fonts/Roboto_Mono/012_Roboto_Mono.h"
-#include "fonts/Roboto_Mono/014_Roboto_Mono.h"
-#include "fonts/Roboto_Mono/016_Roboto_Mono.h"
-#include "fonts/Roboto_Mono/018_Roboto_Mono.h"
-#include "fonts/Roboto_Mono/020_Roboto_Mono.h"
-#include "fonts/Roboto_Mono/022_Roboto_Mono.h"
-#include "fonts/Roboto_Mono/024_Roboto_Mono.h"
-#include "fonts/Roboto_Mono/026_Roboto_Mono.h"
-#include "fonts/Roboto_Mono/028_Roboto_Mono.h"
-#include "fonts/Roboto_Mono/036_Roboto_Mono.h"
-#include "fonts/Roboto_Mono/048_Roboto_Mono.h"
-#include "fonts/Roboto_Mono/072_Roboto_Mono.h"
-#include "fonts/Roboto_Mono/096_Roboto_Mono.h"
-#include "fonts/Roboto_Mono/112_Roboto_Mono.h"
-#include "fonts/Roboto_Mono/128_Roboto_Mono.h"
+//#include "fonts/Roboto_Mono/008_Roboto_Mono.h"
+//#include "fonts/Roboto_Mono/009_Roboto_Mono.h"
+//#include "fonts/Roboto_Mono/010_Roboto_Mono.h"
+//#include "fonts/Roboto_Mono/011_Roboto_Mono.h"
+//#include "fonts/Roboto_Mono/012_Roboto_Mono.h"
+//#include "fonts/Roboto_Mono/014_Roboto_Mono.h"
+//#include "fonts/Roboto_Mono/016_Roboto_Mono.h"
+//#include "fonts/Roboto_Mono/018_Roboto_Mono.h"
+//#include "fonts/Roboto_Mono/020_Roboto_Mono.h"
+//#include "fonts/Roboto_Mono/022_Roboto_Mono.h"
+//#include "fonts/Roboto_Mono/024_Roboto_Mono.h"
+//#include "fonts/Roboto_Mono/026_Roboto_Mono.h"
+//#include "fonts/Roboto_Mono/028_Roboto_Mono.h"
+//#include "fonts/Roboto_Mono/036_Roboto_Mono.h"
+//#include "fonts/Roboto_Mono/048_Roboto_Mono.h"
+//#include "fonts/Roboto_Mono/072_Roboto_Mono.h"
+//#include "fonts/Roboto_Mono/096_Roboto_Mono.h"
+//#include "fonts/Roboto_Mono/112_Roboto_Mono.h"
+//#include "fonts/Roboto_Mono/128_Roboto_Mono.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -194,7 +194,7 @@ SPI_HandleTypeDef hspi2;
 UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN PV */
-uint8_t  touchIRQ = 0, rtcSet = 1, clearEEPROM = 0, barographViewed = 0, sound = 1, printAlarm = 0, alarm1 = 0;
+uint8_t  touchIRQ = 0, rtcSet = 1, clearEEPROM = 0, graphViewed = 0, sound = 1, printAlarm = 0, alarm1 = 0;
 uint8_t rtcSec, rtcMin, rtcHrs, rtcDay, rtcDate, rtcMonth, rtcYear,
 rtcSecA1, rtcMinA1, rtcHrsA1, rtcDayA1, rtcDateA1, rtcMinA2, rtcHrsA2, rtcDayA2, rtcDateA2;
 uint8_t rtcSecLast = 61, rtcMinLast = 61, rtcHrsLast = 25, rtcDayLast, rtcDateLast, rtcMonthLast, rtcYearLast;
@@ -203,9 +203,11 @@ double temperatureLast, humidityLast, temperature, humidity,
 temperatureRemote, temperatureRemoteLast, humidityRemote, humidityRemoteLast;
 uint64_t startHistory;
 
-uint16_t barographHourly[367] = { 25 };
-uint16_t barographDaily[367];
+uint16_t hourlyPressure[157] = { 25 }, hourlyTemperature[156], hourlyHumidity[156];
 uint16_t barographMinimum = 0, barographMaximum = 0, barographAverage = 0;
+
+uint8_t eeprom[4096];
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -258,8 +260,12 @@ void bme280(void) {
 	humidity = BME280_getHumidity(-1);
 	pressure = (uint16_t)BME280_getPressure();
 
+	for (uint16_t i = 0; i < 4096; i++) {
+		eeprom[i] = AT24XX_Read(i);
+	}
+
+	LCD_Rect(2, 190, 157, 128, 1, BLUE);
 	LCD_Rect(161, 190, 157, 128, 1, BLUE);
-	LCD_Rect(320, 190, 157, 128, 1, BLUE);
 
 	if (temperature != temperatureLast && temperature >= -40 && temperature <= 40) {
 
@@ -330,102 +336,45 @@ void bme280(void) {
 	pressure = (uint16_t)BME280_getPressure();
 	if (pressure > 300 && pressure < 1100) {
 
-		for (uint16_t i = 0; i < 367; i++) {
-			barographHourly[i] = byteS(AT24XX_Read(i * 2 + 1000), AT24XX_Read(i * 2 + 1 + 1000));
-			barographDaily[i] = byteS(AT24XX_Read(i * 2 + 2000), AT24XX_Read(i * 2 + 1 + 2000));
+		for (uint16_t i = 0; i < 157; i++) {
+			hourlyPressure[i] = byteS(AT24XX_Read(i * 2 + 1000), AT24XX_Read(i * 2 + 1 + 1000));
 		}
 
-		if (barographHourly[0] != rtcHrs && pressure > 300 && pressure < 1100) {
+		if (hourlyPressure[0] != rtcHrs && pressure > 300 && pressure < 1100) {
 
-			barographHourly[0] = rtcHrs;
+			hourlyPressure[0] = rtcHrs;
 
-			for (uint16_t i = 1; i < 366; i++) barographHourly[i] = barographHourly[i + 1];
-			barographHourly[366] = (uint16_t)pressure;
+			for (uint16_t i = 1; i < 156; i++) hourlyPressure[i] = hourlyPressure[i + 1];
+			hourlyPressure[155] = (uint16_t)pressure;
 
-			for (uint16_t i = 0; i < 367; i++) {
-				AT24XX_Update(i * 2 + 1000, byteL(barographHourly[i]));
-				AT24XX_Update(i * 2 + 1 + 1000, byteH(barographHourly[i]));
+			for (uint16_t i = 0; i < 157; i++) {
+				AT24XX_Update(i * 2 + 1000, byteL(hourlyPressure[i]));
+				AT24XX_Update(i * 2 + 1 + 1000, byteH(hourlyPressure[i]));
 			}
 
-			if (barographDaily[0] != rtcDate) {
-				barographDaily[0] = rtcDate;
-
-				uint32_t barographAverageLast24Hours = 0;
-				uint16_t historyHours = 0;
-				for (uint8_t i = 0; i < 24; i++) {
-					if (barographHourly[366 - i] != 0) {
-						barographAverageLast24Hours = barographAverageLast24Hours + barographHourly[366 - i];
-						historyHours++;
-					}
-				}
-				if (historyHours != 0) barographAverageLast24Hours = barographAverageLast24Hours / historyHours;
-
-				for (uint16_t i = 1; i < 366; i++) {
-					barographDaily[i] = barographDaily[i + 1];
-				}
-				barographDaily[366] = barographAverageLast24Hours;
-
-				for (uint16_t i = 0; i < 367; i++) {
-					AT24XX_Update(i * 2 + 2000, byteL(barographDaily[i]));
-					AT24XX_Update(i * 2 + 1 + 2000, byteH(barographDaily[i]));
-				}
-			}
-			barographViewed = 0;
+			graphViewed = 0;
 		}
 
-		if (!barographViewed) {
+		if (!graphViewed) {
 
-			uint32_t barographAverageLast366Days = 0;
-			uint16_t historyDays = 0;
-			for (uint16_t i = 0; i < 365; i++) {
-				if (barographDaily[366 - i] != 0) {
-					barographAverageLast366Days = barographAverageLast366Days + barographDaily[366 - i];
-					historyDays++;
-				}
-			}
-			if (historyDays != 0) barographAverage = barographAverageLast366Days / historyDays;
-
-			barographMinimum = barographDaily[366];
-			barographMaximum = barographDaily[366];
-
-			for (uint16_t i = 1; i < 366; i++) {
-				if (barographDaily[366 - i] != 0) {
-					if (barographDaily[366 - i] < barographMinimum) barographMinimum = barographDaily[366 - i];
-					if (barographDaily[366 - i] > barographMaximum) barographMaximum = barographDaily[366 - i];
+			for (uint16_t i = 1; i < 156; i++) {
+				if (hourlyPressure[156 - i] != 0) {
+					if (hourlyPressure[156 - i] < barographMinimum) barographMinimum = hourlyPressure[156 - i];
+					if (hourlyPressure[156 - i] > barographMaximum) barographMaximum = hourlyPressure[156 - i];
 				}
 			}
 
-			for (uint16_t i = 1; i < 366; i++) {
-				if (barographHourly[366 - i] != 0) {
-					if (barographHourly[366 - i] < barographMinimum) barographMinimum = barographHourly[366 - i];
-					if (barographHourly[366 - i] > barographMaximum) barographMaximum = barographHourly[366 - i];
-				}
-			}
+			LCD_Rect(320, 190, 157, 128, 1, BLUE);
 
-			barographDaily[0] = rtcDate;
-
-			//			LCD_Rect(1, 201, 368, 128, 1, BLUE);
-			LCD_Rect(2, 190, 157, 128, 1, BLUE);
-
-			for (uint16_t i = 0; i < 366; i++) {
+			for (uint16_t i = 0; i < 156 ; i++) {
 				int16_t val = 0;
-				val = barographHourly[i + 1];
+				val = hourlyPressure[i + 1];
 				if (val < barographMaximum - 127) val = barographMaximum - 127;
-								LCD_Line(111 + i, 318, 111 + i, 192, 1, BLACK);
-								LCD_Line(111 + i, 318, 111 + i, 192 + (barographMaximum - val), 1, RGB(255 - ((barographMaximum - val) * 2), 0, 255 - (255 - ((barographMaximum - val) * 2))));
+								LCD_Line(320 + i, 318, 320 + i, 191, 1, BLACK);
+								LCD_Line(320 + i, 318, 320 + i, 191 + (barographMaximum - val), 1, RGB(255 - ((barographMaximum - val) * 2), 0, 255 - (255 - ((barographMaximum - val) * 2))));
 			}
 
-			//			LCD_Rect(1, 329, 368, 128, 1, BLUE);
-
-			for (uint16_t i = 0; i < 366; i++) {
-				int16_t val = 0;
-				val = barographDaily[i + 1];
-				if (val < barographMaximum - 127) val = barographMaximum - 127;
-
-				//				LCD_Line(2 + i, 456, 2 + i, 330, 1, BLACK);
-				//				LCD_Line(2 + i, 456, 2 + i, 330 + (barographMaximum - val), 1, RGB(255 - ((barographMaximum - val) * 2), 0, 255 - (255 - ((barographMaximum - val) * 2))));
-			}
-			barographViewed = 1;
+			graphViewed = 1;
 		}
 	}
 }
@@ -583,14 +532,22 @@ int main(void)
 	DS3231_Update();
 	BME280_Init();
 
+	LCD_Rect_Fill(0, 0, 480, 320, BLUE);
+	LCD_Rect_Fill(1, 1, 478, 318, BLACK);
+
 	if (clearEEPROM) {
 		for (uint16_t i = 0; i < 4096; i++) {
 			AT24XX_Update(i, 0);
 		}
 	}
 
-	LCD_Rect_Fill(0, 0, 480, 320, BLUE);
-	LCD_Rect_Fill(1, 1, 478, 318, BLACK);
+	LCD_Font(20, 127, "Connect I2C and Reset!", &DejaVu_Sans_36, 1, RED);
+
+	for (uint16_t i = 0; i < 4096; i++) {
+		eeprom[i] = AT24XX_Read(i);
+	}
+
+	LCD_Font(20, 127, "Connect I2C and Reset!", &DejaVu_Sans_36, 1, BLACK);
 	/* USER CODE END 2 */
 
 	/* Infinite loop */
