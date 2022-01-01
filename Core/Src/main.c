@@ -329,11 +329,45 @@ void bme280(void) {
 		pressureLast = pressure;
 	}
 
+	for (uint16_t i = 0; i < 4096; i++) eeprom[i] = AT24XX_Read(i);
 
 	if (pressure > 300 && pressure < 1100) {
+//
 
-		for (uint16_t i = 0; i < 4096; i++) eeprom[i] = AT24XX_Read(i);
+//		for (uint16_t i = 0; i < 157; i++) {
+//			hourlyThemperature[i] = byteS(eeprom[i * 2 + 1000], eeprom[i * 2 + 1 + 1000]);
+//		}
+//
+//		if (hourlyThemperature[0] != rtcHrs) {
+//			hourlyThemperature[0] = rtcHrs;
+//
+//			for (uint16_t i = 1; i < 156; i++) hourlyThemperature[i] = hourlyThemperature[i + 1];
+//
+//			hourlyThemperature[155] = (uint16_t)temperature;
+//
+//			for (uint16_t i = 0; i < 157; i++) {
+//				AT24XX_Update(i * 2 + 1000, byteL(hourlyThemperature[i]));
+//				AT24XX_Update(i * 2 + 1 + 1000, byteH(hourlyThemperature[i]));
+//			}
+//
+//
+//			for (uint16_t i = 0; i < 157; i++) {
+//				hourlyHumidity[i] = byteS(eeprom[i * 2 + 2000], eeprom[i * 2 + 1 + 2000]);
+//			}
+//
+//			if (hourlyHumidity[0] != rtcHrs) {
+//				hourlyHumidity[0] = rtcHrs;
+//
+//				for (uint16_t i = 1; i < 156; i++) hourlyHumidity[i] = hourlyHumidity[i + 1];
+//
+//				hourlyHumidity[155] = (uint16_t)humidity;
+//
+//				for (uint16_t i = 0; i < 157; i++) {
+//					AT24XX_Update(i * 2 + 2000, byteL(hourlyHumidity[i]));
+//					AT24XX_Update(i * 2 + 1 + 2000, byteH(hourlyHumidity[i]));
+//				}
 
+//
 
 		for (uint16_t i = 0; i < 157; i++) {
 			hourlyPressure[i] = byteS(eeprom[i * 2 + 3000], eeprom[i * 2 + 1 + 3000]);
@@ -343,6 +377,7 @@ void bme280(void) {
 			hourlyPressure[0] = rtcHrs;
 
 			for (uint16_t i = 1; i < 156; i++) hourlyPressure[i] = hourlyPressure[i + 1];
+
 			hourlyPressure[155] = (uint16_t)pressure;
 
 			for (uint16_t i = 0; i < 157; i++) {
@@ -441,8 +476,8 @@ void uartDecode() {
 //	}
 //}
 
-void alarm(void)
-{
+//void alarm(void)
+//{
 	//	alarm1 = AT24XX_Read(4000);
 	//	if (rtcHrsA1 < 24 && rtcMinA1 < 60)
 	//	{
@@ -484,7 +519,7 @@ void alarm(void)
 	//		}
 	//		if (alarm1 && rtcHrsA1 == rtcHrs && rtcMinA1 == rtcMin) signal();
 	//	}
-}
+//}
 /* USER CODE END 0 */
 
 /**
