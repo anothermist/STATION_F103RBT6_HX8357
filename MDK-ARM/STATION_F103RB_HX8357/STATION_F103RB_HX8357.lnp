@@ -4,7 +4,6 @@
 "station_f103rb_hx8357\bme280.o"
 "station_f103rb_hx8357\ds3231.o"
 "station_f103rb_hx8357\hx8357.o"
-"station_f103rb_hx8357\uart.o"
 "station_f103rb_hx8357\main.o"
 "station_f103rb_hx8357\stm32f1xx_it.o"
 "station_f103rb_hx8357\stm32f1xx_hal_msp.o"
