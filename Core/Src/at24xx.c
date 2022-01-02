@@ -58,7 +58,7 @@ bool AT24XX_Load(uint16_t address, void *data, size_t size_of_data) {
 }
 
 uint8_t AT24XX_Read(uint16_t address) {
-    uint16_t dt[1] = {NULL};
+    uint16_t dt[1] = {0};
     AT24XX_Load(address, dt, 1);
     return dt[0];
 }

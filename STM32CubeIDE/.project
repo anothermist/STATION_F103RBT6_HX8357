@@ -7,7 +7,6 @@
 	<buildSpec>
 		<buildCommand>
 			<name>org.eclipse.cdt.managedbuilder.core.genmakebuilder</name>
-			<triggers>clean,full,incremental,</triggers>
 			<arguments>
 			</arguments>
 		</buildCommand>
@@ -150,11 +149,6 @@
 			<name>Application/User/Core/stm32f1xx_it.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Core/Src/stm32f1xx_it.c</locationURI>
-		</link>
-		<link>
-			<name>Application/User/Core/uart.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Core/Src/uart.c</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>

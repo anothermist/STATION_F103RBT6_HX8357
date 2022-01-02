@@ -20,7 +20,6 @@
 "station_f103rb_hx8357\stm32f1xx_hal_flash.o"
 "station_f103rb_hx8357\stm32f1xx_hal_flash_ex.o"
 "station_f103rb_hx8357\stm32f1xx_hal_exti.o"
-"station_f103rb_hx8357\stm32f1xx_hal_spi.o"
 "station_f103rb_hx8357\stm32f1xx_hal_tim.o"
 "station_f103rb_hx8357\stm32f1xx_hal_tim_ex.o"
 "station_f103rb_hx8357\stm32f1xx_hal_uart.o"
