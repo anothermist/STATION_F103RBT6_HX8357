@@ -37,11 +37,11 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  16 .debug_ranges 0000bb90  00000000  00000000  00071a48  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_line   00012fab  00000000  00000000  0007d5d8  2**0
+ 17 .debug_line   00012fae  00000000  00000000  0007d5d8  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_str    00088fbe  00000000  00000000  00090583  2**0
+ 18 .debug_str    00088fbe  00000000  00000000  00090586  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .comment      00000050  00000000  00000000  00119541  2**0
+ 19 .comment      00000050  00000000  00000000  00119544  2**0
                   CONTENTS, READONLY
  20 .debug_frame  00001dc8  00000000  00000000  00119594  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
@@ -16450,9 +16450,9 @@ uint8_t DS3231_getYear(void) {
  8008104:	f89b 26e0 	ldrb.w	r2, [fp, #1760]	; 0x6e0
  8008108:	f89b 35dc 	ldrb.w	r3, [fp, #1500]	; 0x5dc
  800810c:	429a      	cmp	r2, r3
- 800810e:	f000 8085 	beq.w	800821c <main+0x103c>
-						sprintf(clockPrint, "%02d", rtcDate);
- 8008112:	f89b 25dd 	ldrb.w	r2, [fp, #1501]	; 0x5dd
+ 800810e:	f000 8089 	beq.w	8008224 <main+0x1044>
+						sprintf(clockPrint, "%02d", rtcDateLast);
+ 8008112:	f89b 26e1 	ldrb.w	r2, [fp, #1761]	; 0x6e1
  8008116:	497d      	ldr	r1, [pc, #500]	; (800830c <main+0x112c>)
  8008118:	a81e      	add	r0, sp, #120	; 0x78
  800811a:	f001 fd03 	bl	8009b24 <siprintf>
@@ -16506,8 +16506,8 @@ uint8_t DS3231_getYear(void) {
  8008198:	495e      	ldr	r1, [pc, #376]	; (8008314 <main+0x1134>)
  800819a:	f503 63fa 	add.w	r3, r3, #2000	; 0x7d0
  800819e:	9300      	str	r3, [sp, #0]
- 80081a0:	f89b 36e1 	ldrb.w	r3, [fp, #1761]	; 0x6e1
- 80081a4:	f89b 26e2 	ldrb.w	r2, [fp, #1762]	; 0x6e2
+ 80081a0:	f89b 36e2 	ldrb.w	r3, [fp, #1762]	; 0x6e2
+ 80081a4:	f89b 26e1 	ldrb.w	r2, [fp, #1761]	; 0x6e1
  80081a8:	a81e      	add	r0, sp, #120	; 0x78
  80081aa:	f001 fcbb 	bl	8009b24 <siprintf>
 						LCD_Font(180, 145, clockPrint, &DejaVu_Sans_48, 1, BLACK);
@@ -16546,21 +16546,22 @@ uint8_t DS3231_getYear(void) {
  8008202:	ebc5 05c5 	rsb	r5, r5, r5, lsl #3
  8008206:	1b5b      	subs	r3, r3, r5
  8008208:	eb07 0383 	add.w	r3, r7, r3, lsl #2
- 800820c:	22ff      	movs	r2, #255	; 0xff
- 800820e:	2014      	movs	r0, #20
- 8008210:	f8d3 1628 	ldr.w	r1, [r3, #1576]	; 0x628
+ 800820c:	f8d3 1628 	ldr.w	r1, [r3, #1576]	; 0x628
+ 8008210:	22ff      	movs	r2, #255	; 0xff
+ 8008212:	2014      	movs	r0, #20
  8008214:	f7fb ff04 	bl	8004020 <LCD_Font.constprop.0>
+						rtcDateLast = rtcDate;
+ 8008218:	f89b 35dd 	ldrb.w	r3, [fp, #1501]	; 0x5dd
 						rtcDayLast = rtcDay;
- 8008218:	f88b 46e0 	strb.w	r4, [fp, #1760]	; 0x6e0
-					rtcDateLast = rtcDate;
- 800821c:	f89b 35dd 	ldrb.w	r3, [fp, #1501]	; 0x5dd
-					rtcHrsLast = rtcHrs;
- 8008220:	4a39      	ldr	r2, [pc, #228]	; (8008308 <main+0x1128>)
-					rtcDateLast = rtcDate;
- 8008222:	f88b 36e2 	strb.w	r3, [fp, #1762]	; 0x6e2
+ 800821c:	f88b 46e0 	strb.w	r4, [fp, #1760]	; 0x6e0
+						rtcDateLast = rtcDate;
+ 8008220:	f88b 36e1 	strb.w	r3, [fp, #1761]	; 0x6e1
 					rtcMonthLast = rtcMonth;
- 8008226:	f89b 35de 	ldrb.w	r3, [fp, #1502]	; 0x5de
- 800822a:	f88b 36e1 	strb.w	r3, [fp, #1761]	; 0x6e1
+ 8008224:	f89b 35de 	ldrb.w	r3, [fp, #1502]	; 0x5de
+					rtcHrsLast = rtcHrs;
+ 8008228:	4a37      	ldr	r2, [pc, #220]	; (8008308 <main+0x1128>)
+					rtcMonthLast = rtcMonth;
+ 800822a:	f88b 36e2 	strb.w	r3, [fp, #1762]	; 0x6e2
 					rtcYearLast = rtcYear;
  800822e:	f89b 35df 	ldrb.w	r3, [fp, #1503]	; 0x5df
  8008232:	f88b 36e3 	strb.w	r3, [fp, #1763]	; 0x6e3

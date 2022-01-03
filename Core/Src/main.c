@@ -449,7 +449,7 @@ int main(void)
 
 					if (rtcDayLast != rtcDay) {
 
-						sprintf(clockPrint, "%02d", rtcDate);
+						sprintf(clockPrint, "%02d", rtcDateLast);
 						LCD_Font(380, 40, clockPrint, &DejaVu_Sans_48, 1, BLACK);
 						sprintf(clockPrint, "%02d", rtcDate);
 						LCD_Font(380, 40, clockPrint, &DejaVu_Sans_48, 1, CYAN);
@@ -469,10 +469,9 @@ int main(void)
 						LCD_Font(20, 145, days[(7 + rtcDay - 2) % 7], &DejaVu_Sans_48, 1, BLACK);
 						LCD_Font(20, 145, days[(7 + rtcDay - 1) % 7], &DejaVu_Sans_48, 1, BLUE);
 
-
 						rtcDayLast = rtcDay;
+						rtcDateLast = rtcDate;
 					}
-					rtcDateLast = rtcDate;
 					rtcMonthLast = rtcMonth;
 					rtcYearLast = rtcYear;
 					rtcHrsLast = rtcHrs;
