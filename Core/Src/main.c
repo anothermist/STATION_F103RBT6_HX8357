@@ -72,6 +72,18 @@
 double map(uint16_t x, uint16_t in_min, uint16_t in_max, uint16_t out_min, uint16_t out_max) {
 	return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
+
+uint8_t byteL(uint16_t val) {
+	return (val & 0xFF);
+}
+
+uint8_t byteH(uint16_t val) {
+	return ((val >> 8) & 0xFF);
+}
+
+uint16_t byteS(uint8_t byteL, uint8_t byteH) {
+	return (byteH << 8) | byteL;
+}
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -85,7 +97,6 @@ uint8_t rtcSec, rtcMin, rtcHrs, rtcDay, rtcDate, rtcMonth, rtcYear;
 uint8_t rtcSecLast = 61, rtcMinLast = 61, rtcHrsLast = 25, rtcDayLast, rtcDateLast, rtcMonthLast, rtcYearLast;
 double temperature, temperatureLast, humidity, humidityLast;
 uint16_t pressure, pressureLast;
-uint8_t eeprom[4096];
 uint16_t hT[157], hH[157], hP[157];
 /* USER CODE END PV */
 
@@ -117,18 +128,6 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef* huart) {
 		rx_buffer[rx_index++] = rx_data;
 		HAL_UART_Receive_IT(&huart1, &rx_data, 1);
 	}
-}
-
-uint8_t byteL(uint16_t val) {
-	return (val & 0xFF);
-}
-
-uint8_t byteH(uint16_t val) {
-	return ((val >> 8) & 0xFF);
-}
-
-uint16_t byteS(uint8_t byteL, uint8_t byteH) {
-	return (byteH << 8) | byteL;
 }
 
 void bme280(void) {
@@ -207,7 +206,7 @@ void bme280(void) {
 
 			AT24XX_Update(0, rtcHrs);
 
-			for (uint16_t i = 0; i < 157; i++) hT[i] = byteS(eeprom[i * 2 + 1000], eeprom[i * 2 + 1 + 1000]);
+			for (uint16_t i = 0; i < 157; i++) hT[i] = byteS(AT24XX_Read(i * 2 + 1000), AT24XX_Read(i * 2 + 1 + 1000));
 
 			for (uint16_t i = 1; i < 156; i++) hT[i] = hT[i + 1];
 
@@ -219,7 +218,7 @@ void bme280(void) {
 			}
 
 
-			for (uint16_t i = 0; i < 157; i++) hH[i] = byteS(eeprom[i * 2 + 2000], eeprom[i * 2 + 1 + 2000]);
+			for (uint16_t i = 0; i < 157; i++) hH[i] = byteS(AT24XX_Read(i * 2 + 2000), AT24XX_Read(i * 2 + 1 + 2000));
 
 			for (uint16_t i = 1; i < 156; i++) hH[i] = hH[i + 1];
 
@@ -231,7 +230,7 @@ void bme280(void) {
 			}
 
 
-			for (uint16_t i = 0; i < 157; i++) hP[i] = byteS(eeprom[i * 2 + 3000], eeprom[i * 2 + 1 + 3000]);
+			for (uint16_t i = 0; i < 157; i++) hP[i] = byteS(AT24XX_Read(i * 2 + 3000), AT24XX_Read(i * 2 + 1 + 3000));
 
 			for (uint16_t i = 1; i < 156; i++) hP[i] = hP[i + 1];
 
@@ -388,20 +387,14 @@ int main(void)
 	LCD_Rect_Fill(1, 1, 478, 318, BLACK);
 
 	LCD_Font(20, 127, "Clearing EEPROM", &DejaVu_Sans_36, 1, RED);
-	if (clearEEPROM) {
-		for (uint16_t i = 0; i < 4096; i++) {
-			AT24XX_Update(i, 0);
-		}
-	}
+	if (clearEEPROM) for (uint16_t i = 0; i < 4096; i++) AT24XX_Update(i, 0);
 	LCD_Font(20, 127, "Clearing EEPROM", &DejaVu_Sans_36, 1, BLACK);
 
 	LCD_Font(20, 127, "Waiting for I2C devices", &DejaVu_Sans_36, 1, RED);
-	for (uint16_t i = 0; i < 4096; i++) eeprom[i] = AT24XX_Read(i);
+	for (uint16_t i = 0; i < 157; i++) hT[i] = byteS(AT24XX_Read(i * 2 + 1000), AT24XX_Read(i * 2 + 1 + 1000));
+	for (uint16_t i = 0; i < 157; i++) hH[i] = byteS(AT24XX_Read(i * 2 + 2000), AT24XX_Read(i * 2 + 1 + 2000));
+	for (uint16_t i = 0; i < 157; i++) hP[i] = byteS(AT24XX_Read(i * 2 + 3000), AT24XX_Read(i * 2 + 1 + 3000));
 	LCD_Font(20, 127, "Waiting for I2C devices", &DejaVu_Sans_36, 1, BLACK);
-
-	for (uint16_t i = 0; i < 157; i++) hT[i] = byteS(eeprom[i * 2 + 1000], eeprom[i * 2 + 1 + 1000]);
-	for (uint16_t i = 0; i < 157; i++) hH[i] = byteS(eeprom[i * 2 + 2000], eeprom[i * 2 + 1 + 2000]);
-	for (uint16_t i = 0; i < 157; i++) hP[i] = byteS(eeprom[i * 2 + 3000], eeprom[i * 2 + 1 + 3000]);
 
 	BME280_Init();
 	DS3231_Update();
@@ -439,14 +432,12 @@ int main(void)
 
 		if (rtcSecLast != rtcSec) {
 
-			for (uint16_t i = 0; i < 4096; i++) eeprom[i] = AT24XX_Read(i);
-
-			LCD_Circle(172, 35, 8, 0, 1, HUE_14);
-			LCD_Circle(172, 75, 8, 0, 1, HUE_14);
+			LCD_Circle(172, 35, 8, 0, 1, ORANGE);
+			LCD_Circle(172, 75, 8, 0, 1, ORANGE);
 
 			if (rtcSec % 2 != 0) {
-				LCD_Circle(172, 35, 7, 1, 1, HUE_14);
-				LCD_Circle(172, 75, 7, 1, 1, HUE_14);
+				LCD_Circle(172, 35, 7, 1, 1, ORANGE);
+				LCD_Circle(172, 75, 7, 1, 1, ORANGE);
 				HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
 			}
 			else {
@@ -460,13 +451,13 @@ int main(void)
 				sprintf(clockPrint, "%02d", rtcMinLast);
 				LCD_Font(180, 100, clockPrint, &DejaVu_Sans_128, 1, BLACK);
 				sprintf(clockPrint, "%02d", rtcMin);
-				LCD_Font(180, 100, clockPrint, &DejaVu_Sans_128, 1, HUE_14);
+				LCD_Font(180, 100, clockPrint, &DejaVu_Sans_128, 1, ORANGE);
 
 				if (rtcHrsLast != rtcHrs) {
 					sprintf(clockPrint, "%02d", rtcHrsLast);
 					LCD_Font(0, 100, clockPrint, &DejaVu_Sans_128, 1, BLACK);
 					sprintf(clockPrint, "%02d", rtcHrs);
-					LCD_Font(0, 100, clockPrint, &DejaVu_Sans_128, 1, HUE_14);
+					LCD_Font(0, 100, clockPrint, &DejaVu_Sans_128, 1, ORANGE);
 
 					if (rtcDayLast != rtcDay) {
 
