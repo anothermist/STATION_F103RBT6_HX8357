@@ -30,26 +30,6 @@
 #include "ds3231.h"
 #include "at24xx.h"
 
-//#include "fonts/Arimo_Regular/008_Arimo_Regular.h"
-//#include "fonts/Arimo_Regular/009_Arimo_Regular.h"
-//#include "fonts/Arimo_Regular/010_Arimo_Regular.h"
-//#include "fonts/Arimo_Regular/011_Arimo_Regular.h"
-//#include "fonts/Arimo_Regular/012_Arimo_Regular.h"
-//#include "fonts/Arimo_Regular/014_Arimo_Regular.h"
-//#include "fonts/Arimo_Regular/016_Arimo_Regular.h"
-//#include "fonts/Arimo_Regular/018_Arimo_Regular.h"
-//#include "fonts/Arimo_Regular/020_Arimo_Regular.h"
-//#include "fonts/Arimo_Regular/022_Arimo_Regular.h"
-//#include "fonts/Arimo_Regular/024_Arimo_Regular.h"
-//#include "fonts/Arimo_Regular/026_Arimo_Regular.h"
-//#include "fonts/Arimo_Regular/028_Arimo_Regular.h"
-//#include "fonts/Arimo_Regular/036_Arimo_Regular.h"
-//#include "fonts/Arimo_Regular/048_Arimo_Regular.h"
-//#include "fonts/Arimo_Regular/072_Arimo_Regular.h"
-//#include "fonts/Arimo_Regular/096_Arimo_Regular.h"
-//#include "fonts/Arimo_Regular/112_Arimo_Regular.h"
-//#include "fonts/Arimo_Regular/128_Arimo_Regular.h"
-
 #include "fonts/DejaVu_Sans/008_DejaVu_Sans.h"
 #include "fonts/DejaVu_Sans/009_DejaVu_Sans.h"
 #include "fonts/DejaVu_Sans/010_DejaVu_Sans.h"
@@ -70,105 +50,6 @@
 #include "fonts/DejaVu_Sans/112_DejaVu_Sans.h"
 #include "fonts/DejaVu_Sans/128_DejaVu_Sans.h"
 
-//#include "fonts/DejaVu_Sans_Bold/008_DejaVu_Sans_Bold.h"
-//#include "fonts/DejaVu_Sans_Bold/009_DejaVu_Sans_Bold.h"
-//#include "fonts/DejaVu_Sans_Bold/010_DejaVu_Sans_Bold.h"
-//#include "fonts/DejaVu_Sans_Bold/011_DejaVu_Sans_Bold.h"
-//#include "fonts/DejaVu_Sans_Bold/012_DejaVu_Sans_Bold.h"
-//#include "fonts/DejaVu_Sans_Bold/014_DejaVu_Sans_Bold.h"
-//#include "fonts/DejaVu_Sans_Bold/016_DejaVu_Sans_Bold.h"
-//#include "fonts/DejaVu_Sans_Bold/018_DejaVu_Sans_Bold.h"
-//#include "fonts/DejaVu_Sans_Bold/020_DejaVu_Sans_Bold.h"
-//#include "fonts/DejaVu_Sans_Bold/022_DejaVu_Sans_Bold.h"
-//#include "fonts/DejaVu_Sans_Bold/024_DejaVu_Sans_Bold.h"
-//#include "fonts/DejaVu_Sans_Bold/026_DejaVu_Sans_Bold.h"
-//#include "fonts/DejaVu_Sans_Bold/028_DejaVu_Sans_Bold.h"
-//#include "fonts/DejaVu_Sans_Bold/036_DejaVu_Sans_Bold.h"
-//#include "fonts/DejaVu_Sans_Bold/048_DejaVu_Sans_Bold.h"
-//#include "fonts/DejaVu_Sans_Bold/072_DejaVu_Sans_Bold.h"
-//#include "fonts/DejaVu_Sans_Bold/096_DejaVu_Sans_Bold.h"
-//#include "fonts/DejaVu_Sans_Bold/112_DejaVu_Sans_Bold.h"
-////#include "fonts/DejaVu_Sans_Bold/128_DejaVu_Sans_Bold.h"
-
-//#include "fonts/DejaVu_Sans_Mono/008_DejaVu_Sans_Mono.h"
-//#include "fonts/DejaVu_Sans_Mono/009_DejaVu_Sans_Mono.h"
-//#include "fonts/DejaVu_Sans_Mono/010_DejaVu_Sans_Mono.h"
-//#include "fonts/DejaVu_Sans_Mono/011_DejaVu_Sans_Mono.h"
-//#include "fonts/DejaVu_Sans_Mono/012_DejaVu_Sans_Mono.h"
-//#include "fonts/DejaVu_Sans_Mono/014_DejaVu_Sans_Mono.h"
-//#include "fonts/DejaVu_Sans_Mono/016_DejaVu_Sans_Mono.h"
-//#include "fonts/DejaVu_Sans_Mono/018_DejaVu_Sans_Mono.h"
-//#include "fonts/DejaVu_Sans_Mono/020_DejaVu_Sans_Mono.h"
-//#include "fonts/DejaVu_Sans_Mono/022_DejaVu_Sans_Mono.h"
-//#include "fonts/DejaVu_Sans_Mono/024_DejaVu_Sans_Mono.h"
-//#include "fonts/DejaVu_Sans_Mono/026_DejaVu_Sans_Mono.h"
-//#include "fonts/DejaVu_Sans_Mono/028_DejaVu_Sans_Mono.h"
-//#include "fonts/DejaVu_Sans_Mono/036_DejaVu_Sans_Mono.h"
-//#include "fonts/DejaVu_Sans_Mono/048_DejaVu_Sans_Mono.h"
-//#include "fonts/DejaVu_Sans_Mono/072_DejaVu_Sans_Mono.h"
-//#include "fonts/DejaVu_Sans_Mono/096_DejaVu_Sans_Mono.h"
-//#include "fonts/DejaVu_Sans_Mono/112_DejaVu_Sans_Mono.h"
-//#include "fonts/DejaVu_Sans_Mono/128_DejaVu_Sans_Mono.h"
-
-//#include "fonts/Open_Sans_Regular/008_Open_Sans_Regular.h"
-//#include "fonts/Open_Sans_Regular/009_Open_Sans_Regular.h"
-//#include "fonts/Open_Sans_Regular/010_Open_Sans_Regular.h"
-//#include "fonts/Open_Sans_Regular/011_Open_Sans_Regular.h"
-//#include "fonts/Open_Sans_Regular/012_Open_Sans_Regular.h"
-//#include "fonts/Open_Sans_Regular/014_Open_Sans_Regular.h"
-//#include "fonts/Open_Sans_Regular/016_Open_Sans_Regular.h"
-//#include "fonts/Open_Sans_Regular/018_Open_Sans_Regular.h"
-//#include "fonts/Open_Sans_Regular/020_Open_Sans_Regular.h"
-//#include "fonts/Open_Sans_Regular/022_Open_Sans_Regular.h"
-//#include "fonts/Open_Sans_Regular/024_Open_Sans_Regular.h"
-//#include "fonts/Open_Sans_Regular/026_Open_Sans_Regular.h"
-//#include "fonts/Open_Sans_Regular/028_Open_Sans_Regular.h"
-//#include "fonts/Open_Sans_Regular/036_Open_Sans_Regular.h"
-//#include "fonts/Open_Sans_Regular/048_Open_Sans_Regular.h"
-//#include "fonts/Open_Sans_Regular/072_Open_Sans_Regular.h"
-//#include "fonts/Open_Sans_Regular/096_Open_Sans_Regular.h"
-//#include "fonts/Open_Sans_Regular/112_Open_Sans_Regular.h"
-//#include "fonts/Open_Sans_Regular/128_Open_Sans_Regular.h"
-
-//#include "fonts/Open_Sans_Bold/008_Open_Sans_Bold.h"
-//#include "fonts/Open_Sans_Bold/009_Open_Sans_Bold.h"
-//#include "fonts/Open_Sans_Bold/010_Open_Sans_Bold.h"
-//#include "fonts/Open_Sans_Bold/011_Open_Sans_Bold.h"
-//#include "fonts/Open_Sans_Bold/012_Open_Sans_Bold.h"
-//#include "fonts/Open_Sans_Bold/014_Open_Sans_Bold.h"
-//#include "fonts/Open_Sans_Bold/016_Open_Sans_Bold.h"
-//#include "fonts/Open_Sans_Bold/018_Open_Sans_Bold.h"
-//#include "fonts/Open_Sans_Bold/020_Open_Sans_Bold.h"
-//#include "fonts/Open_Sans_Bold/022_Open_Sans_Bold.h"
-//#include "fonts/Open_Sans_Bold/024_Open_Sans_Bold.h"
-//#include "fonts/Open_Sans_Bold/026_Open_Sans_Bold.h"
-//#include "fonts/Open_Sans_Bold/028_Open_Sans_Bold.h"
-//#include "fonts/Open_Sans_Bold/036_Open_Sans_Bold.h"
-//#include "fonts/Open_Sans_Bold/048_Open_Sans_Bold.h"
-//#include "fonts/Open_Sans_Bold/072_Open_Sans_Bold.h"
-//#include "fonts/Open_Sans_Bold/096_Open_Sans_Bold.h"
-//#include "fonts/Open_Sans_Bold/112_Open_Sans_Bold.h"
-//#include "fonts/Open_Sans_Bold/128_Open_Sans_Bold.h"
-
-//#include "fonts/Roboto_Mono/008_Roboto_Mono.h"
-//#include "fonts/Roboto_Mono/009_Roboto_Mono.h"
-//#include "fonts/Roboto_Mono/010_Roboto_Mono.h"
-//#include "fonts/Roboto_Mono/011_Roboto_Mono.h"
-//#include "fonts/Roboto_Mono/012_Roboto_Mono.h"
-//#include "fonts/Roboto_Mono/014_Roboto_Mono.h"
-//#include "fonts/Roboto_Mono/016_Roboto_Mono.h"
-//#include "fonts/Roboto_Mono/018_Roboto_Mono.h"
-//#include "fonts/Roboto_Mono/020_Roboto_Mono.h"
-//#include "fonts/Roboto_Mono/022_Roboto_Mono.h"
-//#include "fonts/Roboto_Mono/024_Roboto_Mono.h"
-//#include "fonts/Roboto_Mono/026_Roboto_Mono.h"
-//#include "fonts/Roboto_Mono/028_Roboto_Mono.h"
-//#include "fonts/Roboto_Mono/036_Roboto_Mono.h"
-//#include "fonts/Roboto_Mono/048_Roboto_Mono.h"
-//#include "fonts/Roboto_Mono/072_Roboto_Mono.h"
-//#include "fonts/Roboto_Mono/096_Roboto_Mono.h"
-//#include "fonts/Roboto_Mono/112_Roboto_Mono.h"
-//#include "fonts/Roboto_Mono/128_Roboto_Mono.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -176,8 +57,8 @@
 #define MIN_TEMPERATURE 20
 #define MAX_TEMPERATURE 30
 
-#define MIN_HUMIDITY 20
-#define MAX_HUMIDITY 80
+#define MIN_HUMIDITY 10
+#define MAX_HUMIDITY 90
 
 #define MIN_PRESSURE 920
 #define MAX_PRESSURE 1047
@@ -199,16 +80,13 @@ I2C_HandleTypeDef hi2c1;
 UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN PV */
-uint8_t  rtcSet = 0, clearEEPROM = 0, graphViewed = 0;
-uint8_t rtcSec, rtcMin, rtcHrs, rtcDay, rtcDate, rtcMonth, rtcYear,
-rtcSecA1, rtcMinA1, rtcHrsA1, rtcDayA1, rtcDateA1, rtcMinA2, rtcHrsA2, rtcDayA2, rtcDateA2;
+uint8_t  rtcSet = 0, clearEEPROM = 0, viewGraphs = 0;
+uint8_t rtcSec, rtcMin, rtcHrs, rtcDay, rtcDate, rtcMonth, rtcYear;
 uint8_t rtcSecLast = 61, rtcMinLast = 61, rtcHrsLast = 25, rtcDayLast, rtcDateLast, rtcMonthLast, rtcYearLast;
 double temperature, temperatureLast, humidity, humidityLast;
-uint16_t updateTime = 25, pressure, pressureLast;
-
-uint16_t hourlyTemperature[157], hourlyHumidity[157], hourlyPressure[157];
-//uint16_t updateTime = 25, maximumTemperature = 32, maximumHumidity = 40, maximumPressure = 1040;
+uint16_t pressure, pressureLast;
 uint8_t eeprom[4096];
+uint16_t hT[157], hH[157], hP[157];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -325,61 +203,54 @@ void bme280(void) {
 			pressureLast = pressure;
 		}
 
-		if (updateTime != rtcHrs) {
+		if (AT24XX_Read(0) != rtcHrs) {
 
 			AT24XX_Update(0, rtcHrs);
-			updateTime = AT24XX_Read(0);
+
+			for (uint16_t i = 0; i < 157; i++) hT[i] = byteS(eeprom[i * 2 + 1000], eeprom[i * 2 + 1 + 1000]);
+
+			for (uint16_t i = 1; i < 156; i++) hT[i] = hT[i + 1];
+
+			hT[155] = (uint16_t) (temperature * 10);
 
 			for (uint16_t i = 0; i < 157; i++) {
-				hourlyTemperature[i] = byteS(eeprom[i * 2 + 1000], eeprom[i * 2 + 1 + 1000]);
-			}
-
-			for (uint16_t i = 1; i < 156; i++) hourlyTemperature[i] = hourlyTemperature[i + 1];
-
-			hourlyTemperature[155] = (uint16_t) (temperature * 10);
-
-			for (uint16_t i = 0; i < 157; i++) {
-				AT24XX_Update(i * 2 + 1000, byteL(hourlyTemperature[i]));
-				AT24XX_Update(i * 2 + 1 + 1000, byteH(hourlyTemperature[i]));
+				AT24XX_Update(i * 2 + 1000, byteL(hT[i]));
+				AT24XX_Update(i * 2 + 1 + 1000, byteH(hT[i]));
 			}
 
 
-			for (uint16_t i = 0; i < 157; i++) {
-				hourlyHumidity[i] = byteS(eeprom[i * 2 + 2000], eeprom[i * 2 + 1 + 2000]);
-			}
+			for (uint16_t i = 0; i < 157; i++) hH[i] = byteS(eeprom[i * 2 + 2000], eeprom[i * 2 + 1 + 2000]);
 
-			for (uint16_t i = 1; i < 156; i++) hourlyHumidity[i] = hourlyHumidity[i + 1];
+			for (uint16_t i = 1; i < 156; i++) hH[i] = hH[i + 1];
 
-			hourlyHumidity[155] = (uint16_t) (humidity * 10);
+			hH[155] = (uint16_t) (humidity * 10);
 
 			for (uint16_t i = 0; i < 157; i++) {
-				AT24XX_Update(i * 2 + 2000, byteL(hourlyHumidity[i]));
-				AT24XX_Update(i * 2 + 1 + 2000, byteH(hourlyHumidity[i]));
+				AT24XX_Update(i * 2 + 2000, byteL(hH[i]));
+				AT24XX_Update(i * 2 + 1 + 2000, byteH(hH[i]));
 			}
 
+
+			for (uint16_t i = 0; i < 157; i++) hP[i] = byteS(eeprom[i * 2 + 3000], eeprom[i * 2 + 1 + 3000]);
+
+			for (uint16_t i = 1; i < 156; i++) hP[i] = hP[i + 1];
+
+			hP[155] = (uint16_t)pressure;
 
 			for (uint16_t i = 0; i < 157; i++) {
-				hourlyPressure[i] = byteS(eeprom[i * 2 + 3000], eeprom[i * 2 + 1 + 3000]);
+				AT24XX_Update(i * 2 + 3000, byteL(hP[i]));
+				AT24XX_Update(i * 2 + 1 + 3000, byteH(hP[i]));
 			}
 
-			for (uint16_t i = 1; i < 156; i++) hourlyPressure[i] = hourlyPressure[i + 1];
-
-			hourlyPressure[155] = (uint16_t)pressure;
-
-			for (uint16_t i = 0; i < 157; i++) {
-				AT24XX_Update(i * 2 + 3000, byteL(hourlyPressure[i]));
-				AT24XX_Update(i * 2 + 1 + 3000, byteH(hourlyPressure[i]));
-			}
-
-			graphViewed = 0;
+			viewGraphs = 0;
 		}
 
-		if (!graphViewed) {
+		if (!viewGraphs) {
 
 			LCD_Rect(2, 190, 157, 128, 1, BLUE);
 
-			for (uint16_t i = 0; i < 155 ; i++) {
-				int16_t val = map(((int16_t)hourlyTemperature[i] / 10), MIN_TEMPERATURE, MAX_TEMPERATURE, 0, 127);
+			for (uint16_t i = 0; i < 156 ; i++) {
+				int16_t val = map(((int16_t)hT[i] / 10), MIN_TEMPERATURE, MAX_TEMPERATURE, 0, 127);
 				if (val < 0) val = 0;
 				if (val > 127) val = 127;
 				LCD_Line(3 + i, 191, 3 + i, 318, 1, BLACK);
@@ -390,8 +261,8 @@ void bme280(void) {
 
 			LCD_Rect(161, 190, 157, 128, 1, BLUE);
 
-			for (uint16_t i = 0; i < 155 ; i++) {
-				int16_t val = map(((int16_t)hourlyHumidity[i] / 10), MIN_HUMIDITY, MAX_HUMIDITY, 0, 127);
+			for (uint16_t i = 0; i < 156 ; i++) {
+				int16_t val = map(((int16_t)hH[i] / 10), MIN_HUMIDITY, MAX_HUMIDITY, 0, 127);
 				if (val < 0) val = 0;
 				if (val > 127) val = 127;
 				LCD_Line(162 + i, 191, 162 + i, 318, 1, BLACK);
@@ -402,8 +273,8 @@ void bme280(void) {
 
 			LCD_Rect(320, 190, 157, 128, 1, BLUE);
 
-			for (uint16_t i = 0; i < 155 ; i++) {
-				int16_t val = map(((int16_t)hourlyPressure[i]), MIN_PRESSURE, MAX_PRESSURE, 0, 127);
+			for (uint16_t i = 0; i < 156 ; i++) {
+				int16_t val = map(((int16_t)hP[i]), MIN_PRESSURE, MAX_PRESSURE, 0, 127);
 				if (val < 0) val = 0;
 				if (val > 127) val = 127;
 				LCD_Line(322 + i, 191, 322 + i, 318, 1, BLACK);
@@ -411,7 +282,7 @@ void bme280(void) {
 
 			}
 
-			graphViewed = 1;
+			viewGraphs = 1;
 		}
 	}
 }
@@ -478,59 +349,6 @@ void uartDecode() {
 
 	//	for (uint8_t i = 0; i < 255; i++) rx_buffer[i] = 0;
 }
-
-//void signal(void)
-//{
-//	for (uint32_t i = 0; i <= 65536; i++)
-//	{
-//		TIM1->CCR1 = i;
-//	}
-//}
-
-//void alarm(void)
-//{
-//	alarm1 = AT24XX_Read(4000);
-//	if (rtcHrsA1 < 24 && rtcMinA1 < 60)
-//	{
-//		if (!printAlarm)
-//		{
-//			LCD_Rect_Fill(71, 170, 105, 28, BLACK);
-//			char alarm1Time[8];
-//			sprintf(alarm1Time, "%02d:%02d", rtcHrsA1, rtcMinA1);
-//			if (alarm1) LCD_Font(70, 197, alarm1Time, &DejaVu_Sans_36, 1, RED);
-//			else LCD_Font(70, 197, alarm1Time, &DejaVu_Sans_36, 1, GRAY);
-
-//			LCD_Rect_Round(2, 170, 30, 30, 2, 1, GRAY);
-//			LCD_Font(8, 179, "_", &DejaVu_Sans_36, 1, GRAY);
-//			LCD_Rect_Round(34, 170, 30, 30, 2, 1, GRAY);
-//			LCD_Font(34, 197, "+", &DejaVu_Sans_36, 1, GRAY);
-
-//			LCD_Rect_Round(182, 170, 30, 30, 2, 1, GRAY);
-//			LCD_Font(188, 179, "_", &DejaVu_Sans_36, 1, GRAY);
-//			LCD_Rect_Round(214, 170, 30, 30, 2, 1, GRAY);
-//			LCD_Font(214, 197, "+", &DejaVu_Sans_36, 1, GRAY);
-
-//			LCD_Rect_Round(260, 170, 130, 30, 2, 1, GRAY);
-//			LCD_Rect_Round(300, 175, 50, 20, 2, 1, GRAY);
-//			LCD_Font(262, 192, "OFF", &DejaVu_Sans_18, 1, GRAY);
-//			LCD_Font(356, 192, "ON", &DejaVu_Sans_18, 1, GRAY);
-
-//			if (alarm1)
-//			{
-//				LCD_Rect_Round_Fill(329, 176, 20, 18, 1, RED);
-//				LCD_Rect_Round_Fill(301, 176, 20, 18, 1, BLACK);
-//			}
-//			else
-//			{
-//				LCD_Rect_Round_Fill(301, 176, 20, 18, 1, GRAY);
-//				LCD_Rect_Round_Fill(329, 176, 20, 18, 1, BLACK);
-//			}
-
-//			printAlarm = 1;
-//		}
-//		if (alarm1 && rtcHrsA1 == rtcHrs && rtcMinA1 == rtcMin) signal();
-//	}
-//}
 /* USER CODE END 0 */
 
 /**
@@ -581,6 +399,10 @@ int main(void)
 	for (uint16_t i = 0; i < 4096; i++) eeprom[i] = AT24XX_Read(i);
 	LCD_Font(20, 127, "Waiting for I2C devices", &DejaVu_Sans_36, 1, BLACK);
 
+	for (uint16_t i = 0; i < 157; i++) hT[i] = byteS(eeprom[i * 2 + 1000], eeprom[i * 2 + 1 + 1000]);
+	for (uint16_t i = 0; i < 157; i++) hH[i] = byteS(eeprom[i * 2 + 2000], eeprom[i * 2 + 1 + 2000]);
+	for (uint16_t i = 0; i < 157; i++) hP[i] = byteS(eeprom[i * 2 + 3000], eeprom[i * 2 + 1 + 3000]);
+
 	BME280_Init();
 	DS3231_Update();
 
@@ -599,9 +421,9 @@ int main(void)
 	{
 
 		if (rx_index != 0) {
-			//			HAL_Delay(200);
-			//			rx_index = 0;
-			//			uartDecode();
+			HAL_Delay(200);
+			rx_index = 0;
+			uartDecode();
 		}
 
 		DS3231_Update();
@@ -612,22 +434,12 @@ int main(void)
 		rtcDate = DS3231_getDate();
 		rtcMonth = DS3231_getMonth();
 		rtcYear = DS3231_getYear();
-		//		rtcSecA1 = DS3231_getAlarm1Sec();
-		rtcMinA1 = DS3231_getAlarm1Min();
-		rtcHrsA1 = DS3231_getAlarm1Hour();
-		//		rtcDayA1 = DS3231_getAlarm1Day();
-		//		rtcDateA1 = DS3231_getAlarm1Date();
-		//		rtcMinA2 = DS3231_getAlarm2Min();
-		//		rtcHrsA2 = DS3231_getAlarm2Hour();
-		//		rtcDayA2 = DS3231_getAlarm2Day();
-		//		rtcDateA2 = DS3231_getAlarm2Date();
 
 		char clockPrint[13];
 
 		if (rtcSecLast != rtcSec) {
 
 			for (uint16_t i = 0; i < 4096; i++) eeprom[i] = AT24XX_Read(i);
-			bme280();
 
 			LCD_Circle(172, 35, 8, 0, 1, HUE_14);
 			LCD_Circle(172, 75, 8, 0, 1, HUE_14);
@@ -683,14 +495,11 @@ int main(void)
 					rtcYearLast = rtcYear;
 					rtcHrsLast = rtcHrs;
 				}
-
-
 				rtcMinLast = rtcMin;
 			}
-			//			alarm();
+			bme280();
 			rtcSecLast = rtcSec;
 		}
-		//	}
 		/* USER CODE END WHILE */
 
 		/* USER CODE BEGIN 3 */

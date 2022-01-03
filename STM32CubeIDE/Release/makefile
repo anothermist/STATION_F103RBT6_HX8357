@@ -50,6 +50,9 @@ default.size.stdout \
 OBJDUMP_LIST += \
 STATION_F103RB_HX8357.list \
 
+OBJCOPY_HEX += \
+STATION_F103RB_HX8357.hex \
+
 OBJCOPY_BIN += \
 STATION_F103RB_HX8357.bin \
 
@@ -62,7 +65,7 @@ main-build: STATION_F103RB_HX8357.elf secondary-outputs
 
 # Tool invocations
 STATION_F103RB_HX8357.elf: $(OBJS) $(USER_OBJS) E:\GitHub\STATION_F103RB_HX8357\STM32CubeIDE\STM32F103RBTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "STATION_F103RB_HX8357.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"E:\GitHub\STATION_F103RB_HX8357\STM32CubeIDE\STM32F103RBTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="STATION_F103RB_HX8357.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
+	arm-none-eabi-gcc -o "STATION_F103RB_HX8357.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"E:\GitHub\STATION_F103RB_HX8357\STM32CubeIDE\STM32F103RBTX_FLASH.ld" -Wl,-Map="STATION_F103RB_HX8357.map" -Wl,--gc-sections -static -flto --specs=nano.specs -mfloat-abi=soft -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -76,6 +79,11 @@ STATION_F103RB_HX8357.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL
 	@echo 'Finished building: $@'
 	@echo ' '
 
+STATION_F103RB_HX8357.hex: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objcopy  -O ihex $(EXECUTABLES) "STATION_F103RB_HX8357.hex"
+	@echo 'Finished building: $@'
+	@echo ' '
+
 STATION_F103RB_HX8357.bin: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	arm-none-eabi-objcopy  -O binary $(EXECUTABLES) "STATION_F103RB_HX8357.bin"
 	@echo 'Finished building: $@'
@@ -83,10 +91,10 @@ STATION_F103RB_HX8357.bin: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_
 
 # Other Targets
 clean:
-	-$(RM) STATION_F103RB_HX8357.bin STATION_F103RB_HX8357.elf STATION_F103RB_HX8357.list default.size.stdout
+	-$(RM) STATION_F103RB_HX8357.bin STATION_F103RB_HX8357.elf STATION_F103RB_HX8357.hex STATION_F103RB_HX8357.list default.size.stdout
 	-@echo ' '
 
-secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST) $(OBJCOPY_BIN)
+secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST) $(OBJCOPY_HEX) $(OBJCOPY_BIN)
 
 fail-specified-linker-script-missing:
 	@echo 'Error: Cannot find the specified linker script. Check the linker settings in the build configuration.'
