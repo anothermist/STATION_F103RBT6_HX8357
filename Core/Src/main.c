@@ -60,8 +60,8 @@
 #define MIN_HUMIDITY 10
 #define MAX_HUMIDITY 90
 
-#define MIN_PRESSURE 920
-#define MAX_PRESSURE 1047
+#define MIN_PRESSURE 937
+#define MAX_PRESSURE 1065
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -148,29 +148,29 @@ void bme280(void) {
 			char weatherPrintT[8];
 
 			if (temperatureLast >= 10 || (temperatureLast < 0 && temperatureLast > -10)) {
-				sprintf(weatherPrintT, "%.1f 'C", temperatureLast);
-				LCD_Font(3, 187, weatherPrintT, &DejaVu_Sans_36, 1, BLACK);
+				sprintf(weatherPrintT, "%.1f'C", temperatureLast);
+				LCD_Font(1, 187, weatherPrintT, &DejaVu_Sans_48, 1, BLACK);
 			}
 			else if (temperatureLast < 10 && temperatureLast > 0) {
-				sprintf(weatherPrintT, "%.1f 'C", temperatureLast);
-				LCD_Font(29, 187, weatherPrintT, &DejaVu_Sans_36, 1, BLACK);
+				sprintf(weatherPrintT, "%.1f'C", temperatureLast);
+				LCD_Font(27, 187, weatherPrintT, &DejaVu_Sans_48, 1, BLACK);
 			}
 			else if (temperatureLast <= -10) {
-				sprintf(weatherPrintT, "%2d", (int8_t)temperatureLast);
-				LCD_Font(3, 187, weatherPrintT, &DejaVu_Sans_36, 1, BLACK);
+				sprintf(weatherPrintT, "%2d'C", (int8_t)temperatureLast);
+				LCD_Font(1, 187, weatherPrintT, &DejaVu_Sans_48, 1, BLACK);
 			}
 
 			if (temperature >= 10 || (temperature < 0 && temperature > -10)) {
-				sprintf(weatherPrintT, "%.1f 'C", temperature);
-				LCD_Font(3, 187, weatherPrintT, &DejaVu_Sans_36, 1, ORANGE);
+				sprintf(weatherPrintT, "%.1f'C", temperature);
+				LCD_Font(1, 187, weatherPrintT, &DejaVu_Sans_48, 1, ORANGE);
 			}
 			else if (temperature < 10 && temperature > 0) {
-				sprintf(weatherPrintT, "%.1f 'C", temperature);
-				LCD_Font(29, 187, weatherPrintT, &DejaVu_Sans_36, 1, ORANGE);
+				sprintf(weatherPrintT, "%.1f'C", temperature);
+				LCD_Font(27, 187, weatherPrintT, &DejaVu_Sans_48, 1, ORANGE);
 			}
 			else if (temperature <= -10) {
-				sprintf(weatherPrintT, "%2d 'C", (int8_t)temperature);
-				LCD_Font(3, 187, weatherPrintT, &DejaVu_Sans_36, 1, ORANGE);
+				sprintf(weatherPrintT, "%2d'C", (int8_t)temperature);
+				LCD_Font(1, 187, weatherPrintT, &DejaVu_Sans_48, 1, ORANGE);
 			}
 
 			temperatureLast = temperature;
@@ -180,15 +180,15 @@ void bme280(void) {
 
 			char weatherPrintH[7];
 
-			sprintf(weatherPrintH, "%.1f %%H", humidityLast);
+			sprintf(weatherPrintH, "%.1f'H", humidityLast);
 			if (humidityLast >= 10)
-				LCD_Font(162, 187, weatherPrintH, &DejaVu_Sans_36, 1, BLACK);
-			else LCD_Font(188, 187, weatherPrintH, &DejaVu_Sans_36, 1, BLACK);
+				LCD_Font(160, 187, weatherPrintH, &DejaVu_Sans_48, 1, BLACK);
+			else LCD_Font(186, 187, weatherPrintH, &DejaVu_Sans_48, 1, BLACK);
 
-			sprintf(weatherPrintH, "%.1f %%H", humidity);
+			sprintf(weatherPrintH, "%.1f'H", humidity);
 			if (humidity >= 10)
-				LCD_Font(162, 187, weatherPrintH, &DejaVu_Sans_36, 1, CYAN);
-			else LCD_Font(188, 187, weatherPrintH, &DejaVu_Sans_36, 1, CYAN);
+				LCD_Font(160, 187, weatherPrintH, &DejaVu_Sans_48, 1, CYAN);
+			else LCD_Font(186, 187, weatherPrintH, &DejaVu_Sans_48, 1, CYAN);
 
 			humidityLast = humidity;
 		}
@@ -197,13 +197,13 @@ void bme280(void) {
 
 			char weatherPrintP[11];
 
-			if (pressureLast >= 1000) sprintf(weatherPrintP, "%02d HP", pressureLast);
-			else sprintf(weatherPrintP, " %02d HP", pressureLast);
-			LCD_Font(321, 187, weatherPrintP, &DejaVu_Sans_36, 1, BLACK);
+			if (pressureLast >= 1000) sprintf(weatherPrintP, "%02d", pressureLast);
+			else sprintf(weatherPrintP, " %02d", pressureLast);
+			LCD_Font(321, 187, weatherPrintP, &DejaVu_Sans_48, 1, BLACK);
 
-			if (pressure >= 1000) sprintf(weatherPrintP, "%02d HP", pressure);
-			else sprintf(weatherPrintP, " %02d HP", pressure);
-			LCD_Font(321, 187, weatherPrintP, &DejaVu_Sans_36, 1, GRAY);
+			if (pressure >= 1000) sprintf(weatherPrintP, "%02d", pressure);
+			else sprintf(weatherPrintP, " %02d", pressure);
+			LCD_Font(321, 187, weatherPrintP, &DejaVu_Sans_48, 1, GRAY);
 
 			pressureLast = pressure;
 		}
@@ -373,15 +373,15 @@ int main(void)
 	LCD_Rect_Fill(0, 0, 480, 320, BLUE);
 	LCD_Rect_Fill(1, 1, 478, 318, BLACK);
 
-	LCD_Font(20, 127, "Clearing EEPROM", &DejaVu_Sans_36, 1, RED);
+	LCD_Font(20, 127, "Clearing EEPROM", &DejaVu_Sans_48, 1, RED);
 	if (clearEEPROM) for (uint16_t i = 0; i < 4096; i++) AT24XX_Update(i, 0);
-	LCD_Font(20, 127, "Clearing EEPROM", &DejaVu_Sans_36, 1, BLACK);
+	LCD_Font(20, 127, "Clearing EEPROM", &DejaVu_Sans_48, 1, BLACK);
 
-	LCD_Font(20, 127, "Waiting for I2C devices", &DejaVu_Sans_36, 1, RED);
+	LCD_Font(20, 127, "Waiting for I2C", &DejaVu_Sans_48, 1, RED);
 	for (uint16_t i = 0; i < 157; i++) hT[i] = byteS(AT24XX_Read(i * 2 + 1000), AT24XX_Read(i * 2 + 1 + 1000));
 	for (uint16_t i = 0; i < 157; i++) hH[i] = byteS(AT24XX_Read(i * 2 + 2000), AT24XX_Read(i * 2 + 1 + 2000));
 	for (uint16_t i = 0; i < 157; i++) hP[i] = byteS(AT24XX_Read(i * 2 + 3000), AT24XX_Read(i * 2 + 1 + 3000));
-	LCD_Font(20, 127, "Waiting for I2C devices", &DejaVu_Sans_36, 1, BLACK);
+	LCD_Font(20, 127, "Waiting for I2C", &DejaVu_Sans_48, 1, BLACK);
 
 	BME280_Init();
 	DS3231_Update();
@@ -449,23 +449,26 @@ int main(void)
 
 					if (rtcDayLast != rtcDay) {
 
-						static const char* days[7] = { "MON", "TUE", "WED",
-								"THU", "FRI", "SAT", "SUN" };
+						sprintf(clockPrint, "%02d", rtcDate);
+						LCD_Font(380, 40, clockPrint, &DejaVu_Sans_48, 1, BLACK);
+						sprintf(clockPrint, "%02d", rtcDate);
+						LCD_Font(380, 40, clockPrint, &DejaVu_Sans_48, 1, CYAN);
+						if (rtcDate < 10) LCD_Font(380, 40, "0", &DejaVu_Sans_48, 1, BLACK);
 
-						LCD_Font(2, 130, days[(7 + rtcDay - 2) % 7], &DejaVu_Sans_36, 1, BLACK);
-						LCD_Font(2, 130, days[(7 + rtcDay - 1) % 7], &DejaVu_Sans_36, 1, GRAY);
+						static const char* months[12] = { "JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC" };
 
-						sprintf(clockPrint, "%02d-%02d-%02d", rtcDateLast, rtcMonthLast, rtcYearLast);
-						LCD_Font(100, 130, clockPrint, &DejaVu_Sans_36, 1, BLACK);
+						LCD_Font(370, 90, months[(12 + rtcMonth - 2) % 12], &DejaVu_Sans_48, 1, BLACK);
+						LCD_Font(370, 90, months[(12 + rtcMonth - 1) % 12], &DejaVu_Sans_48, 1, CYAN);
 
-						sprintf(clockPrint, "%02d-%02d-%02d", rtcDate, rtcMonth, rtcYear);
-						LCD_Font(100, 130, clockPrint, &DejaVu_Sans_36, 1, GRAY);
+						sprintf(clockPrint, "%02d-%02d-%02d", rtcDateLast, rtcMonthLast, rtcYearLast +2000);
+						LCD_Font(180, 145, clockPrint, &DejaVu_Sans_48, 1, BLACK);
+						sprintf(clockPrint, "%02d-%02d-%02d", rtcDate, rtcMonth, rtcYear +2000);
+						LCD_Font(180, 145, clockPrint, &DejaVu_Sans_48, 1, BLUE);
 
-						static const char* months[12] = { "JAN", "FEB", "MAR", "APR", "MAY",
-								"JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC" };
+						static const char* days[7] = { "MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN" };
+						LCD_Font(20, 145, days[(7 + rtcDay - 2) % 7], &DejaVu_Sans_48, 1, BLACK);
+						LCD_Font(20, 145, days[(7 + rtcDay - 1) % 7], &DejaVu_Sans_48, 1, BLUE);
 
-						LCD_Font(280, 130, months[(12 + rtcMonth - 2) % 12], &DejaVu_Sans_36, 1, BLACK);
-						LCD_Font(280, 130, months[(12 + rtcMonth - 1) % 12], &DejaVu_Sans_36, 1, GRAY);
 
 						rtcDayLast = rtcDay;
 					}
