@@ -35,70 +35,87 @@ void DS3231_Update(void) {
 }
 
 uint8_t DS3231_getSec(void) {
+	DS3231_Update();
     return bcdToDec(rtcBuffer[0]);
 }
 
 uint8_t DS3231_getMin(void) {
+	DS3231_Update();
     return bcdToDec(rtcBuffer[1]);
 }
 
 uint8_t DS3231_getHrs(void) {
+	DS3231_Update();
     return bcdToDec(rtcBuffer[2]);
 }
 
 uint8_t DS3231_getDay(void) {
+	DS3231_Update();
     return bcdToDec(rtcBuffer[3]);
 }
 
 uint8_t DS3231_getDate(void) {
+	DS3231_Update();
     return bcdToDec(rtcBuffer[4]);
 }
 
 uint8_t DS3231_getMonth(void) {
+	DS3231_Update();
     return bcdToDec(rtcBuffer[5]);
 }
 
 uint8_t DS3231_getYear(void) {
+	DS3231_Update();
     return bcdToDec(rtcBuffer[6]);
 }
 
 uint8_t DS3231_getAlarm1Sec(void) {
+	DS3231_Update();
     return bcdToDec(rtcBuffer[7]);
 }
 
 uint8_t DS3231_getAlarm1Min(void) {
+	DS3231_Update();
     return bcdToDec(rtcBuffer[8]);
 }
 
 uint8_t DS3231_getAlarm1Hour(void) {
+	DS3231_Update();
     return bcdToDec(rtcBuffer[9]);
 }
 
 uint8_t DS3231_getAlarm1Day(void) {
+	DS3231_Update();
     return bcdToDec(rtcBuffer[10]);
 }
 
 uint8_t DS3231_getAlarm1Date(void) {
+	DS3231_Update();
     return bcdToDec(rtcBuffer[11]);
 }
 
 uint8_t DS3231_getAlarm2Min(void) {
+	DS3231_Update();
     return bcdToDec(rtcBuffer[12]);
 }
 
 uint8_t DS3231_getAlarm2Hour(void) {
+	DS3231_Update();
     return bcdToDec(rtcBuffer[13]);
 }
 
 uint8_t DS3231_getAlarm2Day(void) {
+	DS3231_Update();
     return bcdToDec(rtcBuffer[14]);
 }
 
 uint8_t DS3231_getAlarm2Date(void) {
+	DS3231_Update();
     return bcdToDec(rtcBuffer[15]);
 }
 
 double DS3231_getTemp(void) {
+	DS3231_Update();
     uint8_t tempMSB = rtcBuffer[17];
     uint8_t tempLSB = rtcBuffer[18];
     double t = 0.0;

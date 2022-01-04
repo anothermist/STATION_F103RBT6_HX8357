@@ -105,7 +105,7 @@ uint8_t rtcSec, rtcMin, rtcHrs, rtcDay, rtcDate, rtcMonth, rtcYear;
 uint8_t rtcSecLast = 61, rtcMinLast = 61, rtcHrsLast = 25, rtcDayLast, rtcDateLast, rtcMonthLast, rtcYearLast;
 double temperature, temperatureLast, humidity, humidityLast;
 uint16_t pressure, pressureLast;
-uint16_t hT[157], hH[157], hP[157];
+int16_t hT[156], hH[156], hP[156];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -140,239 +140,83 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef* huart) {
 	}
 }
 
-void bme280(void) {
-	temperature = BME280_getTemperature(-1);
-	humidity = BME280_getHumidity(-1);
-	pressure = (uint16_t)BME280_getPressure();
-
-	if (pressure > 300 && pressure < 1100 && temperature < 85 && temperature > -40 && humidity > 0 && humidity < 100) {
-
-		if (temperature != temperatureLast && temperature >= -40 && temperature <= 40) {
-
-			char weatherPrintT[8];
-
-			if (temperatureLast >= 10 || (temperatureLast < 0 && temperatureLast > -10)) {
-				sprintf(weatherPrintT, "%.1f'C", temperatureLast);
-				LCD_Font(1, 187, weatherPrintT, &DejaVu_Sans_48, 1, BLACK);
-			}
-			else if (temperatureLast < 10 && temperatureLast > 0) {
-				sprintf(weatherPrintT, "%.1f'C", temperatureLast);
-				LCD_Font(27, 187, weatherPrintT, &DejaVu_Sans_48, 1, BLACK);
-			}
-			else if (temperatureLast <= -10) {
-				sprintf(weatherPrintT, "%2d'C", (int8_t)temperatureLast);
-				LCD_Font(1, 187, weatherPrintT, &DejaVu_Sans_48, 1, BLACK);
-			}
-
-			if (temperature >= 10 || (temperature < 0 && temperature > -10)) {
-				sprintf(weatherPrintT, "%.1f'C", temperature);
-				LCD_Font(1, 187, weatherPrintT, &DejaVu_Sans_48, 1, ORANGE);
-			}
-			else if (temperature < 10 && temperature > 0) {
-				sprintf(weatherPrintT, "%.1f'C", temperature);
-				LCD_Font(27, 187, weatherPrintT, &DejaVu_Sans_48, 1, ORANGE);
-			}
-			else if (temperature <= -10) {
-				sprintf(weatherPrintT, "%2d'C", (int8_t)temperature);
-				LCD_Font(1, 187, weatherPrintT, &DejaVu_Sans_48, 1, ORANGE);
-			}
-
-			temperatureLast = temperature;
-		}
-
-		if (humidity != humidityLast && humidity >= 0 && humidity < 100) {
-
-			char weatherPrintH[7];
-
-			sprintf(weatherPrintH, "%.1f'H", humidityLast);
-			if (humidityLast >= 10)
-				LCD_Font(160, 187, weatherPrintH, &DejaVu_Sans_48, 1, BLACK);
-			else LCD_Font(186, 187, weatherPrintH, &DejaVu_Sans_48, 1, BLACK);
-
-			sprintf(weatherPrintH, "%.1f'H", humidity);
-			if (humidity >= 10)
-				LCD_Font(160, 187, weatherPrintH, &DejaVu_Sans_48, 1, CYAN);
-			else LCD_Font(186, 187, weatherPrintH, &DejaVu_Sans_48, 1, CYAN);
-
-			humidityLast = humidity;
-		}
-
-		if (pressureLast != pressure) {
-
-			char weatherPrintP[11];
-
-			if (pressureLast >= 1000) sprintf(weatherPrintP, "%02d", pressureLast);
-			else sprintf(weatherPrintP, " %02d", pressureLast);
-			LCD_Font(321, 187, weatherPrintP, &DejaVu_Sans_48, 1, BLACK);
-
-			if (pressure >= 1000) sprintf(weatherPrintP, "%02d", pressure);
-			else sprintf(weatherPrintP, " %02d", pressure);
-			LCD_Font(321, 187, weatherPrintP, &DejaVu_Sans_48, 1, GRAY);
-
-			pressureLast = pressure;
-		}
-
-		if (AT24XX_Read(0) != rtcHrs) {
-
-			AT24XX_Update(0, rtcHrs);
-
-			for (uint16_t i = 0; i < 157; i++) hT[i] = byteS(AT24XX_Read(i * 2 + 1000), AT24XX_Read(i * 2 + 1 + 1000));
-
-			for (uint16_t i = 1; i < 156; i++) hT[i] = hT[i + 1];
-
-			hT[155] = (uint16_t) (temperature * 10);
-
-			for (uint16_t i = 0; i < 157; i++) {
-				AT24XX_Update(i * 2 + 1000, byteL(hT[i]));
-				AT24XX_Update(i * 2 + 1 + 1000, byteH(hT[i]));
-			}
-
-
-			for (uint16_t i = 0; i < 157; i++) hH[i] = byteS(AT24XX_Read(i * 2 + 2000), AT24XX_Read(i * 2 + 1 + 2000));
-
-			for (uint16_t i = 1; i < 156; i++) hH[i] = hH[i + 1];
-
-			hH[155] = (uint16_t) (humidity * 10);
-
-			for (uint16_t i = 0; i < 157; i++) {
-				AT24XX_Update(i * 2 + 2000, byteL(hH[i]));
-				AT24XX_Update(i * 2 + 1 + 2000, byteH(hH[i]));
-			}
-
-
-			for (uint16_t i = 0; i < 157; i++) hP[i] = byteS(AT24XX_Read(i * 2 + 3000), AT24XX_Read(i * 2 + 1 + 3000));
-
-			for (uint16_t i = 1; i < 156; i++) hP[i] = hP[i + 1];
-
-			hP[155] = (uint16_t)pressure;
-
-			for (uint16_t i = 0; i < 157; i++) {
-				AT24XX_Update(i * 2 + 3000, byteL(hP[i]));
-				AT24XX_Update(i * 2 + 1 + 3000, byteH(hP[i]));
-			}
-
-			viewGraphs = 0;
-		}
-
-		if (!viewGraphs) {
-
-			LCD_Rect(2, 190, 157, 128, 1, BLUE);
-
-			for (uint16_t i = 0; i < 156 ; i++) {
-				int16_t val = map(((int16_t)hT[i]), MIN_TEMPERATURE*10, MAX_TEMPERATURE*10, 0, 127);
-				if (val < 0) val = 0;
-				if (val > 127) val = 127;
-				LCD_Line(3 + i, 191, 3 + i, 318, 1, BLACK);
-				LCD_Line(3 + i, 191 + (127 - val), 3 + i, 318, 1, RGB(255 - ((127 - val) * 2), 0, 255 - (255 - ((127 - val) * 2))));
-
-			}
-
-
-			LCD_Rect(161, 190, 157, 128, 1, BLUE);
-
-			for (uint16_t i = 0; i < 156 ; i++) {
-				int16_t val = map(((int16_t)hH[i]), MIN_HUMIDITY*10, MAX_HUMIDITY*10, 0, 127);
-				if (val < 0) val = 0;
-				if (val > 127) val = 127;
-				LCD_Line(162 + i, 191, 162 + i, 318, 1, BLACK);
-				LCD_Line(162 + i, 191 + (127 - val), 162 + i, 318, 1, RGB(255 - ((127 - val) * 2), 0, 255 - (255 - ((127 - val) * 2))));
-
-			}
-
-
-			LCD_Rect(320, 190, 157, 128, 1, BLUE);
-
-			for (uint16_t i = 0; i < 156 ; i++) {
-				int16_t val = map(((int16_t)hP[i]), MIN_PRESSURE, MAX_PRESSURE, 0, 127);
-				if (val < 0) val = 0;
-				if (val > 127) val = 127;
-				LCD_Line(322 + i, 191, 322 + i, 318, 1, BLACK);
-				LCD_Line(322 + i, 191 + (127 - val), 322 + i, 318, 1, RGB(255 - ((127 - val) * 2), 0, 255 - (255 - ((127 - val) * 2))));
-
-			}
-
-			viewGraphs = 1;
-		}
-	}
-}
-
 void uartDecode() {
 
-		if (memcmp(rx_buffer, "CE", 2) == 0) {
-			for (uint16_t i = 0; i < 4096; i++) AT24XX_Update(i, 0);
-			uint8_t uartTransmit[] = "EEPROM IS CLEANED\r\n";
-			HAL_UART_Transmit(&huart1, uartTransmit, sizeof(uartTransmit), 100);
-		}
+	if (memcmp(rx_buffer, "CE", 2) == 0) {
+		for (uint16_t i = 0; i < 4096; i++) AT24XX_Update(i, 0);
+		uint8_t uartTransmit[] = "EEPROM IS CLEANED\r\n";
+		HAL_UART_Transmit(&huart1, uartTransmit, sizeof(uartTransmit), 100);
+	}
 
 
-		if (memcmp(rx_buffer, "RT", 2) == 0) {
-			char val[2];
+	if (memcmp(rx_buffer, "RT", 2) == 0) {
+		char val[2];
 
-			val[0] = rx_buffer[2];
-			val[1] = rx_buffer[3];
-			DS3231_setHrs(atoi(val));
+		val[0] = rx_buffer[2];
+		val[1] = rx_buffer[3];
+		DS3231_setHrs(atoi(val));
 
-			val[0] = rx_buffer[4];
-			val[1] = rx_buffer[5];
-			DS3231_setMin(atoi(val));
+		val[0] = rx_buffer[4];
+		val[1] = rx_buffer[5];
+		DS3231_setMin(atoi(val));
 
-			val[0] = rx_buffer[6];
-			val[1] = rx_buffer[7];
-			DS3231_setSec(atoi(val));
+		val[0] = rx_buffer[6];
+		val[1] = rx_buffer[7];
+		DS3231_setSec(atoi(val));
 
-			val[0] = rx_buffer[8];
-			val[1] = rx_buffer[9];
-			DS3231_setDate(atoi(val));
+		val[0] = rx_buffer[8];
+		val[1] = rx_buffer[9];
+		DS3231_setDate(atoi(val));
 
-			val[0] = rx_buffer[10];
-			val[1] = rx_buffer[11];
-			DS3231_setMonth(atoi(val));
+		val[0] = rx_buffer[10];
+		val[1] = rx_buffer[11];
+		DS3231_setMonth(atoi(val));
 
-			val[0] = rx_buffer[12];
-			val[1] = rx_buffer[13];
-			DS3231_setYear(atoi(val));
+		val[0] = rx_buffer[12];
+		val[1] = rx_buffer[13];
+		DS3231_setYear(atoi(val));
 
-			val[1] = rx_buffer[14];
-			DS3231_setDay(atoi(val));
-		}
+		val[1] = rx_buffer[14];
+		DS3231_setDay(atoi(val));
+	}
 
-		for (uint8_t i = 0; i < 255; i++) rx_buffer[i] = 0;
+	for (uint8_t i = 0; i < 255; i++) rx_buffer[i] = 0;
 }
 /* USER CODE END 0 */
 
 /**
-  * @brief  The application entry point.
-  * @retval int
-  */
+ * @brief  The application entry point.
+ * @retval int
+ */
 int main(void)
 {
-  /* USER CODE BEGIN 1 */
+	/* USER CODE BEGIN 1 */
 
-  /* USER CODE END 1 */
+	/* USER CODE END 1 */
 
-  /* MCU Configuration--------------------------------------------------------*/
+	/* MCU Configuration--------------------------------------------------------*/
 
-  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-  HAL_Init();
+	/* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+	HAL_Init();
 
-  /* USER CODE BEGIN Init */
+	/* USER CODE BEGIN Init */
 
-  /* USER CODE END Init */
+	/* USER CODE END Init */
 
-  /* Configure the system clock */
-  SystemClock_Config();
+	/* Configure the system clock */
+	SystemClock_Config();
 
-  /* USER CODE BEGIN SysInit */
+	/* USER CODE BEGIN SysInit */
 
-  /* USER CODE END SysInit */
+	/* USER CODE END SysInit */
 
-  /* Initialize all configured peripherals */
-  MX_GPIO_Init();
-  MX_I2C1_Init();
-  MX_DMA_Init();
-  MX_USART1_UART_Init();
-  MX_TIM1_Init();
-  /* USER CODE BEGIN 2 */
+	/* Initialize all configured peripherals */
+	MX_GPIO_Init();
+	MX_I2C1_Init();
+	MX_DMA_Init();
+	MX_USART1_UART_Init();
+	MX_TIM1_Init();
+	/* USER CODE BEGIN 2 */
 	LCD_Init();
 
 	LCD_Rect_Fill(0, 0, 480, 320, BLUE);
@@ -383,9 +227,9 @@ int main(void)
 	LCD_Font(20, 127, "Clearing EEPROM", &DejaVu_Sans_48, 1, BLACK);
 
 	LCD_Font(20, 127, "Waiting for I2C", &DejaVu_Sans_48, 1, RED);
-	for (uint16_t i = 0; i < 157; i++) hT[i] = byteS(AT24XX_Read(i * 2 + 1000), AT24XX_Read(i * 2 + 1 + 1000));
-	for (uint16_t i = 0; i < 157; i++) hH[i] = byteS(AT24XX_Read(i * 2 + 2000), AT24XX_Read(i * 2 + 1 + 2000));
-	for (uint16_t i = 0; i < 157; i++) hP[i] = byteS(AT24XX_Read(i * 2 + 3000), AT24XX_Read(i * 2 + 1 + 3000));
+	for (uint16_t i = 0; i <= 155; i++) hT[i] = byteS(AT24XX_Read(i * 2 + 1000), AT24XX_Read(i * 2 + 1 + 1000));
+	for (uint16_t i = 0; i <= 155; i++) hH[i] = byteS(AT24XX_Read(i * 2 + 2000), AT24XX_Read(i * 2 + 1 + 2000));
+	for (uint16_t i = 0; i <= 155; i++) hP[i] = byteS(AT24XX_Read(i * 2 + 3000), AT24XX_Read(i * 2 + 1 + 3000));
 	LCD_Font(20, 127, "Waiting for I2C", &DejaVu_Sans_48, 1, BLACK);
 
 	BME280_Init();
@@ -400,10 +244,10 @@ int main(void)
 	uint8_t uartTransmitDMA[] = "UART DMA OK\r\n";
 	HAL_UART_Transmit_DMA(&huart1, uartTransmitDMA, sizeof(uartTransmitDMA));
 
-  /* USER CODE END 2 */
+	/* USER CODE END 2 */
 
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
+	/* Infinite loop */
+	/* USER CODE BEGIN WHILE */
 	while (1)
 	{
 
@@ -413,18 +257,13 @@ int main(void)
 			uartDecode();
 		}
 
-		DS3231_Update();
 		rtcSec = DS3231_getSec();
-		rtcMin = DS3231_getMin();
-		rtcHrs = DS3231_getHrs();
-		rtcDay = DS3231_getDay();
-		rtcDate = DS3231_getDate();
-		rtcMonth = DS3231_getMonth();
-		rtcYear = DS3231_getYear();
 
 		char clockPrint[13];
 
 		if (rtcSecLast != rtcSec) {
+
+			rtcMin = DS3231_getMin();
 
 			LCD_Circle(172, 35, 8, 0, 1, ORANGE);
 			LCD_Circle(172, 75, 8, 0, 1, ORANGE);
@@ -442,12 +281,20 @@ int main(void)
 
 			if (rtcMinLast != rtcMin) {
 
+				rtcHrs = DS3231_getHrs();
+
 				sprintf(clockPrint, "%02d", rtcMinLast);
 				LCD_Font(180, 100, clockPrint, &DejaVu_Sans_128, 1, BLACK);
 				sprintf(clockPrint, "%02d", rtcMin);
 				LCD_Font(180, 100, clockPrint, &DejaVu_Sans_128, 1, ORANGE);
 
 				if (rtcHrsLast != rtcHrs) {
+
+					rtcDay = DS3231_getDay();
+					rtcDate = DS3231_getDate();
+					rtcMonth = DS3231_getMonth();
+					rtcYear = DS3231_getYear();
+
 					sprintf(clockPrint, "%02d", rtcHrsLast);
 					LCD_Font(0, 100, clockPrint, &DejaVu_Sans_128, 1, BLACK);
 					sprintf(clockPrint, "%02d", rtcHrs);
@@ -484,289 +331,441 @@ int main(void)
 					rtcHrsLast = rtcHrs;
 				}
 				rtcMinLast = rtcMin;
+				temperature = BME280_getTemperature(-1);
+				humidity = BME280_getHumidity(-1);
+				pressure = (uint16_t)BME280_getPressure();
+
+				if (pressure > 300 && pressure < 1100 && temperature < 85 && temperature > -40 && humidity > 0 && humidity < 100) {
+
+					if (temperature != temperatureLast && temperature >= -40 && temperature <= 40) {
+
+						char weatherPrintT[8];
+
+						if (temperatureLast >= 10 || (temperatureLast < 0 && temperatureLast > -10)) {
+							sprintf(weatherPrintT, "%.1f'C", temperatureLast);
+							LCD_Font(1, 187, weatherPrintT, &DejaVu_Sans_48, 1, BLACK);
+						}
+						else if (temperatureLast < 10 && temperatureLast > 0) {
+							sprintf(weatherPrintT, "%.1f'C", temperatureLast);
+							LCD_Font(27, 187, weatherPrintT, &DejaVu_Sans_48, 1, BLACK);
+						}
+						else if (temperatureLast <= -10) {
+							sprintf(weatherPrintT, "%2d'C", (int8_t)temperatureLast);
+							LCD_Font(1, 187, weatherPrintT, &DejaVu_Sans_48, 1, BLACK);
+						}
+
+						if (temperature >= 10 || (temperature < 0 && temperature > -10)) {
+							sprintf(weatherPrintT, "%.1f'C", temperature);
+							LCD_Font(1, 187, weatherPrintT, &DejaVu_Sans_48, 1, ORANGE);
+						}
+						else if (temperature < 10 && temperature > 0) {
+							sprintf(weatherPrintT, "%.1f'C", temperature);
+							LCD_Font(27, 187, weatherPrintT, &DejaVu_Sans_48, 1, ORANGE);
+						}
+						else if (temperature <= -10) {
+							sprintf(weatherPrintT, "%2d'C", (int8_t)temperature);
+							LCD_Font(1, 187, weatherPrintT, &DejaVu_Sans_48, 1, ORANGE);
+						}
+
+						temperatureLast = temperature;
+					}
+
+					if (humidity != humidityLast && humidity >= 0 && humidity < 100) {
+
+						char weatherPrintH[7];
+
+						sprintf(weatherPrintH, "%.1f'H", humidityLast);
+						if (humidityLast >= 10)
+							LCD_Font(160, 187, weatherPrintH, &DejaVu_Sans_48, 1, BLACK);
+						else LCD_Font(186, 187, weatherPrintH, &DejaVu_Sans_48, 1, BLACK);
+
+						sprintf(weatherPrintH, "%.1f'H", humidity);
+						if (humidity >= 10)
+							LCD_Font(160, 187, weatherPrintH, &DejaVu_Sans_48, 1, CYAN);
+						else LCD_Font(186, 187, weatherPrintH, &DejaVu_Sans_48, 1, CYAN);
+
+						humidityLast = humidity;
+					}
+
+					if (pressureLast != pressure) {
+
+						char weatherPrintP[11];
+
+						if (pressureLast >= 1000) sprintf(weatherPrintP, "%02d", pressureLast);
+						else sprintf(weatherPrintP, " %02d", pressureLast);
+						LCD_Font(321, 187, weatherPrintP, &DejaVu_Sans_48, 1, BLACK);
+
+						if (pressure >= 1000) sprintf(weatherPrintP, "%02d", pressure);
+						else sprintf(weatherPrintP, " %02d", pressure);
+						LCD_Font(321, 187, weatherPrintP, &DejaVu_Sans_48, 1, GRAY);
+
+						pressureLast = pressure;
+					}
+
+					if (AT24XX_Read(0) != rtcHrs) {
+
+						AT24XX_Update(0, rtcHrs);
+
+						for (uint16_t i = 0; i <= 155; i++) hT[i] = byteS(AT24XX_Read(i * 2 + 1000), AT24XX_Read(i * 2 + 1 + 1000));
+
+						for (uint16_t i = 1; i <= 154; i++) hT[i] = hT[i + 1];
+
+						hT[155] = (uint16_t) (temperature * 10);
+
+						for (uint16_t i = 0; i <= 155; i++) {
+							AT24XX_Update(i * 2 + 1000, byteL(hT[i]));
+							AT24XX_Update(i * 2 + 1 + 1000, byteH(hT[i]));
+						}
+
+
+						for (uint16_t i = 0; i <= 155; i++) hH[i] = byteS(AT24XX_Read(i * 2 + 2000), AT24XX_Read(i * 2 + 1 + 2000));
+
+						for (uint16_t i = 1; i <= 154; i++) hH[i] = hH[i + 1];
+
+						hH[155] = (uint16_t) (humidity * 10);
+
+						for (uint16_t i = 0; i <= 155; i++) {
+							AT24XX_Update(i * 2 + 2000, byteL(hH[i]));
+							AT24XX_Update(i * 2 + 1 + 2000, byteH(hH[i]));
+						}
+
+
+						for (uint16_t i = 0; i <= 155; i++) hP[i] = byteS(AT24XX_Read(i * 2 + 3000), AT24XX_Read(i * 2 + 1 + 3000));
+
+						for (uint16_t i = 1; i <= 154; i++) hP[i] = hP[i + 1];
+
+						hP[155] = (uint16_t)pressure;
+
+						for (uint16_t i = 0; i <= 155; i++) {
+							AT24XX_Update(i * 2 + 3000, byteL(hP[i]));
+							AT24XX_Update(i * 2 + 1 + 3000, byteH(hP[i]));
+						}
+
+						viewGraphs = 0;
+					}
+
+					if (!viewGraphs) {
+
+						LCD_Rect(2, 190, 157, 128, 1, BLUE);
+
+						for (uint16_t i = 155; i > 0 ; i--) {
+							int16_t val = map(((int16_t)hT[i]), MIN_TEMPERATURE*10, MAX_TEMPERATURE*10, 0, 127);
+							if (val < 0) val = 0;
+							if (val > 127) val = 127;
+							LCD_Line(3 + i, 191, 3 + i, 318, 1, WHITE);
+							LCD_Line(3 + i, 191 + (127 - val), 3 + i, 318, 1, RGB(255 - ((127 - val) * 2), 0, 255 - (255 - ((127 - val) * 2))));
+
+						}
+
+
+						LCD_Rect(161, 190, 157, 128, 1, BLUE);
+
+						for (uint16_t i = 155; i > 0 ; i--) {
+							int16_t val = map(((int16_t)hH[i]), MIN_HUMIDITY*10, MAX_HUMIDITY*10, 0, 127);
+							if (val < 0) val = 0;
+							if (val > 127) val = 127;
+							LCD_Line(162 + i, 191, 162 + i, 318, 1, WHITE);
+							LCD_Line(162 + i, 191 + (127 - val), 162 + i, 318, 1, RGB(255 - ((127 - val) * 2), 0, 255 - (255 - ((127 - val) * 2))));
+
+						}
+
+
+						LCD_Rect(320, 190, 157, 128, 1, BLUE);
+
+						for (uint16_t i = 155; i > 0 ; i--) {
+							int16_t val = map(((int16_t)hP[i]), MIN_PRESSURE, MAX_PRESSURE, 0, 127);
+							if (val < 0) val = 0;
+							if (val > 127) val = 127;
+							LCD_Line(321 + i, 191, 321 + i, 318, 1, WHITE);
+							LCD_Line(321 + i, 191 + (127 - val), 321 + i, 318, 1, RED/*RGB(255 - ((127 - val) * 2), 0, 255 - (255 - ((127 - val) * 2)))*/);
+
+						}
+
+						viewGraphs = 1;
+					}
+				}
 			}
-			bme280();
 			rtcSecLast = rtcSec;
 		}
-    /* USER CODE END WHILE */
+		/* USER CODE END WHILE */
 
-    /* USER CODE BEGIN 3 */
+		/* USER CODE BEGIN 3 */
 	}
-  /* USER CODE END 3 */
+	/* USER CODE END 3 */
 }
 
 /**
-  * @brief System Clock Configuration
-  * @retval None
-  */
+ * @brief System Clock Configuration
+ * @retval None
+ */
 void SystemClock_Config(void)
 {
-  RCC_OscInitTypeDef RCC_OscInitStruct = {0};
-  RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+	RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+	RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
-  /** Initializes the RCC Oscillators according to the specified parameters
-  * in the RCC_OscInitTypeDef structure.
-  */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
-  RCC_OscInitStruct.HSEState = RCC_HSE_ON;
-  RCC_OscInitStruct.HSEPredivValue = RCC_HSE_PREDIV_DIV1;
-  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
-  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-  RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL9;
-  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /** Initializes the CPU, AHB and APB buses clocks
-  */
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
-  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
-  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+	/** Initializes the RCC Oscillators according to the specified parameters
+	 * in the RCC_OscInitTypeDef structure.
+	 */
+	RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+	RCC_OscInitStruct.HSEState = RCC_HSE_ON;
+	RCC_OscInitStruct.HSEPredivValue = RCC_HSE_PREDIV_DIV1;
+	RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+	RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+	RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+	RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL9;
+	if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+	{
+		Error_Handler();
+	}
+	/** Initializes the CPU, AHB and APB buses clocks
+	 */
+	RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
+			|RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+	RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
+	RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+	RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
+	RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
-  {
-    Error_Handler();
-  }
+	if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
+	{
+		Error_Handler();
+	}
 }
 
 /**
-  * @brief I2C1 Initialization Function
-  * @param None
-  * @retval None
-  */
+ * @brief I2C1 Initialization Function
+ * @param None
+ * @retval None
+ */
 static void MX_I2C1_Init(void)
 {
 
-  /* USER CODE BEGIN I2C1_Init 0 */
+	/* USER CODE BEGIN I2C1_Init 0 */
 
-  /* USER CODE END I2C1_Init 0 */
+	/* USER CODE END I2C1_Init 0 */
 
-  /* USER CODE BEGIN I2C1_Init 1 */
+	/* USER CODE BEGIN I2C1_Init 1 */
 
-  /* USER CODE END I2C1_Init 1 */
-  hi2c1.Instance = I2C1;
-  hi2c1.Init.ClockSpeed = 400000;
-  hi2c1.Init.DutyCycle = I2C_DUTYCYCLE_2;
-  hi2c1.Init.OwnAddress1 = 0;
-  hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
-  hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
-  hi2c1.Init.OwnAddress2 = 0;
-  hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
-  hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
-  if (HAL_I2C_Init(&hi2c1) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN I2C1_Init 2 */
+	/* USER CODE END I2C1_Init 1 */
+	hi2c1.Instance = I2C1;
+	hi2c1.Init.ClockSpeed = 400000;
+	hi2c1.Init.DutyCycle = I2C_DUTYCYCLE_2;
+	hi2c1.Init.OwnAddress1 = 0;
+	hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+	hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+	hi2c1.Init.OwnAddress2 = 0;
+	hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+	hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+	if (HAL_I2C_Init(&hi2c1) != HAL_OK)
+	{
+		Error_Handler();
+	}
+	/* USER CODE BEGIN I2C1_Init 2 */
 
-  /* USER CODE END I2C1_Init 2 */
+	/* USER CODE END I2C1_Init 2 */
 
 }
 
 /**
-  * @brief TIM1 Initialization Function
-  * @param None
-  * @retval None
-  */
+ * @brief TIM1 Initialization Function
+ * @param None
+ * @retval None
+ */
 static void MX_TIM1_Init(void)
 {
 
-  /* USER CODE BEGIN TIM1_Init 0 */
+	/* USER CODE BEGIN TIM1_Init 0 */
 
-  /* USER CODE END TIM1_Init 0 */
+	/* USER CODE END TIM1_Init 0 */
 
-  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
-  TIM_MasterConfigTypeDef sMasterConfig = {0};
-  TIM_OC_InitTypeDef sConfigOC = {0};
-  TIM_BreakDeadTimeConfigTypeDef sBreakDeadTimeConfig = {0};
+	TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+	TIM_MasterConfigTypeDef sMasterConfig = {0};
+	TIM_OC_InitTypeDef sConfigOC = {0};
+	TIM_BreakDeadTimeConfigTypeDef sBreakDeadTimeConfig = {0};
 
-  /* USER CODE BEGIN TIM1_Init 1 */
+	/* USER CODE BEGIN TIM1_Init 1 */
 
-  /* USER CODE END TIM1_Init 1 */
-  htim1.Instance = TIM1;
-  htim1.Init.Prescaler = 0;
-  htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim1.Init.Period = 65535;
-  htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  htim1.Init.RepetitionCounter = 0;
-  htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-  if (HAL_TIM_Base_Init(&htim1) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
-  if (HAL_TIM_ConfigClockSource(&htim1, &sClockSourceConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  if (HAL_TIM_PWM_Init(&htim1) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
-  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-  if (HAL_TIMEx_MasterConfigSynchronization(&htim1, &sMasterConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  sConfigOC.OCMode = TIM_OCMODE_PWM1;
-  sConfigOC.Pulse = 0;
-  sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
-  sConfigOC.OCNPolarity = TIM_OCNPOLARITY_HIGH;
-  sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
-  sConfigOC.OCIdleState = TIM_OCIDLESTATE_RESET;
-  sConfigOC.OCNIdleState = TIM_OCNIDLESTATE_RESET;
-  if (HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  sBreakDeadTimeConfig.OffStateRunMode = TIM_OSSR_DISABLE;
-  sBreakDeadTimeConfig.OffStateIDLEMode = TIM_OSSI_DISABLE;
-  sBreakDeadTimeConfig.LockLevel = TIM_LOCKLEVEL_OFF;
-  sBreakDeadTimeConfig.DeadTime = 0;
-  sBreakDeadTimeConfig.BreakState = TIM_BREAK_DISABLE;
-  sBreakDeadTimeConfig.BreakPolarity = TIM_BREAKPOLARITY_HIGH;
-  sBreakDeadTimeConfig.AutomaticOutput = TIM_AUTOMATICOUTPUT_DISABLE;
-  if (HAL_TIMEx_ConfigBreakDeadTime(&htim1, &sBreakDeadTimeConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN TIM1_Init 2 */
+	/* USER CODE END TIM1_Init 1 */
+	htim1.Instance = TIM1;
+	htim1.Init.Prescaler = 0;
+	htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
+	htim1.Init.Period = 65535;
+	htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+	htim1.Init.RepetitionCounter = 0;
+	htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+	if (HAL_TIM_Base_Init(&htim1) != HAL_OK)
+	{
+		Error_Handler();
+	}
+	sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+	if (HAL_TIM_ConfigClockSource(&htim1, &sClockSourceConfig) != HAL_OK)
+	{
+		Error_Handler();
+	}
+	if (HAL_TIM_PWM_Init(&htim1) != HAL_OK)
+	{
+		Error_Handler();
+	}
+	sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+	sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+	if (HAL_TIMEx_MasterConfigSynchronization(&htim1, &sMasterConfig) != HAL_OK)
+	{
+		Error_Handler();
+	}
+	sConfigOC.OCMode = TIM_OCMODE_PWM1;
+	sConfigOC.Pulse = 0;
+	sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
+	sConfigOC.OCNPolarity = TIM_OCNPOLARITY_HIGH;
+	sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
+	sConfigOC.OCIdleState = TIM_OCIDLESTATE_RESET;
+	sConfigOC.OCNIdleState = TIM_OCNIDLESTATE_RESET;
+	if (HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
+	{
+		Error_Handler();
+	}
+	sBreakDeadTimeConfig.OffStateRunMode = TIM_OSSR_DISABLE;
+	sBreakDeadTimeConfig.OffStateIDLEMode = TIM_OSSI_DISABLE;
+	sBreakDeadTimeConfig.LockLevel = TIM_LOCKLEVEL_OFF;
+	sBreakDeadTimeConfig.DeadTime = 0;
+	sBreakDeadTimeConfig.BreakState = TIM_BREAK_DISABLE;
+	sBreakDeadTimeConfig.BreakPolarity = TIM_BREAKPOLARITY_HIGH;
+	sBreakDeadTimeConfig.AutomaticOutput = TIM_AUTOMATICOUTPUT_DISABLE;
+	if (HAL_TIMEx_ConfigBreakDeadTime(&htim1, &sBreakDeadTimeConfig) != HAL_OK)
+	{
+		Error_Handler();
+	}
+	/* USER CODE BEGIN TIM1_Init 2 */
 
-  /* USER CODE END TIM1_Init 2 */
-  HAL_TIM_MspPostInit(&htim1);
+	/* USER CODE END TIM1_Init 2 */
+	HAL_TIM_MspPostInit(&htim1);
 
 }
 
 /**
-  * @brief USART1 Initialization Function
-  * @param None
-  * @retval None
-  */
+ * @brief USART1 Initialization Function
+ * @param None
+ * @retval None
+ */
 static void MX_USART1_UART_Init(void)
 {
 
-  /* USER CODE BEGIN USART1_Init 0 */
+	/* USER CODE BEGIN USART1_Init 0 */
 
-  /* USER CODE END USART1_Init 0 */
+	/* USER CODE END USART1_Init 0 */
 
-  /* USER CODE BEGIN USART1_Init 1 */
+	/* USER CODE BEGIN USART1_Init 1 */
 
-  /* USER CODE END USART1_Init 1 */
-  huart1.Instance = USART1;
-  huart1.Init.BaudRate = 115200;
-  huart1.Init.WordLength = UART_WORDLENGTH_8B;
-  huart1.Init.StopBits = UART_STOPBITS_1;
-  huart1.Init.Parity = UART_PARITY_NONE;
-  huart1.Init.Mode = UART_MODE_TX_RX;
-  huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-  huart1.Init.OverSampling = UART_OVERSAMPLING_16;
-  if (HAL_UART_Init(&huart1) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN USART1_Init 2 */
+	/* USER CODE END USART1_Init 1 */
+	huart1.Instance = USART1;
+	huart1.Init.BaudRate = 115200;
+	huart1.Init.WordLength = UART_WORDLENGTH_8B;
+	huart1.Init.StopBits = UART_STOPBITS_1;
+	huart1.Init.Parity = UART_PARITY_NONE;
+	huart1.Init.Mode = UART_MODE_TX_RX;
+	huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+	huart1.Init.OverSampling = UART_OVERSAMPLING_16;
+	if (HAL_UART_Init(&huart1) != HAL_OK)
+	{
+		Error_Handler();
+	}
+	/* USER CODE BEGIN USART1_Init 2 */
 
-  /* USER CODE END USART1_Init 2 */
+	/* USER CODE END USART1_Init 2 */
 
 }
 
 /**
-  * Enable DMA controller clock
-  */
+ * Enable DMA controller clock
+ */
 static void MX_DMA_Init(void)
 {
 
-  /* DMA controller clock enable */
-  __HAL_RCC_DMA1_CLK_ENABLE();
+	/* DMA controller clock enable */
+	__HAL_RCC_DMA1_CLK_ENABLE();
 
-  /* DMA interrupt init */
-  /* DMA1_Channel2_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA1_Channel2_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(DMA1_Channel2_IRQn);
-  /* DMA1_Channel4_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA1_Channel4_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(DMA1_Channel4_IRQn);
-  /* DMA1_Channel5_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA1_Channel5_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(DMA1_Channel5_IRQn);
-  /* DMA1_Channel6_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA1_Channel6_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(DMA1_Channel6_IRQn);
-  /* DMA1_Channel7_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA1_Channel7_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(DMA1_Channel7_IRQn);
+	/* DMA interrupt init */
+	/* DMA1_Channel2_IRQn interrupt configuration */
+	HAL_NVIC_SetPriority(DMA1_Channel2_IRQn, 0, 0);
+	HAL_NVIC_EnableIRQ(DMA1_Channel2_IRQn);
+	/* DMA1_Channel4_IRQn interrupt configuration */
+	HAL_NVIC_SetPriority(DMA1_Channel4_IRQn, 0, 0);
+	HAL_NVIC_EnableIRQ(DMA1_Channel4_IRQn);
+	/* DMA1_Channel5_IRQn interrupt configuration */
+	HAL_NVIC_SetPriority(DMA1_Channel5_IRQn, 0, 0);
+	HAL_NVIC_EnableIRQ(DMA1_Channel5_IRQn);
+	/* DMA1_Channel6_IRQn interrupt configuration */
+	HAL_NVIC_SetPriority(DMA1_Channel6_IRQn, 0, 0);
+	HAL_NVIC_EnableIRQ(DMA1_Channel6_IRQn);
+	/* DMA1_Channel7_IRQn interrupt configuration */
+	HAL_NVIC_SetPriority(DMA1_Channel7_IRQn, 0, 0);
+	HAL_NVIC_EnableIRQ(DMA1_Channel7_IRQn);
 
 }
 
 /**
-  * @brief GPIO Initialization Function
-  * @param None
-  * @retval None
-  */
+ * @brief GPIO Initialization Function
+ * @param None
+ * @retval None
+ */
 static void MX_GPIO_Init(void)
 {
-  GPIO_InitTypeDef GPIO_InitStruct = {0};
+	GPIO_InitTypeDef GPIO_InitStruct = {0};
 
-  /* GPIO Ports Clock Enable */
-  __HAL_RCC_GPIOC_CLK_ENABLE();
-  __HAL_RCC_GPIOD_CLK_ENABLE();
-  __HAL_RCC_GPIOA_CLK_ENABLE();
-  __HAL_RCC_GPIOB_CLK_ENABLE();
+	/* GPIO Ports Clock Enable */
+	__HAL_RCC_GPIOC_CLK_ENABLE();
+	__HAL_RCC_GPIOD_CLK_ENABLE();
+	__HAL_RCC_GPIOA_CLK_ENABLE();
+	__HAL_RCC_GPIOB_CLK_ENABLE();
 
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, LED_Pin|LCD_DB_08_Pin|LCD_DB_09_Pin|LCD_DB_10_Pin
-                          |LCD_DB_11_Pin|LCD_DB_12_Pin|LCD_DB_13_Pin|LCD_DB_01_Pin
-                          |LCD_DB_00_Pin, GPIO_PIN_RESET);
+	/*Configure GPIO pin Output Level */
+	HAL_GPIO_WritePin(GPIOC, LED_Pin|LCD_DB_08_Pin|LCD_DB_09_Pin|LCD_DB_10_Pin
+			|LCD_DB_11_Pin|LCD_DB_12_Pin|LCD_DB_13_Pin|LCD_DB_01_Pin
+			|LCD_DB_00_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, LCD_DB_14_Pin|LCD_DB_15_Pin|LCD_DB_07_Pin|LCD_DB_06_Pin
-                          |LCD_DB_05_Pin|LCD_DB_04_Pin|LCD_DB_03_Pin|LCD_DB_02_Pin, GPIO_PIN_RESET);
+	/*Configure GPIO pin Output Level */
+	HAL_GPIO_WritePin(GPIOA, LCD_DB_14_Pin|LCD_DB_15_Pin|LCD_DB_07_Pin|LCD_DB_06_Pin
+			|LCD_DB_05_Pin|LCD_DB_04_Pin|LCD_DB_03_Pin|LCD_DB_02_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, LCD_RS_Pin|LCD_WR_Pin|LCD_CS_Pin|LCD_RST_Pin, GPIO_PIN_RESET);
+	/*Configure GPIO pin Output Level */
+	HAL_GPIO_WritePin(GPIOB, LCD_RS_Pin|LCD_WR_Pin|LCD_CS_Pin|LCD_RST_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pin : LED_Pin */
-  GPIO_InitStruct.Pin = LED_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(LED_GPIO_Port, &GPIO_InitStruct);
+	/*Configure GPIO pin : LED_Pin */
+	GPIO_InitStruct.Pin = LED_Pin;
+	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+	HAL_GPIO_Init(LED_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : LCD_DB_08_Pin LCD_DB_09_Pin LCD_DB_10_Pin LCD_DB_11_Pin
+	/*Configure GPIO pins : LCD_DB_08_Pin LCD_DB_09_Pin LCD_DB_10_Pin LCD_DB_11_Pin
                            LCD_DB_12_Pin LCD_DB_13_Pin LCD_DB_01_Pin LCD_DB_00_Pin */
-  GPIO_InitStruct.Pin = LCD_DB_08_Pin|LCD_DB_09_Pin|LCD_DB_10_Pin|LCD_DB_11_Pin
-                          |LCD_DB_12_Pin|LCD_DB_13_Pin|LCD_DB_01_Pin|LCD_DB_00_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+	GPIO_InitStruct.Pin = LCD_DB_08_Pin|LCD_DB_09_Pin|LCD_DB_10_Pin|LCD_DB_11_Pin
+			|LCD_DB_12_Pin|LCD_DB_13_Pin|LCD_DB_01_Pin|LCD_DB_00_Pin;
+	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+	HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : LCD_DB_14_Pin LCD_DB_15_Pin LCD_DB_07_Pin LCD_DB_06_Pin
+	/*Configure GPIO pins : LCD_DB_14_Pin LCD_DB_15_Pin LCD_DB_07_Pin LCD_DB_06_Pin
                            LCD_DB_05_Pin LCD_DB_04_Pin LCD_DB_03_Pin LCD_DB_02_Pin */
-  GPIO_InitStruct.Pin = LCD_DB_14_Pin|LCD_DB_15_Pin|LCD_DB_07_Pin|LCD_DB_06_Pin
-                          |LCD_DB_05_Pin|LCD_DB_04_Pin|LCD_DB_03_Pin|LCD_DB_02_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+	GPIO_InitStruct.Pin = LCD_DB_14_Pin|LCD_DB_15_Pin|LCD_DB_07_Pin|LCD_DB_06_Pin
+			|LCD_DB_05_Pin|LCD_DB_04_Pin|LCD_DB_03_Pin|LCD_DB_02_Pin;
+	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+	HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : LCD_RS_Pin LCD_WR_Pin LCD_CS_Pin LCD_RST_Pin */
-  GPIO_InitStruct.Pin = LCD_RS_Pin|LCD_WR_Pin|LCD_CS_Pin|LCD_RST_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+	/*Configure GPIO pins : LCD_RS_Pin LCD_WR_Pin LCD_CS_Pin LCD_RST_Pin */
+	GPIO_InitStruct.Pin = LCD_RS_Pin|LCD_WR_Pin|LCD_CS_Pin|LCD_RST_Pin;
+	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : SYSTEM_RESERVED_Pin */
-  GPIO_InitStruct.Pin = SYSTEM_RESERVED_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(SYSTEM_RESERVED_GPIO_Port, &GPIO_InitStruct);
+	/*Configure GPIO pin : SYSTEM_RESERVED_Pin */
+	GPIO_InitStruct.Pin = SYSTEM_RESERVED_Pin;
+	GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	HAL_GPIO_Init(SYSTEM_RESERVED_GPIO_Port, &GPIO_InitStruct);
 
 }
 
@@ -775,34 +774,34 @@ static void MX_GPIO_Init(void)
 /* USER CODE END 4 */
 
 /**
-  * @brief  This function is executed in case of error occurrence.
-  * @retval None
-  */
+ * @brief  This function is executed in case of error occurrence.
+ * @retval None
+ */
 void Error_Handler(void)
 {
-  /* USER CODE BEGIN Error_Handler_Debug */
+	/* USER CODE BEGIN Error_Handler_Debug */
 	/* User can add his own implementation to report the HAL error return state */
 	__disable_irq();
 	while (1)
 	{
 	}
-  /* USER CODE END Error_Handler_Debug */
+	/* USER CODE END Error_Handler_Debug */
 }
 
 #ifdef  USE_FULL_ASSERT
 /**
-  * @brief  Reports the name of the source file and the source line number
-  *         where the assert_param error has occurred.
-  * @param  file: pointer to the source file name
-  * @param  line: assert_param error line source number
-  * @retval None
-  */
+ * @brief  Reports the name of the source file and the source line number
+ *         where the assert_param error has occurred.
+ * @param  file: pointer to the source file name
+ * @param  line: assert_param error line source number
+ * @retval None
+ */
 void assert_failed(uint8_t *file, uint32_t line)
 {
-  /* USER CODE BEGIN 6 */
+	/* USER CODE BEGIN 6 */
 	/* User can add his own implementation to report the file name and line number,
      ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
-  /* USER CODE END 6 */
+	/* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
 
