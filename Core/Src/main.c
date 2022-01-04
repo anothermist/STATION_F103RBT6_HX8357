@@ -54,11 +54,11 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-#define MIN_TEMPERATURE 20
-#define MAX_TEMPERATURE 30
+#define MIN_TEMPERATURE 21
+#define MAX_TEMPERATURE 29
 
 #define MIN_HUMIDITY 10
-#define MAX_HUMIDITY 90
+#define MAX_HUMIDITY 74
 
 #define MIN_PRESSURE 937
 #define MAX_PRESSURE 1065
@@ -259,7 +259,7 @@ void bme280(void) {
 			LCD_Rect(2, 190, 157, 128, 1, BLUE);
 
 			for (uint16_t i = 0; i < 156 ; i++) {
-				int16_t val = map(((int16_t)hT[i] / 10), MIN_TEMPERATURE, MAX_TEMPERATURE, 0, 127);
+				int16_t val = map(((int16_t)hT[i]), MIN_TEMPERATURE*10, MAX_TEMPERATURE*10, 0, 127);
 				if (val < 0) val = 0;
 				if (val > 127) val = 127;
 				LCD_Line(3 + i, 191, 3 + i, 318, 1, BLACK);
@@ -271,7 +271,7 @@ void bme280(void) {
 			LCD_Rect(161, 190, 157, 128, 1, BLUE);
 
 			for (uint16_t i = 0; i < 156 ; i++) {
-				int16_t val = map(((int16_t)hH[i] / 10), MIN_HUMIDITY, MAX_HUMIDITY, 0, 127);
+				int16_t val = map(((int16_t)hH[i]), MIN_HUMIDITY*10, MAX_HUMIDITY*10, 0, 127);
 				if (val < 0) val = 0;
 				if (val > 127) val = 127;
 				LCD_Line(162 + i, 191, 162 + i, 318, 1, BLACK);
