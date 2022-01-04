@@ -1,6 +1,6 @@
 ################################################################################
 # Automatically-generated file. Do not edit!
-# Toolchain: GNU ARM Embedded (10.3-2021.10)
+# Toolchain: GNU Tools for STM32 (10.3-2021.10)
 ################################################################################
 
 -include ../makefile.init
@@ -65,7 +65,7 @@ main-build: STATION_F103RB_HX8357.elf secondary-outputs
 
 # Tool invocations
 STATION_F103RB_HX8357.elf: $(OBJS) $(USER_OBJS) E:\GitHub\STATION_F103RB_HX8357\STM32CubeIDE\STM32F103RBTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "STATION_F103RB_HX8357.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"E:\GitHub\STATION_F103RB_HX8357\STM32CubeIDE\STM32F103RBTX_FLASH.ld" -Wl,-Map="STATION_F103RB_HX8357.map" -Wl,--gc-sections -static -flto --specs=nano.specs -mfloat-abi=soft -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
+	arm-none-eabi-gcc -o "STATION_F103RB_HX8357.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"E:\GitHub\STATION_F103RB_HX8357\STM32CubeIDE\STM32F103RBTX_FLASH.ld" -Wl,-Map="STATION_F103RB_HX8357.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

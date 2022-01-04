@@ -446,38 +446,38 @@ int main(void)
 
 					if (!viewGraphs) {
 
-						LCD_Rect(2, 190, 157, 128, 1, BLUE);
+						LCD_Rect(2, 189, 157, 129, 1, BLUE);
 
 						for (uint16_t i = 155; i > 0 ; i--) {
-							int16_t val = map(((int16_t)hT[i]), MIN_TEMPERATURE*10, MAX_TEMPERATURE*10, 0, 127);
+							int16_t val = map(((int16_t)hT[i]), MIN_TEMPERATURE*10, MAX_TEMPERATURE*10, 0, 128);
 							if (val < 0) val = 0;
 							if (val > 127) val = 127;
-							LCD_Line(3 + i, 191, 3 + i, 318, 1, WHITE);
-							LCD_Line(3 + i, 191 + (127 - val), 3 + i, 318, 1, RGB(255 - ((127 - val) * 2), 0, 255 - (255 - ((127 - val) * 2))));
+							LCD_Line(3 + i, 191, 3 + i, 317, 1, BLACK);
+							if (val) LCD_Line(3 + i, 191 + (127 - val), 3 + i, 317, 1, RGB(255 - ((127 - val) * 2), 0, 255 - (255 - ((127 - val) * 2))));
 
 						}
 
 
-						LCD_Rect(161, 190, 157, 128, 1, BLUE);
+						LCD_Rect(161, 189, 157, 129, 1, BLUE);
 
 						for (uint16_t i = 155; i > 0 ; i--) {
-							int16_t val = map(((int16_t)hH[i]), MIN_HUMIDITY*10, MAX_HUMIDITY*10, 0, 127);
+							int16_t val = map(((int16_t)hH[i]), MIN_HUMIDITY*10, MAX_HUMIDITY*10, 0, 128);
 							if (val < 0) val = 0;
 							if (val > 127) val = 127;
-							LCD_Line(162 + i, 191, 162 + i, 318, 1, WHITE);
-							LCD_Line(162 + i, 191 + (127 - val), 162 + i, 318, 1, RGB(255 - ((127 - val) * 2), 0, 255 - (255 - ((127 - val) * 2))));
+							LCD_Line(162 + i, 191, 162 + i, 317, 1, BLACK);
+							if (val) LCD_Line(162 + i, 191 + (127 - val), 162 + i, 317, 1, RGB(255 - ((127 - val) * 2), 0, 255 - (255 - ((127 - val) * 2))));
 
 						}
 
 
-						LCD_Rect(320, 190, 157, 128, 1, BLUE);
+						LCD_Rect(320, 189, 157, 129, 1, BLUE);
 
 						for (uint16_t i = 155; i > 0 ; i--) {
-							int16_t val = map(((int16_t)hP[i]), MIN_PRESSURE, MAX_PRESSURE, 0, 127);
+							int16_t val = map(((int16_t)hP[i]), MIN_PRESSURE, MAX_PRESSURE, 0, 128);
 							if (val < 0) val = 0;
 							if (val > 127) val = 127;
-							LCD_Line(321 + i, 191, 321 + i, 318, 1, WHITE);
-							LCD_Line(321 + i, 191 + (127 - val), 321 + i, 318, 1, RED/*RGB(255 - ((127 - val) * 2), 0, 255 - (255 - ((127 - val) * 2)))*/);
+							LCD_Line(321 + i, 191, 321 + i, 317, 1, BLACK);
+							if (val) LCD_Line(321 + i, 191 + (127 - val), 321 + i, 317, 1, RGB(255 - ((127 - val) * 2), 0, 255 - (255 - ((127 - val) * 2))));
 
 						}
 
