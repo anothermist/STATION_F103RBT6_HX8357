@@ -148,7 +148,6 @@ void uartDecode() {
 		HAL_UART_Transmit(&huart1, uartTransmit, sizeof(uartTransmit), 100);
 	}
 
-
 	if (memcmp(rx_buffer, "RT", 2) == 0) {
 		char val[2];
 
@@ -227,13 +226,12 @@ int main(void)
 	LCD_Font(20, 127, "Clearing EEPROM", &DejaVu_Sans_48, 1, BLACK);
 
 	LCD_Font(20, 127, "Waiting for I2C", &DejaVu_Sans_48, 1, RED);
-	for (uint16_t i = 0; i <= 155; i++) hT[i] = byteS(AT24XX_Read(i * 2 + 1000), AT24XX_Read(i * 2 + 1 + 1000));
-	for (uint16_t i = 0; i <= 155; i++) hH[i] = byteS(AT24XX_Read(i * 2 + 2000), AT24XX_Read(i * 2 + 1 + 2000));
-	for (uint16_t i = 0; i <= 155; i++) hP[i] = byteS(AT24XX_Read(i * 2 + 3000), AT24XX_Read(i * 2 + 1 + 3000));
+	for (uint16_t i = 0; i < 156; i++) hT[i] = byteS(AT24XX_Read(i * 2 + 1000), AT24XX_Read(i * 2 + 1 + 1000));
+	for (uint16_t i = 0; i < 156; i++) hH[i] = byteS(AT24XX_Read(i * 2 + 2000), AT24XX_Read(i * 2 + 1 + 2000));
+	for (uint16_t i = 0; i < 156; i++) hP[i] = byteS(AT24XX_Read(i * 2 + 3000), AT24XX_Read(i * 2 + 1 + 3000));
 	LCD_Font(20, 127, "Waiting for I2C", &DejaVu_Sans_48, 1, BLACK);
 
 	BME280_Init();
-	DS3231_Update();
 
 	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
 	HAL_UART_Receive_IT(&huart1, &rx_data, 1);
@@ -308,7 +306,8 @@ int main(void)
 						LCD_Font(380, 40, clockPrint, &DejaVu_Sans_48, 1, CYAN);
 						if (rtcDate < 10) LCD_Font(380, 40, "0", &DejaVu_Sans_48, 1, BLACK);
 
-						static const char* months[12] = { "JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC" };
+						static const char* months[12] = { "JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL",
+								"AUG", "SEP", "OCT", "NOV", "DEC" };
 
 						LCD_Font(370, 90, months[(12 + rtcMonth - 2) % 12], &DejaVu_Sans_48, 1, BLACK);
 						LCD_Font(370, 90, months[(12 + rtcMonth - 1) % 12], &DejaVu_Sans_48, 1, CYAN);
@@ -337,7 +336,7 @@ int main(void)
 
 				if (pressure > 300 && pressure < 1100 && temperature < 85 && temperature > -40 && humidity > 0 && humidity < 100) {
 
-					if (temperature != temperatureLast && temperature >= -40 && temperature <= 40) {
+					if (temperature != temperatureLast) {
 
 						char weatherPrintT[8];
 
@@ -370,7 +369,7 @@ int main(void)
 						temperatureLast = temperature;
 					}
 
-					if (humidity != humidityLast && humidity >= 0 && humidity < 100) {
+					if (humidity != humidityLast) {
 
 						char weatherPrintH[7];
 
@@ -392,12 +391,13 @@ int main(void)
 						char weatherPrintP[11];
 
 						if (pressureLast >= 1000) sprintf(weatherPrintP, "%02d", pressureLast);
-						else sprintf(weatherPrintP, " %02d", pressureLast);
+						else sprintf(weatherPrintP, "0%02dP", pressureLast);
 						LCD_Font(321, 187, weatherPrintP, &DejaVu_Sans_48, 1, BLACK);
 
 						if (pressure >= 1000) sprintf(weatherPrintP, "%02d", pressure);
-						else sprintf(weatherPrintP, " %02d", pressure);
-						LCD_Font(321, 187, weatherPrintP, &DejaVu_Sans_48, 1, GRAY);
+						else sprintf(weatherPrintP, "0%02dP", pressure);
+						LCD_Font(321, 187, weatherPrintP, &DejaVu_Sans_48, 1, GREEN);
+						LCD_Font(321, 187, "0", &DejaVu_Sans_48, 1, BLACK);
 
 						pressureLast = pressure;
 					}
@@ -406,37 +406,37 @@ int main(void)
 
 						AT24XX_Update(0, rtcHrs);
 
-						for (uint16_t i = 0; i <= 155; i++) hT[i] = byteS(AT24XX_Read(i * 2 + 1000), AT24XX_Read(i * 2 + 1 + 1000));
+						for (uint16_t i = 0; i < 155; i++) hT[i] = byteS(AT24XX_Read(i * 2 + 1000), AT24XX_Read(i * 2 + 1 + 1000));
 
-						for (uint16_t i = 1; i <= 154; i++) hT[i] = hT[i + 1];
+						for (uint16_t i = 1; i < 154; i++) hT[i] = hT[i + 1];
 
 						hT[155] = (uint16_t) (temperature * 10);
 
-						for (uint16_t i = 0; i <= 155; i++) {
+						for (uint16_t i = 0; i < 155; i++) {
 							AT24XX_Update(i * 2 + 1000, byteL(hT[i]));
 							AT24XX_Update(i * 2 + 1 + 1000, byteH(hT[i]));
 						}
 
 
-						for (uint16_t i = 0; i <= 155; i++) hH[i] = byteS(AT24XX_Read(i * 2 + 2000), AT24XX_Read(i * 2 + 1 + 2000));
+						for (uint16_t i = 0; i < 155; i++) hH[i] = byteS(AT24XX_Read(i * 2 + 2000), AT24XX_Read(i * 2 + 1 + 2000));
 
-						for (uint16_t i = 1; i <= 154; i++) hH[i] = hH[i + 1];
+						for (uint16_t i = 1; i < 154; i++) hH[i] = hH[i + 1];
 
 						hH[155] = (uint16_t) (humidity * 10);
 
-						for (uint16_t i = 0; i <= 155; i++) {
+						for (uint16_t i = 0; i < 155; i++) {
 							AT24XX_Update(i * 2 + 2000, byteL(hH[i]));
 							AT24XX_Update(i * 2 + 1 + 2000, byteH(hH[i]));
 						}
 
 
-						for (uint16_t i = 0; i <= 155; i++) hP[i] = byteS(AT24XX_Read(i * 2 + 3000), AT24XX_Read(i * 2 + 1 + 3000));
+						for (uint16_t i = 0; i < 155; i++) hP[i] = byteS(AT24XX_Read(i * 2 + 3000), AT24XX_Read(i * 2 + 1 + 3000));
 
-						for (uint16_t i = 1; i <= 154; i++) hP[i] = hP[i + 1];
+						for (uint16_t i = 1; i < 154; i++) hP[i] = hP[i + 1];
 
 						hP[155] = (uint16_t)pressure;
 
-						for (uint16_t i = 0; i <= 155; i++) {
+						for (uint16_t i = 0; i < 155; i++) {
 							AT24XX_Update(i * 2 + 3000, byteL(hP[i]));
 							AT24XX_Update(i * 2 + 1 + 3000, byteH(hP[i]));
 						}
@@ -448,7 +448,7 @@ int main(void)
 
 						LCD_Rect(2, 189, 157, 129, 1, BLUE);
 
-						for (uint16_t i = 155; i > 0 ; i--) {
+						for (uint16_t i = 0; i < 156 ; i++) {
 							int16_t val = map(((int16_t)hT[i]), MIN_TEMPERATURE*10, MAX_TEMPERATURE*10, 0, 128);
 							if (val < 0) val = 0;
 							if (val > 127) val = 127;
@@ -460,7 +460,7 @@ int main(void)
 
 						LCD_Rect(161, 189, 157, 129, 1, BLUE);
 
-						for (uint16_t i = 155; i > 0 ; i--) {
+						for (uint16_t i = 0; i < 156 ; i++) {
 							int16_t val = map(((int16_t)hH[i]), MIN_HUMIDITY*10, MAX_HUMIDITY*10, 0, 128);
 							if (val < 0) val = 0;
 							if (val > 127) val = 127;
@@ -472,7 +472,7 @@ int main(void)
 
 						LCD_Rect(320, 189, 157, 129, 1, BLUE);
 
-						for (uint16_t i = 155; i > 0 ; i--) {
+						for (uint16_t i = 0; i < 156 ; i++) {
 							int16_t val = map(((int16_t)hP[i]), MIN_PRESSURE, MAX_PRESSURE, 0, 128);
 							if (val < 0) val = 0;
 							if (val > 127) val = 127;
