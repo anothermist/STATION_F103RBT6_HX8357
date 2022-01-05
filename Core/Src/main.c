@@ -436,21 +436,24 @@ int main(void)
 						if (valMap < 0) valMap = 0;
 						if (valMap > 127) valMap = 127;
 						LCD_Line(3 + 155, 191, 3 + 155, 317, 1, BLACK);
-						if (valMap) LCD_Line(3 + 155, 191 + (127 - valMap), 3 + 155, 317, 1, RGB(255 - ((127 - valMap) * 2), 0, 255 - (255 - ((127 - valMap) * 2))));
+						if (valMap) LCD_Line(3 + 155, 191 + (127 - valMap), 3 + 155, 317,
+								1, RGB(255 - ((127 - valMap) * 2), 0, 255 - (255 - ((127 - valMap) * 2))));
 
 					LCD_Rect(161, 189, 157, 129, 1, BLUE);
 						valMap = map(((int16_t)(humidity * 10)), MIN_HUMIDITY_X10, MAX_HUMIDITY_X10, 0, 128);
 						if (valMap < 0) valMap = 0;
 						if (valMap > 127) valMap = 127;
 						LCD_Line(162 + 155, 191, 162 + 155, 317, 1, BLACK);
-						if (valMap) LCD_Line(162 + 155, 191 + (127 - valMap), 162 + 155, 317, 1, RGB(255 - ((127 - valMap) * 2), 0, 255 - (255 - ((127 - valMap) * 2))));
+						if (valMap) LCD_Line(162 + 155, 191 + (127 - valMap), 162 + 155, 317,
+								1, RGB(255 - ((127 - valMap) * 2), 0, 255 - (255 - ((127 - valMap) * 2))));
 
 					LCD_Rect(320, 189, 157, 129, 1, BLUE);
 						valMap = map(((int16_t)(pressure)), MIN_PRESSURE, MAX_PRESSURE, 0, 128);
 						if (valMap < 0) valMap = 0;
 						if (valMap > 127) valMap = 127;
 						LCD_Line(321 + 155, 191, 321 + 155, 317, 1, BLACK);
-						if (valMap) LCD_Line(321 + 155, 191 + (127 - valMap), 321 + 155, 317, 1, RGB(255 - ((127 - valMap) * 2), 0, 255 - (255 - ((127 - valMap) * 2))));
+						if (valMap) LCD_Line(321 + 155, 191 + (127 - valMap), 321 + 155, 317,
+								1, RGB(255 - ((127 - valMap) * 2), 0, 255 - (255 - ((127 - valMap) * 2))));
 
 					if (!viewGraphs) {
 
@@ -458,24 +461,27 @@ int main(void)
 							valMap = map(((int16_t)hT[i]), MIN_TEMPERATURE_X10, MAX_TEMPERATURE_X10, 0, 128);
 							if (valMap < 0) valMap = 0;
 							if (valMap > 127) valMap = 127;
-							LCD_Line(3 + i, 191, 3 + i, 317, 1, BLACK);
-							if (valMap) LCD_Line(3 + i, 191 + (127 - valMap), 3 + i, 317, 1, RGB(255 - ((127 - valMap) * 2), 0, 255 - (255 - ((127 - valMap) * 2))));
+							LCD_Line(3 + (154-i), 191, 3 + (154-i), 317, 1, BLACK);
+							if (valMap) LCD_Line(3 + (154-i), 191 + (127 - valMap), 3 + (154-i), 317,
+									1, RGB(255 - ((127 - valMap) * 2), 0, 255 - (255 - ((127 - valMap) * 2))));
 						}
 
 						for (uint16_t i = 0; i < 155 ; i++) {
 							valMap = map(((int16_t)hH[i]), MIN_HUMIDITY_X10, MAX_HUMIDITY_X10, 0, 128);
 							if (valMap < 0) valMap = 0;
 							if (valMap > 127) valMap = 127;
-							LCD_Line(162 + i, 191, 162 + i, 317, 1, BLACK);
-							if (valMap) LCD_Line(162 + i, 191 + (127 - valMap), 162 + i, 317, 1, RGB(255 - ((127 - valMap) * 2), 0, 255 - (255 - ((127 - valMap) * 2))));
+							LCD_Line(162 + (154-i), 191, 162 + (154-i), 317, 1, BLACK);
+							if (valMap) LCD_Line(162 + (154-i), 191 + (127 - valMap), 162 + (154-i), 317,
+									1, RGB(255 - ((127 - valMap) * 2), 0, 255 - (255 - ((127 - valMap) * 2))));
 						}
 
 						for (uint16_t i = 0; i < 155 ; i++) {
 							valMap = map(((int16_t)hP[i]), MIN_PRESSURE, MAX_PRESSURE, 0, 128);
 							if (valMap < 0) valMap = 0;
 							if (valMap > 127) valMap = 127;
-							LCD_Line(321 + i, 191, 321 + i, 317, 1, BLACK);
-							if (valMap) LCD_Line(321 + i, 191 + (127 - valMap), 321 + i, 317, 1, RGB(255 - ((127 - valMap) * 2), 0, 255 - (255 - ((127 - valMap) * 2))));
+							LCD_Line(321 + (154-i), 191, 321 + (154-i), 317, 1, BLACK);
+							if (valMap) LCD_Line(321 + (154-i), 191 + (127 - valMap), 321 + (154-i), 317,
+									1, RGB(255 - ((127 - valMap) * 2), 0, 255 - (255 - ((127 - valMap) * 2))));
 						}
 						viewGraphs = 1;
 					}
