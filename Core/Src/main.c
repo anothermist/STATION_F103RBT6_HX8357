@@ -23,13 +23,11 @@
 /* USER CODE BEGIN Includes */
 #include <stdio.h>
 #include <math.h>
-#include "hx8357.h"
-
 #include "string.h"
+#include "hx8357.h"
 #include "bme280.h"
 #include "ds3231.h"
 #include "at24xx.h"
-
 #include "fonts/DejaVu_Sans/008_DejaVu_Sans.h"
 #include "fonts/DejaVu_Sans/009_DejaVu_Sans.h"
 #include "fonts/DejaVu_Sans/010_DejaVu_Sans.h"
@@ -54,18 +52,18 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-#define MIN_TEMPERATURE 21
-#define MAX_TEMPERATURE 29
-
-#define MIN_HUMIDITY 10
-#define MAX_HUMIDITY 74
-
-#define MIN_PRESSURE 937
-#define MAX_PRESSURE 1065
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#define MIN_TEMPERATURE_X10 192
+#define MAX_TEMPERATURE_X10 320
+
+#define MIN_HUMIDITY_X10 100
+#define MAX_HUMIDITY_X10 740
+
+#define MIN_PRESSURE 937
+#define MAX_PRESSURE 1065
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -105,7 +103,7 @@ uint8_t rtcSec, rtcMin, rtcHrs, rtcDay, rtcDate, rtcMonth, rtcYear;
 uint8_t rtcSecLast = 61, rtcMinLast = 61, rtcHrsLast = 25, rtcDayLast, rtcDateLast, rtcMonthLast, rtcYearLast;
 double temperature, temperatureLast, humidity, humidityLast;
 uint16_t pressure, pressureLast;
-int16_t hT[156], hH[156], hP[156];
+int16_t hT[155], hH[155], hP[155];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -121,8 +119,6 @@ static void MX_TIM1_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-uint8_t testv = 0;
-
 uint8_t rx_buffer[256];
 uint8_t rx_index = 0;
 uint8_t rx_data;
@@ -226,9 +222,9 @@ int main(void)
 	LCD_Font(20, 127, "Clearing EEPROM", &DejaVu_Sans_48, 1, BLACK);
 
 	LCD_Font(20, 127, "Waiting for I2C", &DejaVu_Sans_48, 1, RED);
-	for (uint16_t i = 0; i < 156; i++) hT[i] = byteS(AT24XX_Read(i * 2 + 1000), AT24XX_Read(i * 2 + 1 + 1000));
-	for (uint16_t i = 0; i < 156; i++) hH[i] = byteS(AT24XX_Read(i * 2 + 2000), AT24XX_Read(i * 2 + 1 + 2000));
-	for (uint16_t i = 0; i < 156; i++) hP[i] = byteS(AT24XX_Read(i * 2 + 3000), AT24XX_Read(i * 2 + 1 + 3000));
+	for (uint16_t i = 0; i < 155; i++) hT[i] = byteS(AT24XX_Read(i * 2 + 1000), AT24XX_Read(i * 2 + 1 + 1000));
+	for (uint16_t i = 0; i < 155; i++) hH[i] = byteS(AT24XX_Read(i * 2 + 2000), AT24XX_Read(i * 2 + 1 + 2000));
+	for (uint16_t i = 0; i < 155; i++) hP[i] = byteS(AT24XX_Read(i * 2 + 3000), AT24XX_Read(i * 2 + 1 + 3000));
 	LCD_Font(20, 127, "Waiting for I2C", &DejaVu_Sans_48, 1, BLACK);
 
 	BME280_Init();
@@ -238,7 +234,6 @@ int main(void)
 
 	uint8_t uartTransmit[] = "UART OK\r\n";
 	HAL_UART_Transmit(&huart1, uartTransmit, sizeof(uartTransmit), 100);
-
 	uint8_t uartTransmitDMA[] = "UART DMA OK\r\n";
 	HAL_UART_Transmit_DMA(&huart1, uartTransmitDMA, sizeof(uartTransmitDMA));
 
@@ -407,10 +402,8 @@ int main(void)
 						AT24XX_Update(0, rtcHrs);
 
 						for (uint16_t i = 0; i < 155; i++) hT[i] = byteS(AT24XX_Read(i * 2 + 1000), AT24XX_Read(i * 2 + 1 + 1000));
-
 						for (uint16_t i = 1; i < 154; i++) hT[i] = hT[i + 1];
-
-						hT[155] = (uint16_t) (temperature * 10);
+						hT[154] = (uint16_t) (temperature * 10);
 
 						for (uint16_t i = 0; i < 155; i++) {
 							AT24XX_Update(i * 2 + 1000, byteL(hT[i]));
@@ -419,10 +412,8 @@ int main(void)
 
 
 						for (uint16_t i = 0; i < 155; i++) hH[i] = byteS(AT24XX_Read(i * 2 + 2000), AT24XX_Read(i * 2 + 1 + 2000));
-
 						for (uint16_t i = 1; i < 154; i++) hH[i] = hH[i + 1];
-
-						hH[155] = (uint16_t) (humidity * 10);
+						hH[154] = (uint16_t) (humidity * 10);
 
 						for (uint16_t i = 0; i < 155; i++) {
 							AT24XX_Update(i * 2 + 2000, byteL(hH[i]));
@@ -431,10 +422,8 @@ int main(void)
 
 
 						for (uint16_t i = 0; i < 155; i++) hP[i] = byteS(AT24XX_Read(i * 2 + 3000), AT24XX_Read(i * 2 + 1 + 3000));
-
 						for (uint16_t i = 1; i < 154; i++) hP[i] = hP[i + 1];
-
-						hP[155] = (uint16_t)pressure;
+						hP[154] = (uint16_t)pressure;
 
 						for (uint16_t i = 0; i < 155; i++) {
 							AT24XX_Update(i * 2 + 3000, byteL(hP[i]));
@@ -444,41 +433,51 @@ int main(void)
 						viewGraphs = 0;
 					}
 
+					LCD_Rect(2, 189, 157, 129, 1, BLUE);
+						int16_t valMap = map(((int16_t)(temperature * 10)), MIN_TEMPERATURE_X10, MAX_TEMPERATURE_X10, 0, 128);
+						if (valMap < 0) valMap = 0;
+						if (valMap > 127) valMap = 127;
+						LCD_Line(3 + 155, 191, 3 + 155, 317, 1, BLACK);
+						if (valMap) LCD_Line(3 + 155, 191 + (127 - valMap), 3 + 155, 317, 1, RGB(255 - ((127 - valMap) * 2), 0, 255 - (255 - ((127 - valMap) * 2))));
+
+					LCD_Rect(161, 189, 157, 129, 1, BLUE);
+						valMap = map(((int16_t)(humidity * 10)), MIN_HUMIDITY_X10, MAX_HUMIDITY_X10, 0, 128);
+						if (valMap < 0) valMap = 0;
+						if (valMap > 127) valMap = 127;
+						LCD_Line(162 + 155, 191, 162 + 155, 317, 1, BLACK);
+						if (valMap) LCD_Line(162 + 155, 191 + (127 - valMap), 162 + 155, 317, 1, RGB(255 - ((127 - valMap) * 2), 0, 255 - (255 - ((127 - valMap) * 2))));
+
+					LCD_Rect(320, 189, 157, 129, 1, BLUE);
+						valMap = map(((int16_t)(pressure)), MIN_PRESSURE, MAX_PRESSURE, 0, 128);
+						if (valMap < 0) valMap = 0;
+						if (valMap > 127) valMap = 127;
+						LCD_Line(321 + 155, 191, 321 + 155, 317, 1, BLACK);
+						if (valMap) LCD_Line(321 + 155, 191 + (127 - valMap), 321 + 155, 317, 1, RGB(255 - ((127 - valMap) * 2), 0, 255 - (255 - ((127 - valMap) * 2))));
+
 					if (!viewGraphs) {
 
-						LCD_Rect(2, 189, 157, 129, 1, BLUE);
-
-						for (uint16_t i = 0; i < 156 ; i++) {
-							int16_t val = map(((int16_t)hT[i]), MIN_TEMPERATURE*10, MAX_TEMPERATURE*10, 0, 128);
-							if (val < 0) val = 0;
-							if (val > 127) val = 127;
+						for (uint16_t i = 0; i < 155 ; i++) {
+							valMap = map(((int16_t)hT[i]), MIN_TEMPERATURE_X10, MAX_TEMPERATURE_X10, 0, 128);
+							if (valMap < 0) valMap = 0;
+							if (valMap > 127) valMap = 127;
 							LCD_Line(3 + i, 191, 3 + i, 317, 1, BLACK);
-							if (val) LCD_Line(3 + i, 191 + (127 - val), 3 + i, 317, 1, RGB(255 - ((127 - val) * 2), 0, 255 - (255 - ((127 - val) * 2))));
-
+							if (valMap) LCD_Line(3 + i, 191 + (127 - valMap), 3 + i, 317, 1, RGB(255 - ((127 - valMap) * 2), 0, 255 - (255 - ((127 - valMap) * 2))));
 						}
 
-
-						LCD_Rect(161, 189, 157, 129, 1, BLUE);
-
-						for (uint16_t i = 0; i < 156 ; i++) {
-							int16_t val = map(((int16_t)hH[i]), MIN_HUMIDITY*10, MAX_HUMIDITY*10, 0, 128);
-							if (val < 0) val = 0;
-							if (val > 127) val = 127;
+						for (uint16_t i = 0; i < 155 ; i++) {
+							valMap = map(((int16_t)hH[i]), MIN_HUMIDITY_X10, MAX_HUMIDITY_X10, 0, 128);
+							if (valMap < 0) valMap = 0;
+							if (valMap > 127) valMap = 127;
 							LCD_Line(162 + i, 191, 162 + i, 317, 1, BLACK);
-							if (val) LCD_Line(162 + i, 191 + (127 - val), 162 + i, 317, 1, RGB(255 - ((127 - val) * 2), 0, 255 - (255 - ((127 - val) * 2))));
-
+							if (valMap) LCD_Line(162 + i, 191 + (127 - valMap), 162 + i, 317, 1, RGB(255 - ((127 - valMap) * 2), 0, 255 - (255 - ((127 - valMap) * 2))));
 						}
 
-
-						LCD_Rect(320, 189, 157, 129, 1, BLUE);
-
-						for (uint16_t i = 0; i < 156 ; i++) {
-							int16_t val = map(((int16_t)hP[i]), MIN_PRESSURE, MAX_PRESSURE, 0, 128);
-							if (val < 0) val = 0;
-							if (val > 127) val = 127;
+						for (uint16_t i = 0; i < 155 ; i++) {
+							valMap = map(((int16_t)hP[i]), MIN_PRESSURE, MAX_PRESSURE, 0, 128);
+							if (valMap < 0) valMap = 0;
+							if (valMap > 127) valMap = 127;
 							LCD_Line(321 + i, 191, 321 + i, 317, 1, BLACK);
-							if (val) LCD_Line(321 + i, 191 + (127 - val), 321 + i, 317, 1, RGB(255 - ((127 - val) * 2), 0, 255 - (255 - ((127 - val) * 2))));
-
+							if (valMap) LCD_Line(321 + i, 191 + (127 - valMap), 321 + i, 317, 1, RGB(255 - ((127 - valMap) * 2), 0, 255 - (255 - ((127 - valMap) * 2))));
 						}
 
 						viewGraphs = 1;
@@ -657,7 +656,7 @@ static void MX_USART1_UART_Init(void)
 
 	/* USER CODE END USART1_Init 1 */
 	huart1.Instance = USART1;
-	huart1.Init.BaudRate = 115200;
+	huart1.Init.BaudRate = 9600;
 	huart1.Init.WordLength = UART_WORDLENGTH_8B;
 	huart1.Init.StopBits = UART_STOPBITS_1;
 	huart1.Init.Parity = UART_PARITY_NONE;
