@@ -25,4 +25,6 @@ Application/User/Core \
 Application/User/Startup \
 Drivers/CMSIS \
 Drivers/STM32F1xx_HAL_Driver \
+workspace_1.8.0/.metadata/.plugins/org.eclipse.cdt.make.core \
+workspace_1.8.0/.metadata/.plugins/org.eclipse.cdt.managedbuilder.core \
 

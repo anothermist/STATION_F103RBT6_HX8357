@@ -24,3 +24,5 @@
 "./Drivers/STM32F1xx_HAL_Driver/stm32f1xx_hal_tim.o"
 "./Drivers/STM32F1xx_HAL_Driver/stm32f1xx_hal_tim_ex.o"
 "./Drivers/STM32F1xx_HAL_Driver/stm32f1xx_hal_uart.o"
+"./workspace_1.8.0/.metadata/.plugins/org.eclipse.cdt.make.core/specs.o"
+"./workspace_1.8.0/.metadata/.plugins/org.eclipse.cdt.managedbuilder.core/spec.o"
