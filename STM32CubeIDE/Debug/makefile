@@ -9,8 +9,6 @@ RM := rm -rf
 
 # All of the sources participating in the build are defined here
 -include sources.mk
--include workspace_1.8.0/.metadata/.plugins/org.eclipse.cdt.managedbuilder.core/subdir.mk
--include workspace_1.8.0/.metadata/.plugins/org.eclipse.cdt.make.core/subdir.mk
 -include Drivers/STM32F1xx_HAL_Driver/subdir.mk
 -include Drivers/CMSIS/subdir.mk
 -include Application/User/Startup/subdir.mk
