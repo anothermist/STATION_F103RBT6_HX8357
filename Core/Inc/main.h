@@ -61,8 +61,6 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define LED_Pin GPIO_PIN_13
 #define LED_GPIO_Port GPIOC
-#define LCD_DB_08_Pin GPIO_PIN_14
-#define LCD_DB_08_GPIO_Port GPIOC
 #define LCD_DB_09_Pin GPIO_PIN_15
 #define LCD_DB_09_GPIO_Port GPIOC
 #define LCD_DB_10_Pin GPIO_PIN_0
@@ -97,12 +95,16 @@ void Error_Handler(void);
 #define LCD_RS_GPIO_Port GPIOB
 #define LCD_WR_Pin GPIO_PIN_1
 #define LCD_WR_GPIO_Port GPIOB
-#define SYSTEM_RESERVED_Pin GPIO_PIN_2
-#define SYSTEM_RESERVED_GPIO_Port GPIOB
 #define LCD_CS_Pin GPIO_PIN_10
 #define LCD_CS_GPIO_Port GPIOB
 #define LCD_RST_Pin GPIO_PIN_11
 #define LCD_RST_GPIO_Port GPIOB
+#define ALARM_MODE_Pin GPIO_PIN_3
+#define ALARM_MODE_GPIO_Port GPIOB
+#define ALARM_HOUR_Pin GPIO_PIN_4
+#define ALARM_HOUR_GPIO_Port GPIOB
+#define ALARM_MINUTE_Pin GPIO_PIN_5
+#define ALARM_MINUTE_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
